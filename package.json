@@ -1,7 +1,7 @@
 {
     "name": "fursorger",
     "version": "0.0.1",
-    "description": "Parvenu - a Phaser 3 game in Typescript",
+    "description": "Fursorger - a Phaser 3 game in Typescript",
     "license": "MIT",
     "scripts": {
         "prebuild": "del-cli build",
@@ -16,13 +16,14 @@
         "test": "mocha",
         "test:coverage": "nyc mocha",
         "test:watch": "mocha --watch --watch-extensions ts",
-        "test:debug": "mocha --inspect-brk"
+        "test:debug": "mocha --inspect-brk",
+        "sanity-check": "npm install && npm run test && npm run dev"
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
+        "@types/graphlib": "^2.1.5",
         "@types/lodash": "^4.14.135",
         "@types/mocha": "^5.2.5",
-        "@types/ms": "^0.7.30",
         "@types/sinon": "^7.0.3",
         "@types/sinon-chai": "^3.2.2",
         "chai": "^4.2.0",
@@ -48,10 +49,9 @@
         "webpack-dev-server": "3.7.2"
     },
     "dependencies": {
+        "graphlib": "^2.1.7",
         "lodash": "^4.17.11",
-        "ms": "^2.1.2",
-        "phaser": "^3.18.1",
-        "rxjs": "^6.4.0"
+        "phaser": "^3.18.1"
     },
     "husky": {
         "hooks": {

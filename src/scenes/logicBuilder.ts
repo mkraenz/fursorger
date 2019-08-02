@@ -1,19 +1,18 @@
-import { City } from "./City";
+import { Graph } from "graphlib";
 import { CityName } from "./CityName";
 import { IMainSceneParams } from "./IMainSceneParams";
-import { Logic } from "./logic";
 import { Player } from "./Player";
-import { Ware } from "./ware";
 
 export class LogicBuilder {
     public static create(): IMainSceneParams {
-        const player = new Player(Ware.getWaresOfEachType());
-        const cities = Object.values(CityName).map(
-            name => new City(Ware.getWaresOfEachType(), name)
-        );
+        const graph = new Graph({ directed: false });
+        Object.values(CityName).forEach(name => {
+            graph.setNode(name, name);
+            // graph.setNode(name, new City(name));
+        });
+        const player = new Player(graph, graph.node(CityName.Athens));
         return {
-            city: cities[0],
-            logic: new Logic(player, cities, CityName.Mecklenburg),
+            graph,
             player,
         };
     }
