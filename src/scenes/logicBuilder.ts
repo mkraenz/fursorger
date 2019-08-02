@@ -10,7 +10,7 @@ export class LogicBuilder {
             graph.setNode(name, name);
             // graph.setNode(name, new City(name));
         });
-        const player = new Player(graph, graph.node(CityName.Holstein));
+        const player = new Player(graph, graph.node(CityName.Athens));
         return {
             graph,
             player,
