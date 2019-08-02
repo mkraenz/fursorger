@@ -2,10 +2,10 @@
     "compilerOptions": {
         "target": "ES2017",
         "module": "CommonJs",
-        "strict": true,
+        "strict": false,
         "noImplicitReturns": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
         "forceConsistentCasingInFileNames": true
     },
     "exclude": ["node_modules", "build", "scripts", "webpack"],

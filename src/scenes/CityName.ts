@@ -1,4 +1,5 @@
 export enum CityName {
-    Mecklenburg = "Mecklenburg",
-    Holstein = "Holstein"
+    Athens = "Athens",
+    Bern = "Bern",
+    Cairo = "Cairo",
 }
