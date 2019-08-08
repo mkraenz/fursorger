@@ -1,12 +1,14 @@
 import { Graph } from "graphlib";
 import { Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { CityName } from "./CityName";
 import { IPlayer } from "./IPlayer";
 import { LogicBuilder } from "./logicBuilder";
 
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
+    private info!: any;
 
     constructor() {
         super({
@@ -29,6 +31,22 @@ export class MainScene extends Scene {
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
+        const bg = this.add.image(0, 0, "sell");
+
+        const container = this.add.container(40, 30, [bg]);
+
+        container.setInteractive(
+            new Phaser.Geom.Circle(0, 0, 90),
+            Phaser.Geom.Circle.Contains
+        );
+
+        container.once("pointerup", () => {
+            this.player.setLocation(CityName.Athens);
+        });
+    }
+
+    public update() {
+        this.player.getLocation();
     }
 
     private addBackgroundMusic() {
