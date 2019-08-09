@@ -6,6 +6,10 @@ export class City implements ICity {
         this.economy = economy;
     }
 
+    public getName() {
+        return this.name;
+    }
+
     private getStock() {
         return this.economy[0];
     }

@@ -35,37 +35,35 @@ export class MainScene extends Scene {
         this.addBackground();
         this.addContainerArray();
 
-        this.info = this.add.text(300, 300, this.player.getLocation(), {
+        this.info = this.add.text(300, 300, this.player.getLocationName(), {
             font: "48px Arial",
             fill: "#000000",
         });
     }
 
     public update() {
-        this.info.setText(this.player.getLocation());
+        this.info.setText(this.player.getLocationName());
     }
 
     private addContainerArray() {
         this.containerArray = [];
         let count = 0;
         Object.values(CityName).forEach(name => {
-            this.containerArray.push(
-                this.add.container(
-                    100,
-                    40 + count * 70,
-                    this.add.image(0, 0, name)
-                )
-            );
+            const cityButton = this.add.image(0, 0, name);
+            const container = this.add.container(100, 40 + count * 70, [
+                cityButton,
+            ]);
+            container.setName(name);
+            this.containerArray.push(container);
             count = count + 1;
         });
         this.containerArray.forEach(container => {
             container.setSize(170, 60);
             container.setInteractive();
             container.on("pointerup", () => {
-                container.each(cityButton => {
-                    this.player.setLocation(cityButton.name);
-                    container.setAlpha(0.5);
-                });
+                this.player.setLocation(this.graph.node(container.name));
+                container.setAlpha(0.5);
+
                 this.containerArray.forEach(other => {
                     if (!(other === container)) {
                         other.clearAlpha();
