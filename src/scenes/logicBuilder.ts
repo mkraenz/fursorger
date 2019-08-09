@@ -9,7 +9,7 @@ export class LogicBuilder {
         const graph = new Graph({ directed: false });
         Object.values(CityName).forEach(name => {
             graph.setNode(name, new City(name, [6, 2, 1]));
-            // graph.setNode(name, new City(name));
+            // graph.setNode(name, new City(name, economy));
         });
         const player = new Player(graph, graph.node(CityName.Athens));
         return {

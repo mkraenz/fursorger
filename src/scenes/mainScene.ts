@@ -9,6 +9,8 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private info!: any;
+    private locationText!: any;
+    private containerArray!: Phaser.GameObjects.Container[];
 
     constructor() {
         super({
@@ -17,36 +19,60 @@ export class MainScene extends Scene {
     }
 
     public preload(): void {
-        this.load.image("buy", "./assets/images/buy.png");
-        this.load.image("sell", "./assets/images/sell.png");
+        this.load.image("Athens", "./assets/images/athens3.png");
+        this.load.image("Bern", "./assets/images/bern3.png");
+        this.load.image("Cairo", "./assets/images/cairo3.png");
         this.load.image("background", "./assets/images/background500x300.png");
-        this.load.audio("buy", "./assets/sounds/buy.wav");
-        this.load.audio("sell", "./assets/sounds/sell.wav");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
     public create(): void {
+        const count = 0;
         const logicObjects = LogicBuilder.create();
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
-        const bg = this.add.image(0, 0, "sell");
+        this.addContainerArray();
 
-        const container = this.add.container(40, 30, [bg]);
-
-        container.setInteractive(
-            new Phaser.Geom.Circle(0, 0, 90),
-            Phaser.Geom.Circle.Contains
-        );
-
-        container.once("pointerup", () => {
-            this.player.setLocation(CityName.Athens);
+        this.info = this.add.text(300, 300, this.player.getLocation(), {
+            font: "48px Arial",
+            fill: "#000000",
         });
     }
 
     public update() {
-        this.player.getLocation();
+        this.info.setText(this.player.getLocation());
+    }
+
+    private addContainerArray() {
+        this.containerArray = [];
+        let count = 0;
+        Object.values(CityName).forEach(name => {
+            this.containerArray.push(
+                this.add.container(
+                    100,
+                    40 + count * 70,
+                    this.add.image(0, 0, name)
+                )
+            );
+            count = count + 1;
+        });
+        this.containerArray.forEach(container => {
+            container.setSize(170, 60);
+            container.setInteractive();
+            container.on("pointerup", () => {
+                container.each(cityButton => {
+                    this.player.setLocation(cityButton.name);
+                    container.setAlpha(0.5);
+                });
+                this.containerArray.forEach(other => {
+                    if (!(other === container)) {
+                        other.clearAlpha();
+                    }
+                });
+            });
+        });
     }
 
     private addBackgroundMusic() {
