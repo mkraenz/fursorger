@@ -8,7 +8,6 @@ import { LogicBuilder } from "./logicBuilder";
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
-    private info!: any;
     private locationText!: any;
     private containerArray!: Phaser.GameObjects.Container[];
 
@@ -35,14 +34,19 @@ export class MainScene extends Scene {
         this.addBackground();
         this.addContainerArray();
 
-        this.info = this.add.text(300, 300, this.player.getLocationName(), {
-            font: "48px Arial",
-            fill: "#000000",
-        });
+        this.locationText = this.add.text(
+            300,
+            300,
+            this.player.getLocationName(),
+            {
+                font: "48px Arial",
+                fill: "#000000",
+            }
+        );
     }
 
     public update() {
-        this.info.setText(this.player.getLocationName());
+        this.locationText.setText(this.player.getLocationName());
     }
 
     private addContainerArray() {
@@ -59,16 +63,26 @@ export class MainScene extends Scene {
         });
         this.containerArray.forEach(container => {
             container.setSize(170, 60);
+            if (container.name === this.player.getLocationName()) {
+                container.setAlpha(0.5);
+            }
             container.setInteractive();
             container.on("pointerup", () => {
-                this.player.setLocation(this.graph.node(container.name));
-                container.setAlpha(0.5);
+                if (
+                    this.graph.hasEdge(
+                        this.player.getLocationName(),
+                        container.name
+                    )
+                ) {
+                    this.player.setLocation(this.graph.node(container.name));
+                    container.setAlpha(0.5);
 
-                this.containerArray.forEach(other => {
-                    if (!(other === container)) {
-                        other.clearAlpha();
-                    }
-                });
+                    this.containerArray.forEach(other => {
+                        if (!(other === container)) {
+                            other.clearAlpha();
+                        }
+                    });
+                }
             });
         });
     }
