@@ -26,12 +26,21 @@ before_deploy:
   # HACK: Delete "build" from gitignore because github pages uses `git add --all`
   - ./deployment/delete-build-dir-from-gitignore.sh
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
-  keep_history: true
-  on:
-    branch: master
+  - provider: heroku
+    app: fursorger-game
+    api_key: ${HEROKU_API_KEY}
+    keep_history: true
+    skip_cleanup: true
+    on:
+      all_branches: true
+      condition: ${TRAVIS_NODE_VERSION} = "11"
+  - provider: pages
+    github_token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
+    keep_history: true
+    skip_cleanup: true
+    on:
+      branch: master
+      condition: ${TRAVIS_NODE_VERSION} = "11"
 after_deploy:
   - ./deployment/push-to-docker-hub.sh "${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}"
-  - ./deployment/push-to-docker-hub.sh 'latest'
+  - if [ ${TRAVIS_BRANCH} == "master" ]; then ./deployment/push-to-docker-hub.sh 'latest'; fi
