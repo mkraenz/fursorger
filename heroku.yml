@@ -1,0 +1,4 @@
+build:
+  docker:
+    web: Dockerfile
+# Heroku runs the CMD specified in the Dockerfile.
