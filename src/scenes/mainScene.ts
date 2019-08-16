@@ -33,7 +33,9 @@ export class MainScene extends Scene {
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
-        this.addContainerArray();
+        // draw edges first, so that cities are drawn on top
+        this.drawEdges();
+        this.addCities();
 
         this.locationText = this.add.text(
             300,
@@ -50,12 +52,26 @@ export class MainScene extends Scene {
         this.locationText.setText(this.player.getLocationName());
     }
 
-    private addContainerArray() {
+    private addBackgroundMusic() {
+        this.sound.add("background").play("", { loop: true });
+    }
+
+    private addBackground() {
+        this.add
+            .image(0, 0, "background")
+            .setOrigin(0)
+            .setScale(
+                (gameConfig.width as number) / 500,
+                (gameConfig.height as number) / 300
+            );
+    }
+
+    private addCities() {
         this.containerArray = [];
         Object.values(CityName).forEach(xName => {
             const name = xName as CityName;
             const cityButton = this.add.image(0, 0, name);
-            const config = cityConfig.cities[name];
+            const config = cityConfig[name];
             const container = this.add.container(config.x, config.y, [
                 cityButton,
             ]);
@@ -90,17 +106,23 @@ export class MainScene extends Scene {
         });
     }
 
-    private addBackgroundMusic() {
-        this.sound.add("background").play("", { loop: true });
-    }
+    private drawEdges() {
+        this.graph.edges().forEach(edge => {
+            const v = edge.v as CityName;
+            const w = edge.w as CityName;
 
-    private addBackground() {
-        this.add
-            .image(0, 0, "background")
-            .setOrigin(0)
-            .setScale(
-                (gameConfig.width as number) / 500,
-                (gameConfig.height as number) / 300
+            const line = new Phaser.Geom.Line(
+                cityConfig[v].x,
+                cityConfig[v].y,
+                cityConfig[w].x,
+                cityConfig[w].y
             );
+
+            const graphics = this.add.graphics({
+                lineStyle: { width: 4, color: 0xaa00aa },
+            });
+
+            graphics.strokeLineShape(line);
+        });
     }
 }
