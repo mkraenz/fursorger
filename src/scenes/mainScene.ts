@@ -108,20 +108,17 @@ export class MainScene extends Scene {
 
     private drawEdges() {
         this.graph.edges().forEach(edge => {
-            const v = edge.v as CityName;
-            const w = edge.w as CityName;
-
+            const nodeV = cityConfig[edge.v as CityName];
+            const nodeW = cityConfig[edge.w as CityName];
             const line = new Phaser.Geom.Line(
-                cityConfig[v].x,
-                cityConfig[v].y,
-                cityConfig[w].x,
-                cityConfig[w].y
+                nodeV.x,
+                nodeV.y,
+                nodeW.x,
+                nodeW.y
             );
-
             const graphics = this.add.graphics({
-                lineStyle: { width: 4, color: 0xaa00aa },
+                lineStyle: { width: 4, color: 0x0 },
             });
-
             graphics.strokeLineShape(line);
         });
     }
