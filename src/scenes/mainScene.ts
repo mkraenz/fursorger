@@ -1,6 +1,7 @@
 import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { cityConfig } from "./City.config";
 import { CityName } from "./CityName";
 import { getNode } from "./getNode";
 import { IPlayer } from "./IPlayer";
@@ -51,15 +52,15 @@ export class MainScene extends Scene {
 
     private addContainerArray() {
         this.containerArray = [];
-        let count = 0;
-        Object.values(CityName).forEach(name => {
+        Object.values(CityName).forEach(xName => {
+            const name = xName as CityName;
             const cityButton = this.add.image(0, 0, name);
-            const container = this.add.container(100, 40 + count * 70, [
+            const config = cityConfig.cities[name];
+            const container = this.add.container(config.x, config.y, [
                 cityButton,
             ]);
             container.setName(name);
             this.containerArray.push(container);
-            count = count + 1;
         });
         this.containerArray.forEach(container => {
             container.setSize(170, 60);
