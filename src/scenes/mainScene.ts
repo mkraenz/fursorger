@@ -1,12 +1,17 @@
 import { Graph } from "graphlib";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { cityConfig } from "./City.config";
+import { CityName } from "./CityName";
+import { getNode } from "./getNode";
 import { IPlayer } from "./IPlayer";
 import { LogicBuilder } from "./logicBuilder";
 
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
+    private locationText!: GameObjects.Text;
+    private containerArray!: GameObjects.Container[];
 
     constructor() {
         super({
@@ -15,11 +20,10 @@ export class MainScene extends Scene {
     }
 
     public preload(): void {
-        this.load.image("buy", "./assets/images/buy.png");
-        this.load.image("sell", "./assets/images/sell.png");
+        this.load.image("Athens", "./assets/images/athens3.png");
+        this.load.image("Bern", "./assets/images/bern3.png");
+        this.load.image("Cairo", "./assets/images/cairo3.png");
         this.load.image("background", "./assets/images/background500x300.png");
-        this.load.audio("buy", "./assets/sounds/buy.wav");
-        this.load.audio("sell", "./assets/sounds/sell.wav");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -29,6 +33,23 @@ export class MainScene extends Scene {
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
+        // draw edges first, so that cities are drawn on top
+        this.drawEdges();
+        this.addCities();
+
+        this.locationText = this.add.text(
+            300,
+            300,
+            this.player.getLocationName(),
+            {
+                font: "48px Arial",
+                fill: "#000000",
+            }
+        );
+    }
+
+    public update() {
+        this.locationText.setText(this.player.getLocationName());
     }
 
     private addBackgroundMusic() {
@@ -43,5 +64,62 @@ export class MainScene extends Scene {
                 (gameConfig.width as number) / 500,
                 (gameConfig.height as number) / 300
             );
+    }
+
+    private addCities() {
+        this.containerArray = [];
+        Object.values(CityName).forEach(xName => {
+            const name = xName as CityName;
+            const cityButton = this.add.image(0, 0, name);
+            const config = cityConfig[name];
+            const container = this.add.container(config.x, config.y, [
+                cityButton,
+            ]);
+            container.setName(name);
+            this.containerArray.push(container);
+        });
+        this.containerArray.forEach(container => {
+            container.setSize(170, 60);
+            if (container.name === this.player.getLocationName()) {
+                container.setAlpha(0.5);
+            }
+            container.setInteractive();
+            container.on("pointerup", () => {
+                if (
+                    this.graph.hasEdge(
+                        this.player.getLocationName(),
+                        container.name
+                    )
+                ) {
+                    this.player.setLocation(
+                        getNode(this.graph, container.name as CityName)
+                    );
+                    container.setAlpha(0.5);
+
+                    this.containerArray.forEach(other => {
+                        if (!(other === container)) {
+                            other.clearAlpha();
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    private drawEdges() {
+        this.graph.edges().forEach(edge => {
+            const nodeV = cityConfig[edge.v as CityName];
+            const nodeW = cityConfig[edge.w as CityName];
+            const line = new Phaser.Geom.Line(
+                nodeV.x,
+                nodeV.y,
+                nodeW.x,
+                nodeW.y
+            );
+            const graphics = this.add.graphics({
+                lineStyle: { width: 4, color: 0x0 },
+            });
+            graphics.strokeLineShape(line);
+        });
     }
 }
