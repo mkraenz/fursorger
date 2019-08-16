@@ -1,15 +1,16 @@
 import { Graph } from "graphlib";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
 import { CityName } from "./CityName";
+import { getNode } from "./getNode";
 import { IPlayer } from "./IPlayer";
 import { LogicBuilder } from "./logicBuilder";
 
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
-    private locationText!: any;
-    private containerArray!: Phaser.GameObjects.Container[];
+    private locationText!: GameObjects.Text;
+    private containerArray!: GameObjects.Container[];
 
     constructor() {
         super({
@@ -26,7 +27,6 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
-        const count = 0;
         const logicObjects = LogicBuilder.create();
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
@@ -74,7 +74,9 @@ export class MainScene extends Scene {
                         container.name
                     )
                 ) {
-                    this.player.setLocation(this.graph.node(container.name));
+                    this.player.setLocation(
+                        getNode(this.graph, container.name as CityName)
+                    );
                     container.setAlpha(0.5);
 
                     this.containerArray.forEach(other => {

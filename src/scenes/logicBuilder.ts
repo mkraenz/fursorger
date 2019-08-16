@@ -9,7 +9,10 @@ export class LogicBuilder {
     public static create(): IMainSceneParams {
         const graph = new Graph({ directed: false });
         Object.values(CityName).forEach(name => {
-            graph.setNode(name, new City(name, [6, 2, 1]));
+            graph.setNode(
+                name,
+                new City(name, { consumption: 2, stock: 6, production: 1 })
+            );
             // graph.setNode(name, new City(name, economy));
         });
         Object.values(TravelPaths).forEach(pathName => {

@@ -1,8 +1,7 @@
-import { City } from "./City";
+import { ILocation } from "./ILocation";
 
-// tslint:disable-next-line:no-empty-interface
 export interface IPlayer {
-    getLocation(): City;
-    setLocation(city: City): void;
+    getLocation(): ILocation;
     getLocationName(): string;
+    setLocation(location: ILocation): void;
 }
