@@ -12,6 +12,7 @@ export class MainScene extends Scene {
     private graph!: Graph;
     private locationText!: GameObjects.Text;
     private containerArray!: GameObjects.Container[];
+    private buttonImageArray!: GameObjects.Image[];
 
     constructor() {
         super({
@@ -68,6 +69,7 @@ export class MainScene extends Scene {
 
     private addCities() {
         this.containerArray = [];
+        this.buttonImageArray = [];
         Object.values(CityName).forEach(xName => {
             const name = xName as CityName;
             const cityButton = this.add.image(0, 0, name);
@@ -77,11 +79,13 @@ export class MainScene extends Scene {
             ]);
             container.setName(name);
             this.containerArray.push(container);
+            this.buttonImageArray.push(cityButton);
         });
         this.containerArray.forEach(container => {
+            const index = this.containerArray.indexOf(container);
             container.setSize(170, 60);
             if (container.name === this.player.getLocationName()) {
-                container.setAlpha(0.5);
+                this.buttonImageArray[index].setTint(0x44ff44);
             }
             container.setInteractive();
             container.on("pointerup", () => {
@@ -94,11 +98,14 @@ export class MainScene extends Scene {
                     this.player.setLocation(
                         getNode(this.graph, container.name as CityName)
                     );
-                    container.setAlpha(0.5);
+                    this.buttonImageArray[
+                        this.containerArray.indexOf(container)
+                    ].setTint(0x44ff44);
 
                     this.containerArray.forEach(other => {
-                        if (!(other === container)) {
-                            other.clearAlpha();
+                        const otherIndex = this.containerArray.indexOf(other);
+                        if (!(index === otherIndex)) {
+                            this.buttonImageArray[otherIndex].clearTint();
                         }
                     });
                 }
