@@ -3,11 +3,19 @@
 
 # Fursorger
 
-Play now at [https://prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/).
+**Play now at [fursorger-game.herokuapp.com](https://fursorger-game.herokuapp.com).**
 
-Or on [Google Cloud Engine](34.90.37.206:80)
+```
+I am the care taker who 
+tries to keep the dying world alive 
+as long as possible
+by traveling to cities,
+redistributing goods among cities,
+and building factories to build more goods
+```
+[Big Hairy Audacious Goal](https://en.wikipedia.org/wiki/Big_Hairy_Audacious_Goal) Number 1.
 
-A phaser3 trading simulation game in TypeScript.
+A phaser3 survival trading game in TypeScript.
 
 ## Getting started
 
@@ -24,10 +32,10 @@ Clone the git repository
 git clone https://github.com/proSingularity/fursorger.git
 ```
 
-Install dependencies:
+Install, test and start:
 
 ```
-npm install
+npm run sanity-check
 ```
 
 ### Building and Running
