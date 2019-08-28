@@ -79,9 +79,10 @@ export class MainScene extends Scene {
             this.containerArray.push(container);
         });
         this.containerArray.forEach(container => {
+            const index = this.containerArray.indexOf(container);
             container.setSize(170, 60);
             if (container.name === this.player.getLocationName()) {
-                container.setAlpha(0.5);
+                (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
             }
             container.setInteractive();
             container.on("pointerup", () => {
@@ -94,11 +95,14 @@ export class MainScene extends Scene {
                     this.player.setLocation(
                         getNode(this.graph, container.name as CityName)
                     );
-                    container.setAlpha(0.5);
+                    (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
 
-                    this.containerArray.forEach(other => {
-                        if (!(other === container)) {
-                            other.clearAlpha();
+                    this.containerArray.forEach((other, otherIndex) => {
+                        if (!(index === otherIndex)) {
+                            const otherImg = other.getAt(
+                                0
+                            ) as GameObjects.Image;
+                            otherImg.clearTint();
                         }
                     });
                 }
