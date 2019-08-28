@@ -7,11 +7,14 @@ import { getNode } from "./getNode";
 import { IPlayer } from "./IPlayer";
 import { LogicBuilder } from "./logicBuilder";
 
+const PLAYER_INFO_X = 680;
+
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private locationText!: GameObjects.Text;
     private containerArray!: GameObjects.Container[];
+    private playerInfo!: GameObjects.Text;
 
     constructor() {
         super({
@@ -24,6 +27,7 @@ export class MainScene extends Scene {
         this.load.image("Bern", "./assets/images/bern3.png");
         this.load.image("Cairo", "./assets/images/cairo3.png");
         this.load.image("background", "./assets/images/background500x300.png");
+        this.load.image("backpack", "./assets/images/backpack64x64.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -36,6 +40,11 @@ export class MainScene extends Scene {
         // draw edges first, so that cities are drawn on top
         this.drawEdges();
         this.addCities();
+        this.add.image(PLAYER_INFO_X, 40, "backpack");
+        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", {
+            font: "48px Arial",
+            fill: "#000000",
+        });
 
         this.locationText = this.add.text(
             300,
@@ -50,6 +59,7 @@ export class MainScene extends Scene {
 
     public update() {
         this.locationText.setText(this.player.getLocationName());
+        this.playerInfo.setText(this.player.stock.toString());
     }
 
     private addBackgroundMusic() {
