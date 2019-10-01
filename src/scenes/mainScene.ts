@@ -16,7 +16,6 @@ const textStyle = {
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
-    private locationText!: GameObjects.Text;
     private containerArray!: GameObjects.Container[];
     private playerInfo!: GameObjects.Text;
 
@@ -50,19 +49,10 @@ export class MainScene extends Scene {
         // draw edges first, so that cities are drawn on top
         this.drawEdges();
         this.addCities();
-        this.add.image(PLAYER_INFO_X, 40, "backpack");
-        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", textStyle);
-
-        this.locationText = this.add.text(
-            300,
-            300,
-            this.player.getLocationName(),
-            textStyle
-        );
+        this.addPlayerInfo();
     }
 
     public update() {
-        this.locationText.setText(this.player.getLocationName());
         this.playerInfo.setText(this.player.stock.toString());
         this.containerArray.forEach(container => {
             // getAt(1) returns the stock text
@@ -89,6 +79,11 @@ export class MainScene extends Scene {
         });
     }
 
+    private addPlayerInfo() {
+        this.add.image(PLAYER_INFO_X, 40, "backpack");
+        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", textStyle);
+    }
+
     private addBackgroundMusic() {
         this.sound.add("background").play("", { loop: true });
     }
@@ -105,15 +100,31 @@ export class MainScene extends Scene {
 
     private addCities() {
         this.containerArray = [];
+        const textToIconOffset = -25;
         Object.values(CityName).forEach(xName => {
             const name = xName as CityName;
             const button = this.add.image(0, 0, name);
             const stock = this.add.image(0, -60, "stock");
-            const stockText = this.add.text(40, -60, "", textStyle);
+            const stockText = this.add.text(
+                40,
+                -60 + textToIconOffset,
+                "",
+                textStyle
+            );
             const production = this.add.image(0, 60, "production");
-            const prodText = this.add.text(40, 60, "", textStyle);
+            const prodText = this.add.text(
+                40,
+                60 + textToIconOffset,
+                "",
+                textStyle
+            );
             const consumption = this.add.image(130, 0, "consumption");
-            const consText = this.add.text(170, 0, "", textStyle);
+            const consText = this.add.text(
+                170,
+                0 + textToIconOffset,
+                "",
+                textStyle
+            );
             const config = cityConfig[name];
             const container = this.add.container(config.x, config.y, [
                 button,
