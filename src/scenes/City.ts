@@ -5,7 +5,7 @@ import { ILocation } from "./ILocation";
 export class City implements ICity, ILocation {
     constructor(
         public readonly name: CityName,
-        private economy: {
+        public economy: {
             stock: number;
             consumption: number;
             production: number;

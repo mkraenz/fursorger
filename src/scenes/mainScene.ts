@@ -9,10 +9,13 @@ import { LogicBuilder } from "./logicBuilder";
 
 const PLAYER_INFO_X = 680;
 
+const textStyle = {
+    font: "48px Arial",
+    fill: "#000000",
+};
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
-    private locationText!: GameObjects.Text;
     private containerArray!: GameObjects.Container[];
     private playerInfo!: GameObjects.Text;
 
@@ -28,6 +31,12 @@ export class MainScene extends Scene {
         this.load.image("Cairo", "./assets/images/cairo3.png");
         this.load.image("background", "./assets/images/background500x300.png");
         this.load.image("backpack", "./assets/images/backpack64x64.png");
+        this.load.image("stock", "./assets/images/storage64x64.png");
+        this.load.image("production", "./assets/images/factory64x64.png");
+        this.load.image(
+            "consumption",
+            "./assets/images/decreasing-bars64x64.png"
+        );
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -40,26 +49,39 @@ export class MainScene extends Scene {
         // draw edges first, so that cities are drawn on top
         this.drawEdges();
         this.addCities();
-        this.add.image(PLAYER_INFO_X, 40, "backpack");
-        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", {
-            font: "48px Arial",
-            fill: "#000000",
-        });
-
-        this.locationText = this.add.text(
-            300,
-            300,
-            this.player.getLocationName(),
-            {
-                font: "48px Arial",
-                fill: "#000000",
-            }
-        );
+        this.addPlayerInfo();
     }
 
     public update() {
-        this.locationText.setText(this.player.getLocationName());
         this.playerInfo.setText(this.player.stock.toString());
+        this.containerArray.forEach(container => {
+            // getAt(1) returns the stock text
+            (container.getAt(1) as GameObjects.Text).setText(
+                getNode(
+                    this.graph,
+                    container.name as CityName
+                ).economy.stock.toString()
+            );
+            // getAt(2) returns the production text
+            (container.getAt(2) as GameObjects.Text).setText(
+                getNode(
+                    this.graph,
+                    container.name as CityName
+                ).economy.production.toString()
+            );
+            // getAt(3) returns the consupmtion text
+            (container.getAt(3) as GameObjects.Text).setText(
+                getNode(
+                    this.graph,
+                    container.name as CityName
+                ).economy.consumption.toString()
+            );
+        });
+    }
+
+    private addPlayerInfo() {
+        this.add.image(PLAYER_INFO_X, 40, "backpack");
+        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", textStyle);
     }
 
     private addBackgroundMusic() {
@@ -78,12 +100,40 @@ export class MainScene extends Scene {
 
     private addCities() {
         this.containerArray = [];
+        const textToIconOffset = -25;
         Object.values(CityName).forEach(xName => {
             const name = xName as CityName;
-            const cityButton = this.add.image(0, 0, name);
+            const button = this.add.image(0, 0, name);
+            const stock = this.add.image(0, -60, "stock");
+            const stockText = this.add.text(
+                40,
+                -60 + textToIconOffset,
+                "",
+                textStyle
+            );
+            const production = this.add.image(0, 60, "production");
+            const prodText = this.add.text(
+                40,
+                60 + textToIconOffset,
+                "",
+                textStyle
+            );
+            const consumption = this.add.image(130, 0, "consumption");
+            const consText = this.add.text(
+                170,
+                0 + textToIconOffset,
+                "",
+                textStyle
+            );
             const config = cityConfig[name];
             const container = this.add.container(config.x, config.y, [
-                cityButton,
+                button,
+                stockText,
+                prodText,
+                consText,
+                stock,
+                production,
+                consumption,
             ]);
             container.setName(name);
             this.containerArray.push(container);
