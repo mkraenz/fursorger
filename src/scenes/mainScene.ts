@@ -136,11 +136,16 @@ export class MainScene extends Scene {
                     this.player.store();
                 }
             });
+
             const minus = this.add
                 .image(-105, 30, "minus")
                 .setScale(0.5)
                 .setInteractive();
-
+            minus.on("pointerup", () => {
+                if (name === this.player.getLocationName()) {
+                    this.player.take();
+                }
+            });
             const config = cityConfig[name];
             const container = this.add.container(config.x, config.y, [
                 button,

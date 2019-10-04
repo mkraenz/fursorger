@@ -9,6 +9,13 @@ export class Player implements IPlayer {
         public stock = 3
     ) {}
 
+    public take(): void {
+        if (this.location.economy.stock > 0) {
+            this.stock += 1;
+            this.location.economy.stock -= 1;
+        }
+    }
+
     public store(): void {
         if (this.stock > 0) {
             this.stock -= 1;
