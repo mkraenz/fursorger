@@ -37,6 +37,8 @@ export class MainScene extends Scene {
             "consumption",
             "./assets/images/decreasing-bars64x64.png"
         );
+        this.load.image("plus", "./assets/images/plus64x64.png");
+        this.load.image("minus", "./assets/images/minus64x64.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -125,6 +127,25 @@ export class MainScene extends Scene {
                 "",
                 textStyle
             );
+            const plus = this.add
+                .image(-105, -30, "plus")
+                .setScale(0.5)
+                .setInteractive();
+            plus.on("pointerup", () => {
+                if (name === this.player.getLocationName()) {
+                    this.player.store();
+                }
+            });
+
+            const minus = this.add
+                .image(-105, 30, "minus")
+                .setScale(0.5)
+                .setInteractive();
+            minus.on("pointerup", () => {
+                if (name === this.player.getLocationName()) {
+                    this.player.take();
+                }
+            });
             const config = cityConfig[name];
             const container = this.add.container(config.x, config.y, [
                 button,
@@ -134,6 +155,8 @@ export class MainScene extends Scene {
                 stock,
                 production,
                 consumption,
+                plus,
+                minus,
             ]);
             container.setName(name);
             this.containerArray.push(container);

@@ -8,7 +8,10 @@ describe("Player", () => {
     it("constructs a new player", () => {
         const graph = new Graph();
 
-        const result = new Player(graph, { name: CityName.Athens });
+        const result = new Player(graph, {
+            name: CityName.Athens,
+            economy: { stock: 1 },
+        });
 
         expect(result).to.exist;
     });
