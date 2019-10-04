@@ -69,7 +69,7 @@ export class MainScene extends Scene {
                     container.name as CityName
                 ).economy.production.toString()
             );
-            // getAt(3) returns the consupmtion text
+            // getAt(3) returns the consumption text
             (container.getAt(3) as GameObjects.Text).setText(
                 getNode(
                     this.graph,
@@ -147,6 +147,7 @@ export class MainScene extends Scene {
             container.setInteractive();
             container.on("pointerup", () => {
                 if (
+                    // no edges between city and itself
                     this.graph.hasEdge(
                         this.player.getLocationName(),
                         container.name
@@ -156,7 +157,13 @@ export class MainScene extends Scene {
                         getNode(this.graph, container.name as CityName)
                     );
                     (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
-
+                    this.containerArray.forEach(cont => {
+                        const consumCity = getNode(
+                            this.graph,
+                            cont.name as CityName
+                        );
+                        consumCity.consume();
+                    });
                     this.containerArray.forEach((other, otherIndex) => {
                         if (!(index === otherIndex)) {
                             const otherImg = other.getAt(
