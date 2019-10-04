@@ -11,4 +11,8 @@ export class City implements ICity, ILocation {
             production: number;
         }
     ) {}
+
+    public consume() {
+        this.economy.stock -= this.economy.consumption;
+    }
 }
