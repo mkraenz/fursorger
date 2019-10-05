@@ -32,9 +32,8 @@ export class MainScene extends Scene {
         this.load.image("background", "./assets/images/background500x300.png");
         this.load.image("backpack", "./assets/images/backpack64x64.png");
         this.load.image("stock", "./assets/images/storage64x64.png");
-        this.load.image("production", "./assets/images/factory64x64.png");
         this.load.image(
-            "consumption",
+            "production",
             "./assets/images/decreasing-bars64x64.png"
         );
         this.load.audio("background", "./assets/sounds/bgm.mp3");
@@ -68,13 +67,6 @@ export class MainScene extends Scene {
                     this.graph,
                     container.name as CityName
                 ).economy.production.toString()
-            );
-            // getAt(3) returns the consumption text
-            (container.getAt(3) as GameObjects.Text).setText(
-                getNode(
-                    this.graph,
-                    container.name as CityName
-                ).economy.consumption.toString()
             );
         });
     }
@@ -118,22 +110,13 @@ export class MainScene extends Scene {
                 "",
                 textStyle
             );
-            const consumption = this.add.image(130, 0, "consumption");
-            const consText = this.add.text(
-                170,
-                0 + textToIconOffset,
-                "",
-                textStyle
-            );
             const config = cityConfig[name];
             const container = this.add.container(config.x, config.y, [
                 button,
                 stockText,
                 prodText,
-                consText,
                 stock,
                 production,
-                consumption,
             ]);
             container.setName(name);
             this.containerArray.push(container);
@@ -162,7 +145,7 @@ export class MainScene extends Scene {
                             this.graph,
                             cont.name as CityName
                         );
-                        consumCity.consume();
+                        consumCity.economize();
                     });
                     this.containerArray.forEach((other, otherIndex) => {
                         if (!(index === otherIndex)) {
