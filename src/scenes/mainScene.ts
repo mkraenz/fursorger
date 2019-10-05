@@ -189,6 +189,9 @@ export class MainScene extends Scene {
                             cont.name as CityName
                         );
                         consumCity.economize();
+                        if (consumCity.economy.stock < 0) {
+                            this.endScene();
+                        }
                     });
                     this.containerArray.forEach((other, otherIndex) => {
                         if (!(index === otherIndex)) {
@@ -218,5 +221,15 @@ export class MainScene extends Scene {
             });
             graphics.strokeLineShape(line);
         });
+    }
+
+    private endScene() {
+        this.add
+            .image(0, 0, "background")
+            .setOrigin(0)
+            .setScale(
+                (gameConfig.width as number) / 500,
+                (gameConfig.height as number) / 300
+            );
     }
 }
