@@ -11,6 +11,10 @@ export class City implements ICity, ILocation {
         }
     ) {}
 
+    public setFactory() {
+        this.economy.production += 1;
+    }
+
     public economize() {
         this.economy.stock += this.economy.production;
     }
