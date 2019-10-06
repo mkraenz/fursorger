@@ -7,12 +7,11 @@ export class City implements ICity, ILocation {
         public readonly name: CityName,
         public economy: {
             stock: number;
-            consumption: number;
             production: number;
         }
     ) {}
 
-    public consume() {
-        this.economy.stock -= this.economy.consumption;
+    public economize() {
+        this.economy.stock += this.economy.production;
     }
 }
