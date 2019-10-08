@@ -17,7 +17,8 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private containerArray!: GameObjects.Container[];
-    private playerInfo!: GameObjects.Text;
+    private playerStockInfo!: GameObjects.Text;
+    private playerTurnInfo!: GameObjects.Text;
 
     constructor() {
         super({
@@ -38,6 +39,7 @@ export class MainScene extends Scene {
         );
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
+        this.load.image("hourglass", "./assets/images/hourglass64x64.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -54,7 +56,8 @@ export class MainScene extends Scene {
     }
 
     public update() {
-        this.playerInfo.setText(this.player.stock.toString());
+        this.playerStockInfo.setText(this.player.stock.toString());
+        this.playerTurnInfo.setText(this.player.turn.toString());
         this.containerArray.forEach(container => {
             // getAt(1) returns the stock text
             (container.getAt(1) as GameObjects.Text).setText(
@@ -74,8 +77,25 @@ export class MainScene extends Scene {
     }
 
     private addPlayerInfo() {
-        this.add.image(PLAYER_INFO_X, 40, "backpack");
-        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", textStyle);
+        const IMAGE_TO_TEXT_OFFSET_Y = -25;
+        const IMAGE_TO_TEXT_OFFSET_X = 40;
+        const STOCK_Y = 40;
+        this.add.image(PLAYER_INFO_X, STOCK_Y, "backpack");
+        this.playerStockInfo = this.add.text(
+            PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
+            STOCK_Y + IMAGE_TO_TEXT_OFFSET_Y,
+            "",
+            textStyle
+        );
+
+        const TURN_Y = 120;
+        this.add.image(PLAYER_INFO_X, TURN_Y, "hourglass");
+        this.playerTurnInfo = this.add.text(
+            PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
+            TURN_Y + IMAGE_TO_TEXT_OFFSET_Y,
+            "",
+            textStyle
+        );
     }
 
     private addBackgroundMusic() {
