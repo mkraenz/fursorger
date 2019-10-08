@@ -39,7 +39,7 @@ export class MainScene extends Scene {
         );
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
-        this.load.svg("hourglass", "./assets/images/hourglass.svg");
+        this.load.image("hourglass", "./assets/images/hourglass64x64.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -77,20 +77,22 @@ export class MainScene extends Scene {
     }
 
     private addPlayerInfo() {
-        this.add.image(PLAYER_INFO_X, 40, "backpack");
+        const IMAGE_TO_TEXT_OFFSET_Y = -25;
+        const IMAGE_TO_TEXT_OFFSET_X = 40;
+        const STOCK_Y = 40;
+        this.add.image(PLAYER_INFO_X, STOCK_Y, "backpack");
         this.playerStockInfo = this.add.text(
-            PLAYER_INFO_X + 40,
-            15,
+            PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
+            STOCK_Y + IMAGE_TO_TEXT_OFFSET_Y,
             "",
             textStyle
         );
-        this.add
-            .image(0, 80, "hourglass")
-            .setScale(50 / 512)
-            .setOrigin(0.5);
+
+        const TURN_Y = 120;
+        this.add.image(PLAYER_INFO_X, TURN_Y, "hourglass");
         this.playerTurnInfo = this.add.text(
-            PLAYER_INFO_X + 40,
-            55,
+            PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
+            TURN_Y + IMAGE_TO_TEXT_OFFSET_Y,
             "",
             textStyle
         );
