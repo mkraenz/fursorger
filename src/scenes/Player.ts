@@ -6,7 +6,8 @@ export class Player implements IPlayer {
     constructor(
         private graph: Graph,
         private location: ILocation,
-        public stock = 3
+        public stock = 3,
+        public turn = 0
     ) {}
 
     public take(): void {
@@ -25,6 +26,7 @@ export class Player implements IPlayer {
 
     public setLocation(location: ILocation): void {
         this.location = location;
+        this.turn++;
     }
 
     public getLocation() {

@@ -17,7 +17,8 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private containerArray!: GameObjects.Container[];
-    private playerInfo!: GameObjects.Text;
+    private playerStockInfo!: GameObjects.Text;
+    private playerTurnInfo!: GameObjects.Text;
 
     constructor() {
         super({
@@ -38,6 +39,7 @@ export class MainScene extends Scene {
         );
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
+        this.load.svg("hourglass", "./assets/images/hourglass.svg");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -54,7 +56,8 @@ export class MainScene extends Scene {
     }
 
     public update() {
-        this.playerInfo.setText(this.player.stock.toString());
+        this.playerStockInfo.setText(this.player.stock.toString());
+        this.playerTurnInfo.setText(this.player.turn.toString());
         this.containerArray.forEach(container => {
             // getAt(1) returns the stock text
             (container.getAt(1) as GameObjects.Text).setText(
@@ -75,7 +78,22 @@ export class MainScene extends Scene {
 
     private addPlayerInfo() {
         this.add.image(PLAYER_INFO_X, 40, "backpack");
-        this.playerInfo = this.add.text(PLAYER_INFO_X + 40, 15, "", textStyle);
+        this.playerStockInfo = this.add.text(
+            PLAYER_INFO_X + 40,
+            15,
+            "",
+            textStyle
+        );
+        this.add
+            .image(0, 80, "hourglass")
+            .setScale(50 / 512)
+            .setOrigin(0.5);
+        this.playerTurnInfo = this.add.text(
+            PLAYER_INFO_X + 40,
+            55,
+            "",
+            textStyle
+        );
     }
 
     private addBackgroundMusic() {
