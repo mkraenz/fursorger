@@ -19,6 +19,7 @@ export class MainScene extends Scene {
     private containerArray!: GameObjects.Container[];
     private playerStockInfo!: GameObjects.Text;
     private playerTurnInfo!: GameObjects.Text;
+    private buildFactoryButton!: GameObjects.Image;
 
     constructor() {
         super({
@@ -40,6 +41,11 @@ export class MainScene extends Scene {
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
         this.load.image("hourglass", "./assets/images/hourglass64x64.png");
+        this.load.image(
+            "buildFactory",
+            "./assets/images/buildFactoryButton128x128.png"
+        );
+
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
@@ -58,6 +64,11 @@ export class MainScene extends Scene {
     public update() {
         this.playerStockInfo.setText(this.player.stock.toString());
         this.playerTurnInfo.setText(this.player.turn.toString());
+        this.updateBuildFactoryButton();
+        this.updateCityInfos();
+    }
+
+    private updateCityInfos() {
         this.containerArray.forEach(container => {
             // getAt(1) returns the stock text
             (container.getAt(1) as GameObjects.Text).setText(
@@ -74,6 +85,14 @@ export class MainScene extends Scene {
                 ).economy.production.toString()
             );
         });
+    }
+
+    private updateBuildFactoryButton() {
+        if (this.player.factories === 0) {
+            this.buildFactoryButton.setAlpha(0.5).disableInteractive();
+        } else {
+            this.buildFactoryButton.clearAlpha().setInteractive();
+        }
     }
 
     private addPlayerInfo() {
@@ -96,6 +115,19 @@ export class MainScene extends Scene {
             "",
             textStyle
         );
+
+        this.buildFactoryButton = this.add
+            .image(PLAYER_INFO_X, 220, "buildFactory")
+            .setScale(0.5);
+        this.buildFactoryButton.on("pointerup", () => {
+            this.handleBuildButtonClicked();
+        });
+    }
+
+    private handleBuildButtonClicked() {
+        const locationName = this.player.getLocationName();
+        getNode(this.graph, locationName).economy.production++;
+        this.player.factories--;
     }
 
     private addBackgroundMusic() {
