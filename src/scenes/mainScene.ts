@@ -1,6 +1,7 @@
 import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { BadEndScene } from "./badEndScene";
 import { cityConfig } from "./City.config";
 import { CityName } from "./CityName";
 import { getNode } from "./getNode";
@@ -224,6 +225,6 @@ export class MainScene extends Scene {
     }
 
     private endScene() {
-        this.scene.add("myScene", MainScene, true, { x: 400, y: 300 });
+        this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
     }
 }
