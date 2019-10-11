@@ -224,12 +224,6 @@ export class MainScene extends Scene {
     }
 
     private endScene() {
-        this.add
-            .image(0, 0, "background")
-            .setOrigin(0)
-            .setScale(
-                (gameConfig.width as number) / 500,
-                (gameConfig.height as number) / 300
-            );
+        this.scene.add("myScene", MainScene, true, { x: 400, y: 300 });
     }
 }
