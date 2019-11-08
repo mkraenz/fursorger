@@ -1,6 +1,7 @@
 import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { BadEndScene } from "./badEndScene";
 import { cityConfig } from "./City.config";
 import { CityName } from "./CityName";
 import { getNode } from "./getNode";
@@ -221,6 +222,9 @@ export class MainScene extends Scene {
                             cont.name as CityName
                         );
                         consumCity.economize();
+                        if (consumCity.economy.stock < 0) {
+                            this.endScene();
+                        }
                     });
                     this.containerArray.forEach((other, otherIndex) => {
                         if (!(index === otherIndex)) {
@@ -250,5 +254,9 @@ export class MainScene extends Scene {
             });
             graphics.strokeLineShape(line);
         });
+    }
+
+    private endScene() {
+        this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
     }
 }
