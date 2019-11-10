@@ -4,7 +4,8 @@ import { gameConfig } from "../game-config";
 import { BadEndScene } from "./badEndScene";
 import { cityConfig } from "./City.config";
 import { CityName } from "./CityName";
-import { getNode } from "./getNode";
+import { getAllCities, getNode } from "./getNode";
+import { GoodEndScene } from "./GoodEndScene";
 import { IPlayer } from "./IPlayer";
 import { LogicBuilder } from "./logicBuilder";
 
@@ -129,6 +130,19 @@ export class MainScene extends Scene {
         const locationName = this.player.getLocationName();
         getNode(this.graph, locationName).economy.production++;
         this.player.factories--;
+        if (this.isWin()) {
+            this.scene.add("GoodEndScene", GoodEndScene, true, {
+                x: 400,
+                y: 300,
+            });
+        }
+    }
+
+    private isWin() {
+        const endangeredCities = getAllCities(this.graph).filter(
+            city => city.economy.production < 0
+        );
+        return endangeredCities.length === 0;
     }
 
     private addBackgroundMusic() {
