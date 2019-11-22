@@ -13,4 +13,8 @@ export const cityConfig = {
         x: 150,
         y: 300,
     },
+    [CityName.Dublin]: {
+        x: 500,
+        y: 400,
+    },
 };
