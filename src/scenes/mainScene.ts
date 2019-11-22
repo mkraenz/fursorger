@@ -8,6 +8,7 @@ import { getAllCities, getNode } from "./getNode";
 import { GoodEndScene } from "./GoodEndScene";
 import { IPlayer } from "./IPlayer";
 import { LogicBuilder } from "./logicBuilder";
+import { TravelPathKey } from "./TravelPaths";
 
 const PLAYER_INFO_X = 680;
 
@@ -22,6 +23,7 @@ export class MainScene extends Scene {
     private playerStockInfo!: GameObjects.Text;
     private playerTurnInfo!: GameObjects.Text;
     private buildFactoryButton!: GameObjects.Image;
+    private level = 2;
 
     constructor() {
         super({
@@ -33,6 +35,7 @@ export class MainScene extends Scene {
         this.load.image("Athens", "./assets/images/athens3.png");
         this.load.image("Bern", "./assets/images/bern3.png");
         this.load.image("Cairo", "./assets/images/cairo3.png");
+        this.load.image("Dublin", "./assets/images/dublin1.png");
         this.load.image("background", "./assets/images/background500x300.png");
         this.load.image("backpack", "./assets/images/backpack64x64.png");
         this.load.image("stock", "./assets/images/storage64x64.png");
@@ -52,7 +55,8 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
-        const logicObjects = LogicBuilder.create();
+        const logicObjects = LogicBuilder.create((this
+            .level as unknown) as TravelPathKey);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
@@ -60,6 +64,7 @@ export class MainScene extends Scene {
         // draw edges first, so that cities are drawn on top
         this.drawEdges();
         this.addCities();
+        this.addLevelButton();
         this.addPlayerInfo();
     }
 
@@ -68,6 +73,15 @@ export class MainScene extends Scene {
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
+    }
+
+    private addLevelButton() {
+        const button = this.add
+            .text(50, 500, "Next Level", textStyle)
+            .setInteractive();
+        button.on("pointerup", () => {
+            this.toggleLevel();
+        });
     }
 
     private updateCityInfos() {
@@ -162,8 +176,8 @@ export class MainScene extends Scene {
     private addCities() {
         this.containerArray = [];
         const textToIconOffset = -25;
-        Object.values(CityName).forEach(xName => {
-            const name = xName as CityName;
+        getAllCities(this.graph).forEach(city => {
+            const name = city.name;
             const button = this.add.image(0, 0, name);
             const stock = this.add.image(0, -60, "stock");
             const stockText = this.add.text(
@@ -272,5 +286,10 @@ export class MainScene extends Scene {
 
     private endScene() {
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
+    }
+
+    private toggleLevel() {
+        this.level = (this.level % 2) + 1;
+        this.scene.restart();
     }
 }
