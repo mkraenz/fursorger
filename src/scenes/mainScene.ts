@@ -55,6 +55,11 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
+        // TODO #55 consider moving into title screen
+        document
+            .getElementById("files-input")
+            .addEventListener("change", handleFileSelect);
+
         const logicObjects = LogicBuilder.create((this
             .level as unknown) as TravelPathKey);
         this.player = logicObjects.player;
@@ -64,8 +69,10 @@ export class MainScene extends Scene {
         // draw edges first, so that cities are drawn on top
         this.drawEdges();
         this.addCities();
-        this.addLevelButton();
         this.addPlayerInfo();
+
+        this.addLevelButton();
+        this.addLoadLevelFromFileButton();
     }
 
     public update() {
@@ -81,6 +88,15 @@ export class MainScene extends Scene {
             .setInteractive();
         button.on("pointerup", () => {
             this.toggleLevel();
+        });
+    }
+
+    private addLoadLevelFromFileButton() {
+        const button = this.add
+            .text(400, 500, "Load Level File", textStyle)
+            .setInteractive();
+        button.on("pointerup", () => {
+            document.getElementById("files-input").click();
         });
     }
 
@@ -292,4 +308,22 @@ export class MainScene extends Scene {
         this.level = (this.level % 2) + 1;
         this.scene.restart();
     }
+}
+
+function handleFileSelect(event) {
+    const files = event.target.files; // FileList object
+    const reader = new FileReader();
+    // Closure to capture the file information.
+    reader.onload = file => {
+        try {
+            const json = JSON.parse(file.target.result as string);
+            // tslint:disable-next-line: no-console
+            console.log(json);
+        } catch (err) {
+            alert(
+                `Error when trying to parse file as JSON. Original error: ${err.message}`
+            );
+        }
+    };
+    reader.readAsText(files[0]);
 }
