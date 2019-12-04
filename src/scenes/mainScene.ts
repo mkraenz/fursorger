@@ -2,7 +2,6 @@ import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
 import { BadEndScene } from "./badEndScene";
-import { CityName } from "./CityName";
 import { getAllCities, getNode } from "./getNode";
 import { GoodEndScene } from "./GoodEndScene";
 import { ICity } from "./ILevel";
@@ -104,16 +103,13 @@ export class MainScene extends Scene {
         this.containerArray.forEach(container => {
             // getAt(1) returns the stock text
             (container.getAt(1) as GameObjects.Text).setText(
-                getNode(
-                    this.graph,
-                    container.name as CityName
-                ).economy.stock.toString()
+                getNode(this.graph, container.name).economy.stock.toString()
             );
             // getAt(2) returns the production text
             (container.getAt(2) as GameObjects.Text).setText(
                 getNode(
                     this.graph,
-                    container.name as CityName
+                    container.name
                 ).economy.production.toString()
             );
         });
@@ -257,14 +253,11 @@ export class MainScene extends Scene {
                     )
                 ) {
                     this.player.setLocation(
-                        getNode(this.graph, container.name as CityName)
+                        getNode(this.graph, container.name)
                     );
                     (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
                     this.containerArray.forEach(cont => {
-                        const consumCity = getNode(
-                            this.graph,
-                            cont.name as CityName
-                        );
+                        const consumCity = getNode(this.graph, cont.name);
                         consumCity.economize();
                         if (consumCity.economy.stock < 0) {
                             this.endScene();
