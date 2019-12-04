@@ -1,7 +1,5 @@
 import { ILevel } from "./ILevel";
 
-// export type TravelPathKey = keyof typeof TRAVEL_PATHS;
-
 const level1: ILevel = {
     cities: [
         { name: "Athens", stock: 6, production: -1, x: 150, y: 100 },

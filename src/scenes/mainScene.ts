@@ -298,7 +298,8 @@ export class MainScene extends Scene {
     }
 
     private toggleLevel() {
-        this.level = (this.level % 2) + 1;
+        // TODO #55
+        this.level = (this.level % levelArray.length) + 1;
         this.scene.restart();
     }
 }
@@ -312,6 +313,8 @@ function handleFileSelect(event) {
             const json = JSON.parse(file.target.result as string);
             // tslint:disable-next-line: no-console
             console.log(json);
+            // TODO #55 maybe not ideal to modify the levelArray from unintuitive, hidden position in code
+            levelArray.push(json);
         } catch (err) {
             alert(
                 `Error when trying to parse file as JSON. Original error: ${err.message}`
