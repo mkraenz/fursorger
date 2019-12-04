@@ -1,21 +1,26 @@
 import { Graph } from "graphlib";
 import { City } from "./City";
-import { CityName } from "./CityName";
-import { getCities } from "./getCities";
 import { IMainSceneParams } from "./IMainSceneParams";
+import { levelArray } from "./levels";
 import { Player } from "./Player";
-import { TRAVEL_PATHS, TravelPathKey } from "./TravelPaths";
 
 export class LogicBuilder {
-    public static create(level: TravelPathKey): IMainSceneParams {
+    // TODO #55: make data type for level
+    public static create(level: number): IMainSceneParams {
         const graph = new Graph({ directed: false });
-        getCities(level).forEach(name => {
-            graph.setNode(name, new City(name, { stock: 6, production: -1 }));
+        levelArray[level - 1].cities.forEach(city => {
+            graph.setNode(
+                city.name,
+                new City(city.name, {
+                    stock: city.stock,
+                    production: city.production,
+                })
+            );
         });
-        TRAVEL_PATHS[level].forEach(edge => {
+        levelArray[level - 1].travelPaths.forEach(edge => {
             graph.setEdge(edge.first, edge.second);
         });
-        const player = new Player(graph, graph.node(CityName.Athens));
+        const player = new Player(graph, graph.node("Athens"));
         return {
             graph,
             player,

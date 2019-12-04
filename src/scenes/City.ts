@@ -1,10 +1,9 @@
-import { CityName } from "./CityName";
 import { ICity } from "./ICity";
 import { ILocation } from "./ILocation";
 
 export class City implements ICity, ILocation {
     constructor(
-        public readonly name: CityName,
+        public readonly name: string,
         public economy: {
             stock: number;
             production: number;

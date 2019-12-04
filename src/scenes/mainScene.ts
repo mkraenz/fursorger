@@ -2,13 +2,13 @@ import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
 import { BadEndScene } from "./badEndScene";
-import { cityConfig } from "./City.config";
 import { CityName } from "./CityName";
 import { getAllCities, getNode } from "./getNode";
 import { GoodEndScene } from "./GoodEndScene";
+import { ICity } from "./ILevel";
 import { IPlayer } from "./IPlayer";
+import { levelArray } from "./levels";
 import { LogicBuilder } from "./logicBuilder";
-import { TravelPathKey } from "./TravelPaths";
 
 const PLAYER_INFO_X = 680;
 
@@ -60,15 +60,15 @@ export class MainScene extends Scene {
             .getElementById("files-input")
             .addEventListener("change", handleFileSelect);
 
-        const logicObjects = LogicBuilder.create((this
-            .level as unknown) as TravelPathKey);
+        const cityData = levelArray[this.level - 1].cities;
+        const logicObjects = LogicBuilder.create(this.level);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
         // draw edges first, so that cities are drawn on top
-        this.drawEdges();
-        this.addCities();
+        this.drawEdges(cityData);
+        this.addCities(cityData);
         this.addPlayerInfo();
 
         this.addLevelButton();
@@ -189,10 +189,10 @@ export class MainScene extends Scene {
             );
     }
 
-    private addCities() {
+    private addCities(cities: ICity[]) {
         this.containerArray = [];
         const textToIconOffset = -25;
-        getAllCities(this.graph).forEach(city => {
+        cities.forEach(city => {
             const name = city.name;
             const button = this.add.image(0, 0, name);
             const stock = this.add.image(0, -60, "stock");
@@ -228,8 +228,8 @@ export class MainScene extends Scene {
                     this.player.take();
                 }
             });
-            const config = cityConfig[name];
-            const container = this.add.container(config.x, config.y, [
+
+            const container = this.add.container(city.x, city.y, [
                 button,
                 stockText,
                 prodText,
@@ -283,10 +283,10 @@ export class MainScene extends Scene {
         });
     }
 
-    private drawEdges() {
+    private drawEdges(cities: ICity[]) {
         this.graph.edges().forEach(edge => {
-            const nodeV = cityConfig[edge.v as CityName];
-            const nodeW = cityConfig[edge.w as CityName];
+            const nodeV = cities.find(city => edge.v === city.name);
+            const nodeW = cities.find(city => edge.w === city.name);
             const line = new Phaser.Geom.Line(
                 nodeV.x,
                 nodeV.y,
