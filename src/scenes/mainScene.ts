@@ -10,6 +10,9 @@ import { levelArray } from "./levels";
 import { LogicBuilder } from "./logicBuilder";
 
 const PLAYER_INFO_X = 680;
+const CITY_NAME_X = -70;
+const CITY_NAME_Y = -25;
+const textToIconOffset = -25;
 
 const textStyle = {
     font: "48px Arial",
@@ -191,25 +194,21 @@ export class MainScene extends Scene {
 
     private addCities(cities: ICity[]) {
         this.containerArray = [];
-        const textToIconOffset = -25;
         cities.forEach(city => {
             const name = city.name;
-            const button = this.add.image(0, 0, "rectangleButton");
-            const nameText = this.add.text(-70, -25, name, nameTextStyle);
-            const stock = this.add.image(0, -60, "stock");
-            const stockText = this.add.text(
-                40,
-                -60 + textToIconOffset,
-                "",
-                textStyle
+            const nameText = this.add.text(
+                CITY_NAME_X,
+                CITY_NAME_Y,
+                name,
+                nameTextStyle
             );
-            const production = this.add.image(0, 60, "production");
-            const prodText = this.add.text(
-                40,
-                60 + textToIconOffset,
-                "",
-                textStyle
-            );
+            const button = this.addFittingButton(nameText);
+            const {
+                stockText,
+                prodText,
+                stock,
+                production,
+            } = this.addEconomyInfo(nameText);
             const plus = this.add
                 .image(-105, -30, "plus")
                 .setScale(0.5)
@@ -280,6 +279,32 @@ export class MainScene extends Scene {
                 }
             });
         });
+    }
+
+    private addEconomyInfo(nameText: GameObjects.Text) {
+        const midOfButton = nameText.width / 2 + nameText.x;
+        const stock = this.add.image(midOfButton, -60, "stock");
+        const stockText = this.add.text(
+            midOfButton + 40,
+            -60 + textToIconOffset,
+            "",
+            textStyle
+        );
+        const production = this.add.image(midOfButton, 60, "production");
+        const prodText = this.add.text(
+            midOfButton + 40,
+            60 + textToIconOffset,
+            "",
+            textStyle
+        );
+        return { stockText, prodText, stock, production };
+    }
+
+    private addFittingButton(nameText: GameObjects.Text) {
+        const button = this.add.image(0, 0, "rectangleButton");
+        button.scaleX = (nameText.width + 20) / 160;
+        button.x += (nameText.width - button.width) / 2 + 10;
+        return button;
     }
 
     private drawEdges(cities: ICity[]) {
