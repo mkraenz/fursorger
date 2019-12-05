@@ -15,6 +15,10 @@ const textStyle = {
     font: "48px Arial",
     fill: "#000000",
 };
+const nameTextStyle = {
+    font: "40px Arial",
+    fill: "#000000",
+};
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
@@ -31,10 +35,10 @@ export class MainScene extends Scene {
     }
 
     public preload(): void {
-        this.load.image("Athens", "./assets/images/athens3.png");
-        this.load.image("Bern", "./assets/images/bern3.png");
-        this.load.image("Cairo", "./assets/images/cairo3.png");
-        this.load.image("Dublin", "./assets/images/dublin1.png");
+        this.load.image(
+            "rectangleButton",
+            " ./assets/images/blank_rectangle60x160.png"
+        );
         this.load.image("background", "./assets/images/background500x300.png");
         this.load.image("backpack", "./assets/images/backpack64x64.png");
         this.load.image("stock", "./assets/images/storage64x64.png");
@@ -190,7 +194,8 @@ export class MainScene extends Scene {
         const textToIconOffset = -25;
         cities.forEach(city => {
             const name = city.name;
-            const button = this.add.image(0, 0, name);
+            const button = this.add.image(0, 0, "rectangleButton");
+            const nameText = this.add.text(-70, -25, name, nameTextStyle);
             const stock = this.add.image(0, -60, "stock");
             const stockText = this.add.text(
                 40,
@@ -233,6 +238,7 @@ export class MainScene extends Scene {
                 production,
                 plus,
                 minus,
+                nameText,
             ]);
             container.setName(name);
             this.containerArray.push(container);
