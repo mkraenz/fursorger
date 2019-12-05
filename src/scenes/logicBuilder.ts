@@ -20,7 +20,10 @@ export class LogicBuilder {
         levelArray[level - 1].travelPaths.forEach(edge => {
             graph.setEdge(edge.first, edge.second);
         });
-        const player = new Player(graph, graph.node("Athens"));
+        const player = new Player(
+            graph,
+            graph.node(levelArray[level - 1].cities[0].name)
+        );
         return {
             graph,
             player,
