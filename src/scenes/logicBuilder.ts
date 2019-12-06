@@ -5,7 +5,6 @@ import { IMainSceneParams } from "./IMainSceneParams";
 import { Player } from "./Player";
 
 export class LogicBuilder {
-    // TODO #55: make data type for level
     public static create(level: ILevel): IMainSceneParams {
         const graph = new Graph({ directed: false });
         level.cities.forEach(city => {

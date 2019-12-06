@@ -2,7 +2,6 @@ sudo: false
 language: node_js
 node_js:
   - "11"
-  - "8"
 
 services:
   - docker
@@ -33,14 +32,12 @@ deploy:
     skip_cleanup: true
     on:
       all_branches: true
-      condition: ${TRAVIS_NODE_VERSION} = "11"
   - provider: pages
     github_token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
     keep_history: true
     skip_cleanup: true
     on:
       branch: master
-      condition: ${TRAVIS_NODE_VERSION} = "11"
 after_deploy:
   - ./deployment/push-to-docker-hub.sh "${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}"
   - if [ ${TRAVIS_BRANCH} == "master" ]; then ./deployment/push-to-docker-hub.sh 'latest'; fi
