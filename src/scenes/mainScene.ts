@@ -2,18 +2,24 @@ import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
 import { BadEndScene } from "./badEndScene";
-import { cityConfig } from "./City.config";
-import { CityName } from "./CityName";
 import { getAllCities, getNode } from "./getNode";
 import { GoodEndScene } from "./GoodEndScene";
+import { ICity } from "./ILevel";
 import { IPlayer } from "./IPlayer";
+import { levelArray } from "./levels";
 import { LogicBuilder } from "./logicBuilder";
-import { TravelPathKey } from "./TravelPaths";
 
 const PLAYER_INFO_X = 680;
+const CITY_NAME_X = -70;
+const CITY_NAME_Y = -25;
+const textToIconOffset = -25;
 
 const textStyle = {
     font: "48px Arial",
+    fill: "#000000",
+};
+const nameTextStyle = {
+    font: "40px Arial",
     fill: "#000000",
 };
 export class MainScene extends Scene {
@@ -32,10 +38,10 @@ export class MainScene extends Scene {
     }
 
     public preload(): void {
-        this.load.image("Athens", "./assets/images/athens3.png");
-        this.load.image("Bern", "./assets/images/bern3.png");
-        this.load.image("Cairo", "./assets/images/cairo3.png");
-        this.load.image("Dublin", "./assets/images/dublin1.png");
+        this.load.image(
+            "rectangleButton",
+            " ./assets/images/blank_rectangle60x160.png"
+        );
         this.load.image("background", "./assets/images/background500x300.png");
         this.load.image("backpack", "./assets/images/backpack64x64.png");
         this.load.image("stock", "./assets/images/storage64x64.png");
@@ -55,17 +61,24 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
-        const logicObjects = LogicBuilder.create((this
-            .level as unknown) as TravelPathKey);
+        // TODO #55 consider moving into title screen
+        document
+            .getElementById("files-input")
+            .addEventListener("change", handleFileSelect);
+
+        const cityData = levelArray[this.level - 1].cities;
+        const logicObjects = LogicBuilder.create(levelArray[this.level - 1]);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
         // draw edges first, so that cities are drawn on top
-        this.drawEdges();
-        this.addCities();
-        this.addLevelButton();
+        this.drawEdges(cityData);
+        this.addCities(cityData);
         this.addPlayerInfo();
+
+        this.addLevelButton();
+        this.addLoadLevelFromFileButton();
     }
 
     public update() {
@@ -84,20 +97,26 @@ export class MainScene extends Scene {
         });
     }
 
+    private addLoadLevelFromFileButton() {
+        const button = this.add
+            .text(400, 500, "Load Level File", textStyle)
+            .setInteractive();
+        button.on("pointerup", () => {
+            document.getElementById("files-input").click();
+        });
+    }
+
     private updateCityInfos() {
         this.containerArray.forEach(container => {
             // getAt(1) returns the stock text
             (container.getAt(1) as GameObjects.Text).setText(
-                getNode(
-                    this.graph,
-                    container.name as CityName
-                ).economy.stock.toString()
+                getNode(this.graph, container.name).economy.stock.toString()
             );
             // getAt(2) returns the production text
             (container.getAt(2) as GameObjects.Text).setText(
                 getNode(
                     this.graph,
-                    container.name as CityName
+                    container.name
                 ).economy.production.toString()
             );
         });
@@ -173,26 +192,23 @@ export class MainScene extends Scene {
             );
     }
 
-    private addCities() {
+    private addCities(cities: ICity[]) {
         this.containerArray = [];
-        const textToIconOffset = -25;
-        getAllCities(this.graph).forEach(city => {
+        cities.forEach(city => {
             const name = city.name;
-            const button = this.add.image(0, 0, name);
-            const stock = this.add.image(0, -60, "stock");
-            const stockText = this.add.text(
-                40,
-                -60 + textToIconOffset,
-                "",
-                textStyle
+            const nameText = this.add.text(
+                CITY_NAME_X,
+                CITY_NAME_Y,
+                name,
+                nameTextStyle
             );
-            const production = this.add.image(0, 60, "production");
-            const prodText = this.add.text(
-                40,
-                60 + textToIconOffset,
-                "",
-                textStyle
-            );
+            const button = this.addFittingButton(nameText);
+            const {
+                stockText,
+                prodText,
+                stock,
+                production,
+            } = this.addEconomyInfo(nameText);
             const plus = this.add
                 .image(-105, -30, "plus")
                 .setScale(0.5)
@@ -212,8 +228,8 @@ export class MainScene extends Scene {
                     this.player.take();
                 }
             });
-            const config = cityConfig[name];
-            const container = this.add.container(config.x, config.y, [
+
+            const container = this.add.container(city.x, city.y, [
                 button,
                 stockText,
                 prodText,
@@ -221,6 +237,7 @@ export class MainScene extends Scene {
                 production,
                 plus,
                 minus,
+                nameText,
             ]);
             container.setName(name);
             this.containerArray.push(container);
@@ -241,14 +258,11 @@ export class MainScene extends Scene {
                     )
                 ) {
                     this.player.setLocation(
-                        getNode(this.graph, container.name as CityName)
+                        getNode(this.graph, container.name)
                     );
                     (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
                     this.containerArray.forEach(cont => {
-                        const consumCity = getNode(
-                            this.graph,
-                            cont.name as CityName
-                        );
+                        const consumCity = getNode(this.graph, cont.name);
                         consumCity.economize();
                         if (consumCity.economy.stock < 0) {
                             this.endScene();
@@ -267,10 +281,36 @@ export class MainScene extends Scene {
         });
     }
 
-    private drawEdges() {
+    private addEconomyInfo(nameText: GameObjects.Text) {
+        const midOfButton = nameText.width / 2 + nameText.x;
+        const stock = this.add.image(midOfButton, -60, "stock");
+        const stockText = this.add.text(
+            midOfButton + 40,
+            -60 + textToIconOffset,
+            "",
+            textStyle
+        );
+        const production = this.add.image(midOfButton, 60, "production");
+        const prodText = this.add.text(
+            midOfButton + 40,
+            60 + textToIconOffset,
+            "",
+            textStyle
+        );
+        return { stockText, prodText, stock, production };
+    }
+
+    private addFittingButton(nameText: GameObjects.Text) {
+        const button = this.add.image(0, 0, "rectangleButton");
+        button.scaleX = (nameText.width + 20) / 160;
+        button.x += (nameText.width - button.width) / 2 + 10;
+        return button;
+    }
+
+    private drawEdges(cities: ICity[]) {
         this.graph.edges().forEach(edge => {
-            const nodeV = cityConfig[edge.v as CityName];
-            const nodeW = cityConfig[edge.w as CityName];
+            const nodeV = cities.find(city => edge.v === city.name);
+            const nodeW = cities.find(city => edge.w === city.name);
             const line = new Phaser.Geom.Line(
                 nodeV.x,
                 nodeV.y,
@@ -289,7 +329,28 @@ export class MainScene extends Scene {
     }
 
     private toggleLevel() {
-        this.level = (this.level % 2) + 1;
+        // TODO #55
+        this.level = (this.level % levelArray.length) + 1;
         this.scene.restart();
     }
+}
+
+function handleFileSelect(event) {
+    const files = event.target.files; // FileList object
+    const reader = new FileReader();
+    // Closure to capture the file information.
+    reader.onload = file => {
+        try {
+            const json = JSON.parse(file.target.result as string);
+            // tslint:disable-next-line: no-console
+            console.log(json);
+            // TODO #55 maybe not ideal to modify the levelArray from unintuitive, hidden position in code
+            levelArray.push(json);
+        } catch (err) {
+            alert(
+                `Error when trying to parse file as JSON. Original error: ${err.message}`
+            );
+        }
+    };
+    reader.readAsText(files[0]);
 }

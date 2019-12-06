@@ -1,7 +1,6 @@
 // tslint:disable: no-unused-expression
 import { expect } from "chai";
 import { Graph } from "graphlib";
-import { CityName } from "./CityName";
 import { Player } from "./Player";
 
 describe("Player", () => {
@@ -9,7 +8,7 @@ describe("Player", () => {
         const graph = new Graph();
 
         const result = new Player(graph, {
-            name: CityName.Athens,
+            name: "Athens",
             economy: { stock: 1 },
         });
 

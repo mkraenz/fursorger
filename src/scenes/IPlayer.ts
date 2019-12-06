@@ -1,4 +1,3 @@
-import { CityName } from "./CityName";
 import { ILocation } from "./ILocation";
 
 export interface IPlayer {
@@ -8,6 +7,6 @@ export interface IPlayer {
     take(): void;
     store(): void;
     getLocation(): ILocation;
-    getLocationName(): CityName;
+    getLocationName(): string;
     setLocation(location: ILocation): void;
 }
