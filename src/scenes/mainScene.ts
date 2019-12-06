@@ -64,7 +64,7 @@ export class MainScene extends Scene {
         // TODO #55 consider moving into title screen
         document
             .getElementById("files-input")
-            .addEventListener("change", handleFileSelect);
+            .addEventListener("change", event => this.handleFileSelect(event));
 
         const cityData = levelArray[this.level - 1].cities;
         const logicObjects = LogicBuilder.create(levelArray[this.level - 1]);
@@ -86,6 +86,12 @@ export class MainScene extends Scene {
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
+    }
+
+    private handleFileSelect(event: any) {
+        handleFileSelect(event, () => {
+            this.toggleLevel(levelArray.length);
+        });
     }
 
     private addLevelButton() {
@@ -328,14 +334,13 @@ export class MainScene extends Scene {
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
     }
 
-    private toggleLevel() {
-        // TODO #55
-        this.level = (this.level % levelArray.length) + 1;
+    private toggleLevel(selectedLevel?: number) {
+        this.level = selectedLevel || (this.level % levelArray.length) + 1;
         this.scene.restart();
     }
 }
 
-function handleFileSelect(event) {
+function handleFileSelect(event: any, cb: () => void) {
     const files = event.target.files; // FileList object
     const reader = new FileReader();
     // Closure to capture the file information.
@@ -346,6 +351,7 @@ function handleFileSelect(event) {
             console.log(json);
             // TODO #55 maybe not ideal to modify the levelArray from unintuitive, hidden position in code
             levelArray.push(json);
+            cb();
         } catch (err) {
             alert(
                 `Error when trying to parse file as JSON. Original error: ${err.message}`
