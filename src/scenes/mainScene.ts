@@ -67,7 +67,7 @@ export class MainScene extends Scene {
             .addEventListener("change", handleFileSelect);
 
         const cityData = levelArray[this.level - 1].cities;
-        const logicObjects = LogicBuilder.create(this.level);
+        const logicObjects = LogicBuilder.create(levelArray[this.level - 1]);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();

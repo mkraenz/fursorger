@@ -3,7 +3,7 @@ import { ILevel } from "./ILevel";
 const level1: ILevel = {
     cities: [
         { name: "Athens", stock: 6, production: -1, x: 150, y: 100 },
-        { name: "Bern", stock: 6, production: -1, x: 500, y: 200 },
+        { name: "Bern", stock: 9, production: -2, x: 500, y: 200 },
         { name: "Cairo", stock: 6, production: -1, x: 150, y: 300 },
     ],
     travelPaths: [
