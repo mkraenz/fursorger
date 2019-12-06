@@ -1,9 +1,6 @@
 import { Scene } from "phaser";
 import { gameConfig } from "../game-config";
-const textStyle = {
-    font: "48px Arial",
-    fill: "#000000",
-};
+
 export class BadEndScene extends Scene {
     constructor() {
         super({
