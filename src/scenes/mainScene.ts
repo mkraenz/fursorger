@@ -30,6 +30,7 @@ export class MainScene extends Scene {
     private playerTurnInfo!: GameObjects.Text;
     private buildFactoryButton!: GameObjects.Image;
     private level = 2;
+    private travelPathLines!: GameObjects.Graphics;
 
     constructor() {
         super({
@@ -67,6 +68,9 @@ export class MainScene extends Scene {
             .addEventListener("change", event => this.handleFileSelect(event));
 
         const cityData = levelArray[this.level - 1].cities;
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: 4, color: 0x0 },
+        });
         const logicObjects = LogicBuilder.create(levelArray[this.level - 1]);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
@@ -76,7 +80,6 @@ export class MainScene extends Scene {
         this.drawEdges(cityData);
         this.addCities(cityData);
         this.addPlayerInfo();
-
         this.addLevelButton();
         this.addLoadLevelFromFileButton();
     }
@@ -86,6 +89,39 @@ export class MainScene extends Scene {
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
+    }
+
+    public defineContainerDrag(container: GameObjects.Container) {
+        this.input.setDraggable(container);
+        this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+            this.updateEdges(this.containerArray);
+            // TODO: edges behind container
+            // TODO: no turn advance when dragging
+        });
+    }
+
+    private updateEdges(containerArray: GameObjects.Container[]) {
+        this.travelPathLines.clear();
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: 4, color: 0x0 },
+        });
+        this.graph.edges().forEach(edge => {
+            const nodeV = containerArray.find(
+                container => edge.v === container.name
+            );
+            const nodeW = containerArray.find(
+                container => edge.w === container.name
+            );
+            const line = new Phaser.Geom.Line(
+                nodeV.x,
+                nodeV.y,
+                nodeW.x,
+                nodeW.y
+            );
+            this.travelPathLines.strokeLineShape(line);
+        });
     }
 
     private handleFileSelect(event: any) {
@@ -249,41 +285,42 @@ export class MainScene extends Scene {
             this.containerArray.push(container);
         });
         this.containerArray.forEach(container => {
-            const index = this.containerArray.indexOf(container);
             container.setSize(170, 60);
             if (container.name === this.player.getLocationName()) {
                 (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
             }
-            container.setInteractive();
-            container.on("pointerup", () => {
-                if (
-                    // no edges between city and itself
-                    this.graph.hasEdge(
-                        this.player.getLocationName(),
-                        container.name
-                    )
-                ) {
-                    this.player.setLocation(
-                        getNode(this.graph, container.name)
-                    );
-                    (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
-                    this.containerArray.forEach(cont => {
-                        const consumCity = getNode(this.graph, cont.name);
-                        consumCity.economize();
-                        if (consumCity.economy.stock < 0) {
-                            this.endScene();
-                        }
-                    });
-                    this.containerArray.forEach((other, otherIndex) => {
-                        if (!(index === otherIndex)) {
-                            const otherImg = other.getAt(
-                                0
-                            ) as GameObjects.Image;
-                            otherImg.clearTint();
-                        }
-                    });
-                }
-            });
+            this.defineContainerClick(container);
+            this.defineContainerDrag(container);
+        });
+    }
+
+    private defineContainerClick(container: GameObjects.Container) {
+        const index = this.containerArray.indexOf(container);
+        container.setInteractive();
+        container.on("pointerup", () => {
+            if (
+                // no edges between city and itself
+                this.graph.hasEdge(
+                    this.player.getLocationName(),
+                    container.name
+                )
+            ) {
+                this.player.setLocation(getNode(this.graph, container.name));
+                (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
+                this.containerArray.forEach(cont => {
+                    const consumCity = getNode(this.graph, cont.name);
+                    consumCity.economize();
+                    if (consumCity.economy.stock < 0) {
+                        this.endScene();
+                    }
+                });
+                this.containerArray.forEach((other, otherIndex) => {
+                    if (!(index === otherIndex)) {
+                        const otherImg = other.getAt(0) as GameObjects.Image;
+                        otherImg.clearTint();
+                    }
+                });
+            }
         });
     }
 
@@ -314,6 +351,9 @@ export class MainScene extends Scene {
     }
 
     private drawEdges(cities: ICity[]) {
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: 4, color: 0x0 },
+        });
         this.graph.edges().forEach(edge => {
             const nodeV = cities.find(city => edge.v === city.name);
             const nodeW = cities.find(city => edge.w === city.name);
@@ -323,10 +363,7 @@ export class MainScene extends Scene {
                 nodeW.x,
                 nodeW.y
             );
-            const graphics = this.add.graphics({
-                lineStyle: { width: 4, color: 0x0 },
-            });
-            graphics.strokeLineShape(line);
+            this.travelPathLines.strokeLineShape(line);
         });
     }
 
