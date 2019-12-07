@@ -97,8 +97,11 @@ export class MainScene extends Scene {
             gameObject.x = dragX;
             gameObject.y = dragY;
             this.updateEdges(this.containerArray);
-            // TODO: edges behind container
-            // TODO: no turn advance when dragging
+            // to prevent turn advance after dragging
+            container.off("pointerup");
+            container.on("pointerdown", () =>
+                this.defineContainerClick(container)
+            );
         });
     }
 
