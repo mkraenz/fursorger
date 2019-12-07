@@ -281,6 +281,7 @@ export class MainScene extends Scene {
                 minus,
                 nameText,
             ]);
+            container.setDepth(1);
             container.setName(name);
             this.containerArray.push(container);
         });
