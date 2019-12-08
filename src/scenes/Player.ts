@@ -6,14 +6,11 @@ export class Player implements IPlayer {
     constructor(
         private graph: Graph,
         private location: ILocation,
-        private stock: number,
+        // tslint:disable-next-line:variable-name
+        public stock: number,
         public turn = 0,
         public factories = 0
     ) {}
-
-    public getStock(): number {
-        return this.stock;
-    }
 
     public take(): void {
         if (this.location.economy.stock > 0) {

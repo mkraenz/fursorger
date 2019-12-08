@@ -85,7 +85,7 @@ export class MainScene extends Scene {
     }
 
     public update() {
-        this.playerStockInfo.setText(this.player.getStock().toString());
+        this.playerStockInfo.setText(this.player.stock.toString());
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
