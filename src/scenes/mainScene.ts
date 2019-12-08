@@ -89,9 +89,10 @@ export class MainScene extends Scene {
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
+        this.updateVisibility();
     }
 
-    public defineContainerDrag(container: GameObjects.Container) {
+    private defineContainerDrag(container: GameObjects.Container) {
         this.input.setDraggable(container);
         this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
             gameObject.x = dragX;
@@ -101,6 +102,17 @@ export class MainScene extends Scene {
             container.off("pointerup");
             container.on("pointerdown", () =>
                 this.defineContainerClick(container)
+            );
+        });
+    }
+
+    private updateVisibility() {
+        this.containerArray.forEach(container => {
+            (container.getAt(5) as GameObjects.Image).setVisible(
+                container.name === this.player.getLocationName()
+            );
+            (container.getAt(6) as GameObjects.Image).setVisible(
+                container.name === this.player.getLocationName()
             );
         });
     }
