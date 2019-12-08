@@ -157,13 +157,21 @@ export class MainScene extends Scene {
             (container.getAt(1) as GameObjects.Text).setText(
                 getNode(this.graph, container.name).economy.stock.toString()
             );
+            const production = getNode(this.graph, container.name).economy
+                .production;
             // getAt(2) returns the production text
-            (container.getAt(2) as GameObjects.Text).setText(
-                getNode(
-                    this.graph,
-                    container.name
-                ).economy.production.toString()
-            );
+            const productionText = (container.getAt(
+                2
+            ) as GameObjects.Text).setText(production.toString());
+            if (production < 0) {
+                productionText.setColor("#f80606");
+            }
+            if (production > 0) {
+                productionText.setColor("#0db80b");
+            }
+            if (production === 0) {
+                productionText.setColor("#000000");
+            }
         });
     }
 
