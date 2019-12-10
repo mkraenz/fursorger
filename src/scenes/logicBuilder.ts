@@ -19,7 +19,11 @@ export class LogicBuilder {
         level.travelPaths.forEach(edge => {
             graph.setEdge(edge.first, edge.second);
         });
-        const player = new Player(graph, graph.node(level.cities[0].name));
+        const player = new Player(
+            graph,
+            graph.node(level.cities[0].name),
+            level.playerStock
+        );
         return {
             graph,
             player,

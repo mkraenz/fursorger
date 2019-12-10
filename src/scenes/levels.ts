@@ -10,6 +10,7 @@ const level1: ILevel = {
         { first: "Athens", second: "Bern" },
         { first: "Bern", second: "Cairo" },
     ],
+    playerStock: 3,
 };
 const level2: ILevel = {
     cities: [
@@ -24,6 +25,7 @@ const level2: ILevel = {
         { first: "Bern", second: "Cairo" },
         { first: "Dublin", second: "Athens" },
     ],
+    playerStock: 3,
 };
 
 export const levelArray = [level1, level2];
