@@ -6,7 +6,7 @@ export class Player implements IPlayer {
     constructor(
         private graph: Graph,
         private location: ILocation,
-        public stock = 3,
+        public stock: number,
         public turn = 0,
         public factories = 0
     ) {}

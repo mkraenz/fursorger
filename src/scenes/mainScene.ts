@@ -30,6 +30,7 @@ export class MainScene extends Scene {
     private playerTurnInfo!: GameObjects.Text;
     private buildFactoryButton!: GameObjects.Image;
     private level = 2;
+    private travelPathLines!: GameObjects.Graphics;
 
     constructor() {
         super({
@@ -67,6 +68,9 @@ export class MainScene extends Scene {
             .addEventListener("change", event => this.handleFileSelect(event));
 
         const cityData = levelArray[this.level - 1].cities;
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: 4, color: 0x0 },
+        });
         const logicObjects = LogicBuilder.create(levelArray[this.level - 1]);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
@@ -76,7 +80,6 @@ export class MainScene extends Scene {
         this.drawEdges(cityData);
         this.addCities(cityData);
         this.addPlayerInfo();
-
         this.addLevelButton();
         this.addLoadLevelFromFileButton();
     }
@@ -86,6 +89,54 @@ export class MainScene extends Scene {
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
+        this.updateVisibilityTradeButtons();
+    }
+
+    private defineContainerDrag(container: GameObjects.Container) {
+        this.input.setDraggable(container);
+        this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+            this.updateEdges(this.containerArray);
+            // to prevent turn advance after dragging
+            container.off("pointerup");
+            container.on("pointerdown", () =>
+                this.defineContainerClick(container)
+            );
+        });
+    }
+
+    private updateVisibilityTradeButtons() {
+        this.containerArray.forEach(container => {
+            (container.getAt(5) as GameObjects.Image).setVisible(
+                container.name === this.player.getLocationName()
+            );
+            (container.getAt(6) as GameObjects.Image).setVisible(
+                container.name === this.player.getLocationName()
+            );
+        });
+    }
+
+    private updateEdges(containerArray: GameObjects.Container[]) {
+        this.travelPathLines.clear();
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: 4, color: 0x0 },
+        });
+        this.graph.edges().forEach(edge => {
+            const nodeV = containerArray.find(
+                container => edge.v === container.name
+            );
+            const nodeW = containerArray.find(
+                container => edge.w === container.name
+            );
+            const line = new Phaser.Geom.Line(
+                nodeV.x,
+                nodeV.y,
+                nodeW.x,
+                nodeW.y
+            );
+            this.travelPathLines.strokeLineShape(line);
+        });
     }
 
     private handleFileSelect(event: any) {
@@ -118,13 +169,21 @@ export class MainScene extends Scene {
             (container.getAt(1) as GameObjects.Text).setText(
                 getNode(this.graph, container.name).economy.stock.toString()
             );
+            const production = getNode(this.graph, container.name).economy
+                .production;
             // getAt(2) returns the production text
-            (container.getAt(2) as GameObjects.Text).setText(
-                getNode(
-                    this.graph,
-                    container.name
-                ).economy.production.toString()
-            );
+            const productionText = (container.getAt(
+                2
+            ) as GameObjects.Text).setText(production.toString());
+            if (production < 0) {
+                productionText.setColor("#f80606");
+            }
+            if (production > 0) {
+                productionText.setColor("#0db80b");
+            }
+            if (production === 0) {
+                productionText.setColor("#000000");
+            }
         });
     }
 
@@ -170,6 +229,7 @@ export class MainScene extends Scene {
         getNode(this.graph, locationName).economy.production++;
         this.player.factories--;
         if (this.isWin()) {
+            this.sound.stopAll();
             this.scene.add("GoodEndScene", GoodEndScene, true, {
                 x: 400,
                 y: 300,
@@ -220,9 +280,7 @@ export class MainScene extends Scene {
                 .setScale(0.5)
                 .setInteractive();
             plus.on("pointerup", () => {
-                if (name === this.player.getLocationName()) {
-                    this.player.store();
-                }
+                this.player.store();
             });
 
             const minus = this.add
@@ -230,9 +288,7 @@ export class MainScene extends Scene {
                 .setScale(0.5)
                 .setInteractive();
             minus.on("pointerup", () => {
-                if (name === this.player.getLocationName()) {
-                    this.player.take();
-                }
+                this.player.take();
             });
 
             const container = this.add.container(city.x, city.y, [
@@ -245,45 +301,47 @@ export class MainScene extends Scene {
                 minus,
                 nameText,
             ]);
+            container.setDepth(1);
             container.setName(name);
             this.containerArray.push(container);
         });
         this.containerArray.forEach(container => {
-            const index = this.containerArray.indexOf(container);
             container.setSize(170, 60);
             if (container.name === this.player.getLocationName()) {
                 (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
             }
-            container.setInteractive();
-            container.on("pointerup", () => {
-                if (
-                    // no edges between city and itself
-                    this.graph.hasEdge(
-                        this.player.getLocationName(),
-                        container.name
-                    )
-                ) {
-                    this.player.setLocation(
-                        getNode(this.graph, container.name)
-                    );
-                    (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
-                    this.containerArray.forEach(cont => {
-                        const consumCity = getNode(this.graph, cont.name);
-                        consumCity.economize();
-                        if (consumCity.economy.stock < 0) {
-                            this.endScene();
-                        }
-                    });
-                    this.containerArray.forEach((other, otherIndex) => {
-                        if (!(index === otherIndex)) {
-                            const otherImg = other.getAt(
-                                0
-                            ) as GameObjects.Image;
-                            otherImg.clearTint();
-                        }
-                    });
-                }
-            });
+            this.defineContainerClick(container);
+            this.defineContainerDrag(container);
+        });
+    }
+
+    private defineContainerClick(container: GameObjects.Container) {
+        const index = this.containerArray.indexOf(container);
+        container.setInteractive();
+        container.on("pointerup", () => {
+            if (
+                // no edges between city and itself
+                this.graph.hasEdge(
+                    this.player.getLocationName(),
+                    container.name
+                )
+            ) {
+                this.player.setLocation(getNode(this.graph, container.name));
+                (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
+                this.containerArray.forEach(cont => {
+                    const consumCity = getNode(this.graph, cont.name);
+                    consumCity.economize();
+                    if (consumCity.economy.stock < 0) {
+                        this.badEndScene();
+                    }
+                });
+                this.containerArray.forEach((other, otherIndex) => {
+                    if (!(index === otherIndex)) {
+                        const otherImg = other.getAt(0) as GameObjects.Image;
+                        otherImg.clearTint();
+                    }
+                });
+            }
         });
     }
 
@@ -314,6 +372,7 @@ export class MainScene extends Scene {
     }
 
     private drawEdges(cities: ICity[]) {
+        this.addLineGraphics(4, 0x0);
         this.graph.edges().forEach(edge => {
             const nodeV = cities.find(city => edge.v === city.name);
             const nodeW = cities.find(city => edge.w === city.name);
@@ -323,19 +382,24 @@ export class MainScene extends Scene {
                 nodeW.x,
                 nodeW.y
             );
-            const graphics = this.add.graphics({
-                lineStyle: { width: 4, color: 0x0 },
-            });
-            graphics.strokeLineShape(line);
+            this.travelPathLines.strokeLineShape(line);
         });
     }
 
-    private endScene() {
+    private addLineGraphics(thickness: number, hexDecimal: number) {
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: thickness, color: hexDecimal },
+        });
+    }
+
+    private badEndScene() {
+        this.sound.stopAll();
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
     }
 
     private toggleLevel(selectedLevel?: number) {
         this.level = selectedLevel || (this.level % levelArray.length) + 1;
+        this.sound.stopAll();
         this.scene.restart();
     }
 }
