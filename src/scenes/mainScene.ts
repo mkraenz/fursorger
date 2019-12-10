@@ -229,6 +229,7 @@ export class MainScene extends Scene {
         getNode(this.graph, locationName).economy.production++;
         this.player.factories--;
         if (this.isWin()) {
+            this.sound.stopAll();
             this.scene.add("GoodEndScene", GoodEndScene, true, {
                 x: 400,
                 y: 300,
@@ -279,9 +280,7 @@ export class MainScene extends Scene {
                 .setScale(0.5)
                 .setInteractive();
             plus.on("pointerup", () => {
-                if (name === this.player.getLocationName()) {
-                    this.player.store();
-                }
+                this.player.store();
             });
 
             const minus = this.add
@@ -289,9 +288,7 @@ export class MainScene extends Scene {
                 .setScale(0.5)
                 .setInteractive();
             minus.on("pointerup", () => {
-                if (name === this.player.getLocationName()) {
-                    this.player.take();
-                }
+                this.player.take();
             });
 
             const container = this.add.container(city.x, city.y, [
@@ -335,7 +332,7 @@ export class MainScene extends Scene {
                     const consumCity = getNode(this.graph, cont.name);
                     consumCity.economize();
                     if (consumCity.economy.stock < 0) {
-                        this.endScene();
+                        this.badEndScene();
                     }
                 });
                 this.containerArray.forEach((other, otherIndex) => {
@@ -395,12 +392,14 @@ export class MainScene extends Scene {
         });
     }
 
-    private endScene() {
+    private badEndScene() {
+        this.sound.stopAll();
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
     }
 
     private toggleLevel(selectedLevel?: number) {
         this.level = selectedLevel || (this.level % levelArray.length) + 1;
+        this.sound.stopAll();
         this.scene.restart();
     }
 }
