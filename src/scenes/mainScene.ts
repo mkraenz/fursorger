@@ -1,3 +1,4 @@
+import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
@@ -79,6 +80,7 @@ export class MainScene extends Scene {
 
         this.addLevelButton();
         this.addLoadLevelFromFileButton();
+        this.addExportLevelButton();
     }
 
     public update() {
@@ -101,6 +103,18 @@ export class MainScene extends Scene {
         button.on("pointerup", () => {
             this.toggleLevel();
         });
+    }
+
+    private addExportLevelButton() {
+        const button = this.add.text(0, 580, "Export").setInteractive();
+        const saveToFile = () => {
+            const data = JSON.stringify(levelArray[this.level - 1], null, 4);
+            const blob = new Blob([data], {
+                type: "application/json",
+            });
+            saveAs(blob, "level.json");
+        };
+        button.on("pointerup", saveToFile);
     }
 
     private addLoadLevelFromFileButton() {
