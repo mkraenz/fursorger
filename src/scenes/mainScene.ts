@@ -89,7 +89,7 @@ export class MainScene extends Scene {
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateBuildFactoryButton();
         this.updateCityInfos();
-        this.updateVisibility();
+        this.updateVisibilityTradeButtons();
     }
 
     private defineContainerDrag(container: GameObjects.Container) {
@@ -106,7 +106,7 @@ export class MainScene extends Scene {
         });
     }
 
-    private updateVisibility() {
+    private updateVisibilityTradeButtons() {
         this.containerArray.forEach(container => {
             (container.getAt(5) as GameObjects.Image).setVisible(
                 container.name === this.player.getLocationName()
@@ -375,9 +375,7 @@ export class MainScene extends Scene {
     }
 
     private drawEdges(cities: ICity[]) {
-        this.travelPathLines = this.add.graphics({
-            lineStyle: { width: 4, color: 0x0 },
-        });
+        this.addLineGraphics(4, 0x0);
         this.graph.edges().forEach(edge => {
             const nodeV = cities.find(city => edge.v === city.name);
             const nodeW = cities.find(city => edge.w === city.name);
@@ -388,6 +386,12 @@ export class MainScene extends Scene {
                 nodeW.y
             );
             this.travelPathLines.strokeLineShape(line);
+        });
+    }
+
+    private addLineGraphics(thickness: number, hexDecimal: number) {
+        this.travelPathLines = this.add.graphics({
+            lineStyle: { width: thickness, color: hexDecimal },
         });
     }
 
