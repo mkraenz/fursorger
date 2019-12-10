@@ -63,11 +63,6 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
-        // TODO #55 consider moving into title screen
-        document
-            .getElementById("files-input")
-            .addEventListener("change", event => this.handleFileSelect(event));
-
         const cityData = levelArray[this.level - 1].cities;
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
@@ -172,9 +167,19 @@ export class MainScene extends Scene {
         const button = this.add
             .text(400, 500, "Load Level File", textStyle)
             .setInteractive();
-        button.on("pointerup", () => {
-            document.getElementById("files-input").click();
-        });
+        const triggerFileUploadWindow = () => {
+            const input = document.createElement("input");
+            input.setAttribute("type", "file");
+            input.setAttribute("id", "files-input");
+            input.setAttribute("name", "files[]");
+            input.setAttribute("style", "opacity:0;");
+            input.addEventListener("change", event =>
+                this.handleFileSelect(event)
+            );
+            input.click();
+            input.remove();
+        };
+        button.on("pointerup", triggerFileUploadWindow);
     }
 
     private updateCityInfos() {
