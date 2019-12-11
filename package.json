@@ -21,6 +21,7 @@
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
+        "@types/file-saver": "^2.0.1",
         "@types/graphlib": "^2.1.5",
         "@types/lodash": "^4.14.135",
         "@types/mocha": "^5.2.5",
@@ -52,6 +53,7 @@
     },
     "dependencies": {
         "codecov": "^3.6.1",
+        "file-saver": "^2.0.2",
         "graphlib": "^2.1.7",
         "lodash": "^4.17.11",
         "phaser": "^3.18.1"
