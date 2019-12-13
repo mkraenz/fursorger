@@ -1,4 +1,4 @@
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { random } from "lodash";
 import { GameObjects, Scene } from "phaser";
@@ -130,6 +130,15 @@ export class MainScene extends Scene {
         });
     }
 
+    private addEditorButton() {
+        const button = this.add
+            .text(300, 40, "Editor", textStyle)
+            .setInteractive();
+        button.on("pointerup", () => {
+            this.isEditorMode = !this.isEditorMode;
+        });
+    }
+
     private addExportLevelButton() {
         const button = this.add
             .text(132, 747, "Export", TextConfig.sm)
@@ -143,7 +152,7 @@ export class MainScene extends Scene {
             const blob = new Blob([data], {
                 type: "application/json",
             });
-            saveAs(blob, "level.json");
+            // saveAs(blob, "level.json");
         };
         button.on("pointerup", saveToFile);
     }
