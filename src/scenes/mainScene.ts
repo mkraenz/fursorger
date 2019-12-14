@@ -130,15 +130,6 @@ export class MainScene extends Scene {
         });
     }
 
-    private addEditorButton() {
-        const button = this.add
-            .text(300, 40, "Editor", textStyle)
-            .setInteractive();
-        button.on("pointerup", () => {
-            this.isEditorMode = !this.isEditorMode;
-        });
-    }
-
     private addExportLevelButton() {
         const button = this.add
             .text(132, 747, "Export", TextConfig.sm)
