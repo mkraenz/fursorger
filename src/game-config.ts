@@ -7,4 +7,7 @@ export const gameConfig: Types.Core.GameConfig = {
     scene: MainScene,
     type: Phaser.AUTO,
     width: 800,
+    dom: {
+        createContainer: true,
+    },
 };
