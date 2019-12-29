@@ -14,7 +14,7 @@ export class EditorScene extends Scene {
     private containerArray!: GameObjects.Container[];
     private playerStockInfo!: GameObjects.Text;
     private travelPathLines!: GameObjects.Graphics;
-    private selectedCities!: string[];
+    private selectedContainer!: GameObjects.Container[];
     private firstCityText!: GameObjects.Text;
     private secondCityText!: GameObjects.Text;
     private graph!: Graph;
@@ -50,7 +50,7 @@ export class EditorScene extends Scene {
             lineStyle: { width: 4, color: 0x0 },
         });
         this.containerArray = [];
-        this.selectedCities = [];
+        this.selectedContainer = [];
         this.graph = new Graph({ directed: false });
         this.addBackground();
         this.addSelectedCityText();
@@ -63,11 +63,11 @@ export class EditorScene extends Scene {
     }
 
     private updateSelectedCityText() {
-        const cityPair = this.selectedCities;
+        const cityPair = this.selectedContainer;
         if (cityPair.length >= 1) {
-            this.firstCityText.setText(this.selectedCities[0]);
+            this.firstCityText.setText(this.selectedContainer[0].name);
             if (cityPair.length === 2) {
-                this.secondCityText.setText(this.selectedCities[1]);
+                this.secondCityText.setText(this.selectedContainer[1].name);
             } else {
                 this.secondCityText.setText("");
             }
@@ -136,14 +136,29 @@ export class EditorScene extends Scene {
         );
     }
 
+    private setContainerButtonColor(
+        container: GameObjects.Container,
+        hex: number
+    ) {
+        (container.getAt(0) as GameObjects.Image).setTint(hex);
+    }
+
+    private resetContainerButtonColor(container: GameObjects.Container) {
+        (container.getAt(0) as GameObjects.Image).clearTint();
+    }
+
     private defineContainerClickUp(container: GameObjects.Container) {
         // otherwise previous pointerup-listeners will stack
         container.off("pointerup");
         container.on("pointerup", () => {
-            this.selectedCities.push(container.name);
-            if (this.selectedCities.length === 2) {
+            this.selectedContainer.push(container);
+            if (this.selectedContainer.length === 2) {
+                this.resetContainerButtonColor(this.selectedContainer[0]);
+                this.resetContainerButtonColor(this.selectedContainer[1]);
                 this.redrawEdges();
-                this.selectedCities = [];
+                this.selectedContainer = [];
+            } else {
+                this.setContainerButtonColor(container, 0x44ff44);
             }
         });
     }
@@ -173,20 +188,20 @@ export class EditorScene extends Scene {
     }
 
     private redrawEdges() {
-        const cityPair = this.selectedCities;
+        const cityPair = this.selectedContainer;
         if (cityPair.length !== 2) {
             throw new Error(
                 "selectedCities has wrong length for redrawEdges()"
             );
         }
 
-        if (this.graph.hasEdge(cityPair[0], cityPair[1])) {
-            this.graph.removeEdge(cityPair[0], cityPair[1]);
+        if (this.graph.hasEdge(cityPair[0].name, cityPair[1].name)) {
+            this.graph.removeEdge(cityPair[0].name, cityPair[1].name);
         } else {
             if (cityPair[0] === cityPair[1]) {
-                this.selectedCities = [];
+                this.selectedContainer = [];
             } else {
-                this.graph.setEdge(cityPair[0], cityPair[1]);
+                this.graph.setEdge(cityPair[0].name, cityPair[1].name);
             }
         }
     }
