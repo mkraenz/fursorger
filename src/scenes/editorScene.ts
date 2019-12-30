@@ -10,8 +10,10 @@ const nameTextStyle = {
     font: "40px Arial",
     fill: "#000000",
 };
+const textToIconOffset = -25;
 export class EditorScene extends Scene {
     private containerArray!: GameObjects.Container[];
+    private economyArray!: Array<{ stock: number; production: number }>;
     private playerStockInfo!: GameObjects.Text;
     private travelPathLines!: GameObjects.Graphics;
     private selectedContainer!: GameObjects.Container[];
@@ -50,16 +52,19 @@ export class EditorScene extends Scene {
             lineStyle: { width: 4, color: 0x0 },
         });
         this.containerArray = [];
+        this.economyArray = [];
         this.selectedContainer = [];
         this.graph = new Graph({ directed: false });
         this.addBackground();
         this.addSelectedCityText();
         this.addCityCreationButton();
+        this.addEconomyButtons();
     }
 
     public update() {
         this.updateSelectedCityText();
-        this.updateEdges(this.containerArray);
+        this.updateEdges();
+        this.updateEconomyText();
     }
 
     private updateSelectedCityText() {
@@ -77,16 +82,16 @@ export class EditorScene extends Scene {
         }
     }
 
-    private updateEdges(containerArray: GameObjects.Container[]) {
+    private updateEdges() {
         this.travelPathLines.clear();
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
         this.graph.edges().forEach(edge => {
-            const nodeV = containerArray.find(
+            const nodeV = this.containerArray.find(
                 container => edge.v === container.name
             );
-            const nodeW = containerArray.find(
+            const nodeW = this.containerArray.find(
                 container => edge.w === container.name
             );
             const line = new Phaser.Geom.Line(
@@ -96,6 +101,20 @@ export class EditorScene extends Scene {
                 nodeW.y
             );
             this.travelPathLines.strokeLineShape(line);
+        });
+    }
+
+    private updateEconomyText() {
+        this.containerArray.forEach(container => {
+            const economy = this.economyArray[
+                this.containerArray.indexOf(container)
+            ];
+            (container.getAt(1) as GameObjects.Text).setText(
+                economy.stock.toString()
+            );
+            (container.getAt(2) as GameObjects.Text).setText(
+                economy.production.toString()
+            );
         });
     }
 
@@ -114,9 +133,47 @@ export class EditorScene extends Scene {
         this.secondCityText = this.add.text(300, 160, "bla", textStyle);
     }
 
+    private addEconomyButtons() {
+        const plusStock = this.add
+            .image(20, 20, "plus")
+            .setScale(0.5)
+            .setInteractive();
+        plusStock.on("pointerup", () => {
+            this.addContainerStock(this.selectedContainer[0], 1);
+        });
+
+        const minusStock = this.add
+            .image(20, 60, "minus")
+            .setScale(0.5)
+            .setInteractive();
+
+        minusStock.on("pointerup", () => {
+            this.addContainerStock(this.selectedContainer[0], -1);
+        });
+
+        const plusProd = this.add
+            .image(20, 100, "plus")
+            .setScale(0.5)
+            .setInteractive();
+
+        plusProd.on("pointerup", () => {
+            this.addContainerProduction(this.selectedContainer[0], 1);
+        });
+
+        const minusProd = this.add
+            .image(20, 140, "minus")
+            .setScale(0.5)
+            .setInteractive();
+
+        minusProd.on("pointerup", () => {
+            this.addContainerProduction(this.selectedContainer[0], -1);
+        });
+    }
+
     private creationButtonClicked() {
         const button = this.add.image(0, 0, "rectangleButton");
         const container = this.add.container(230, 170, [button]);
+        this.addEconomy(container);
         // setSize() is crucial to avoid "gameObject.input is null"
         container.setSize(button.width, button.height);
         container.setInteractive();
@@ -128,6 +185,7 @@ export class EditorScene extends Scene {
         this.defineContainerClickDown(container);
         this.graph.setNode(container.name);
         this.containerArray.push(container);
+        this.economyArray.push({ stock: 0, production: 0 });
     }
 
     private defineContainerClickDown(container: GameObjects.Container) {
@@ -167,10 +225,26 @@ export class EditorScene extends Scene {
         this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
             gameObject.x = dragX;
             gameObject.y = dragY;
-            this.updateEdges(this.containerArray);
+            this.updateEdges();
             // to prevent turn advance after dragging
             container.off("pointerup");
         });
+    }
+
+    private addContainerStock(
+        container: GameObjects.Container,
+        stockAdd: number
+    ) {
+        const index = this.containerArray.indexOf(container);
+        this.economyArray[index].stock += stockAdd;
+    }
+
+    private addContainerProduction(
+        container: GameObjects.Container,
+        productionAdd: number
+    ) {
+        const index = this.containerArray.indexOf(container);
+        this.economyArray[index].production += productionAdd;
     }
 
     private addCityCreationButton() {
@@ -204,5 +278,24 @@ export class EditorScene extends Scene {
                 this.graph.setEdge(cityPair[0].name, cityPair[1].name);
             }
         }
+    }
+
+    private addEconomy(container: GameObjects.Container) {
+        const midOfButton = container.width / 2 + container.x;
+        const stock = this.add.image(midOfButton, -60, "stock");
+        const stockText = this.add.text(
+            midOfButton + 40,
+            -60 + textToIconOffset,
+            "",
+            textStyle
+        );
+        const production = this.add.image(midOfButton, 60, "production");
+        const prodText = this.add.text(
+            midOfButton + 40,
+            60 + textToIconOffset,
+            "",
+            textStyle
+        );
+        container.add([stockText, prodText, stock, production]);
     }
 }
