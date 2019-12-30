@@ -20,8 +20,8 @@ export class GoodEndScene extends Scene {
             .image(0, 0, "goodEnd")
             .setOrigin(0)
             .setScale(
-                (gameConfig.width as number) / 1280,
-                (gameConfig.height as number) / 853
+                (gameConfig.scale.width as number) / 1280,
+                (gameConfig.scale.height as number) / 853
             );
     }
 }
