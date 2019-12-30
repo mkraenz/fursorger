@@ -58,7 +58,6 @@ export class EditorScene extends Scene {
         this.addBackground();
         this.addSelectedCityText();
         this.addCityCreationButton();
-        this.addEconomyButtons();
     }
 
     public update() {
@@ -133,43 +132,6 @@ export class EditorScene extends Scene {
         this.secondCityText = this.add.text(300, 160, "bla", textStyle);
     }
 
-    private addEconomyButtons() {
-        const plusStock = this.add
-            .image(20, 20, "plus")
-            .setScale(0.5)
-            .setInteractive();
-        plusStock.on("pointerup", () => {
-            this.addContainerStock(this.selectedContainer[0], 1);
-        });
-
-        const minusStock = this.add
-            .image(20, 60, "minus")
-            .setScale(0.5)
-            .setInteractive();
-
-        minusStock.on("pointerup", () => {
-            this.addContainerStock(this.selectedContainer[0], -1);
-        });
-
-        const plusProd = this.add
-            .image(20, 100, "plus")
-            .setScale(0.5)
-            .setInteractive();
-
-        plusProd.on("pointerup", () => {
-            this.addContainerProduction(this.selectedContainer[0], 1);
-        });
-
-        const minusProd = this.add
-            .image(20, 140, "minus")
-            .setScale(0.5)
-            .setInteractive();
-
-        minusProd.on("pointerup", () => {
-            this.addContainerProduction(this.selectedContainer[0], -1);
-        });
-    }
-
     private creationButtonClicked() {
         const button = this.add.image(0, 0, "rectangleButton");
         const container = this.add.container(230, 170, [button]);
@@ -186,6 +148,13 @@ export class EditorScene extends Scene {
         this.graph.setNode(container.name);
         this.containerArray.push(container);
         this.economyArray.push({ stock: 0, production: 0 });
+    }
+
+    private setButtonVisible(isVisible: boolean) {
+        const buttonArray = this.selectedContainer[0].getAll().slice(5, 9);
+        buttonArray.forEach(button => {
+            (button as GameObjects.Image).setVisible(isVisible);
+        });
     }
 
     private defineContainerClickDown(container: GameObjects.Container) {
@@ -213,10 +182,12 @@ export class EditorScene extends Scene {
             if (this.selectedContainer.length === 2) {
                 this.resetContainerButtonColor(this.selectedContainer[0]);
                 this.resetContainerButtonColor(this.selectedContainer[1]);
+                this.setButtonVisible(false);
                 this.redrawEdges();
                 this.selectedContainer = [];
             } else {
                 this.setContainerButtonColor(container, 0x44ff44);
+                this.setButtonVisible(true);
             }
         });
     }
@@ -281,21 +252,68 @@ export class EditorScene extends Scene {
     }
 
     private addEconomy(container: GameObjects.Container) {
-        const midOfButton = container.width / 2 + container.x;
-        const stock = this.add.image(midOfButton, -60, "stock");
+        const midOfButton = container.width / 2;
+        const imageX = midOfButton;
+        const stockY = -60;
+        const prodY = 60;
+        const buttonX = midOfButton + 100;
+        const stockButtonY = stockY;
+        const prodButtonY = prodY;
+
+        const stock = this.add.image(midOfButton, stockY, "stock");
         const stockText = this.add.text(
             midOfButton + 40,
-            -60 + textToIconOffset,
+            stockY + textToIconOffset,
             "",
             textStyle
         );
-        const production = this.add.image(midOfButton, 60, "production");
+        const production = this.add.image(midOfButton, prodY, "production");
         const prodText = this.add.text(
             midOfButton + 40,
-            60 + textToIconOffset,
+            prodY + textToIconOffset,
             "",
             textStyle
         );
         container.add([stockText, prodText, stock, production]);
+
+        const plusStock = this.add
+            .image(buttonX, stockButtonY - 20, "plus")
+            .setScale(0.5)
+            .setInteractive();
+        plusStock.on("pointerup", () => {
+            this.addContainerStock(container, 1);
+        });
+        plusStock.setVisible(false);
+
+        const minusStock = this.add
+            .image(buttonX, stockButtonY + 20, "minus")
+            .setScale(0.5)
+            .setInteractive();
+        minusStock.on("pointerup", () => {
+            this.addContainerStock(container, -1);
+        });
+        minusStock.setVisible(false);
+
+        const plusProd = this.add
+            .image(buttonX, prodButtonY - 20, "plus")
+            .setScale(0.5)
+            .setInteractive();
+        plusProd.on("pointerup", () => {
+            this.addContainerProduction(container, 1);
+        });
+        plusProd.setVisible(false);
+
+        const minusProd = this.add
+            .image(buttonX, prodButtonY + 20, "minus")
+            .setScale(0.5)
+            .setInteractive();
+
+        minusProd.on("pointerup", () => {
+            this.addContainerProduction(container, -1);
+        });
+
+        minusProd.setVisible(false);
+
+        container.add([plusStock, minusStock, plusProd, minusProd]);
     }
 }
