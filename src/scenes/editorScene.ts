@@ -14,7 +14,8 @@ const textToIconOffset = -25;
 export class EditorScene extends Scene {
     private containerArray!: GameObjects.Container[];
     private economyArray!: Array<{ stock: number; production: number }>;
-    private playerStockInfo!: GameObjects.Text;
+    private backpackContainer!: GameObjects.Container;
+    private backpack: number;
     private travelPathLines!: GameObjects.Graphics;
     private selectedContainer!: GameObjects.Container[];
     private firstCityText!: GameObjects.Text;
@@ -48,6 +49,8 @@ export class EditorScene extends Scene {
     public create(): void {
         // TODO #55 consider moving into title screen
 
+        this.backpack = 0;
+
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
@@ -58,12 +61,60 @@ export class EditorScene extends Scene {
         this.addBackground();
         this.addSelectedCityText();
         this.addCityCreationButton();
+        this.addBackpackContainer();
     }
 
     public update() {
         this.updateSelectedCityText();
         this.updateEdges();
         this.updateEconomyText();
+        (this.backpackContainer.getAt(0) as GameObjects.Text).setText(
+            this.backpack.toString()
+        );
+    }
+
+    private addBackpackContainer() {
+        const backpackX = 680;
+        const backpackY = 40;
+        const backpackTextY = backpackY - 25;
+        const backpackTextX = backpackX + 40;
+        const backpackImage = this.add.image(backpackX, backpackY, "backpack");
+        const backpackText = this.add.text(
+            backpackTextX,
+            backpackTextY,
+            "",
+            textStyle
+        );
+
+        const backpackButtonY = backpackY + backpackImage.height / 2 - 25;
+        const backpackButtonX = backpackX - 50;
+
+        const backpackPlus = this.add
+            .image(backpackButtonX, backpackButtonY - 20, "plus")
+            .setScale(0.5)
+            .setInteractive();
+        const backpackMinus = this.add
+            .image(backpackButtonX, backpackButtonY + 20, "minus")
+            .setScale(0.5)
+            .setInteractive();
+
+        backpackPlus.on("pointerup", () => {
+            this.backpack += 1;
+        });
+        backpackMinus.on("pointerup", () => {
+            if (this.backpack > 0) {
+                this.backpack -= 1;
+            }
+        });
+
+        const backpackContainer = this.add.container(0, 0, [
+            backpackText,
+            backpackImage,
+            backpackPlus,
+            backpackMinus,
+        ]);
+
+        this.backpackContainer = backpackContainer;
     }
 
     private updateSelectedCityText() {
