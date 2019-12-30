@@ -1,6 +1,8 @@
+import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { MainScene } from "./mainScene";
 
 const textStyle = {
     font: "48px Arial",
@@ -18,8 +20,6 @@ export class EditorScene extends Scene {
     private backpack: number;
     private travelPathLines!: GameObjects.Graphics;
     private selectedContainer!: GameObjects.Container[];
-    private firstCityText!: GameObjects.Text;
-    private secondCityText!: GameObjects.Text;
     private graph!: Graph;
 
     constructor() {
@@ -42,6 +42,8 @@ export class EditorScene extends Scene {
         );
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
+        this.load.image("play", "./assets/images/playArrow300x200.png");
+        this.load.image("export", "./assets/images/export180x120.png");
 
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
@@ -59,13 +61,13 @@ export class EditorScene extends Scene {
         this.selectedContainer = [];
         this.graph = new Graph({ directed: false });
         this.addBackground();
-        this.addSelectedCityText();
         this.addCityCreationButton();
         this.addBackpackContainer();
+        this.addExportLevelButton();
+        this.addMainSceneButton();
     }
 
     public update() {
-        this.updateSelectedCityText();
         this.updateEdges();
         this.updateEconomyText();
         (this.backpackContainer.getAt(0) as GameObjects.Text).setText(
@@ -117,21 +119,6 @@ export class EditorScene extends Scene {
         this.backpackContainer = backpackContainer;
     }
 
-    private updateSelectedCityText() {
-        const cityPair = this.selectedContainer;
-        if (cityPair.length >= 1) {
-            this.firstCityText.setText(this.selectedContainer[0].name);
-            if (cityPair.length === 2) {
-                this.secondCityText.setText(this.selectedContainer[1].name);
-            } else {
-                this.secondCityText.setText("");
-            }
-        } else {
-            this.firstCityText.setText("");
-            this.secondCityText.setText("");
-        }
-    }
-
     private updateEdges() {
         this.travelPathLines.clear();
         this.travelPathLines = this.add.graphics({
@@ -176,11 +163,6 @@ export class EditorScene extends Scene {
                 (gameConfig.width as number) / 500,
                 (gameConfig.height as number) / 300
             );
-    }
-
-    private addSelectedCityText() {
-        this.firstCityText = this.add.text(300, 80, "bla", textStyle);
-        this.secondCityText = this.add.text(300, 160, "bla", textStyle);
     }
 
     private creationButtonClicked() {
@@ -366,5 +348,55 @@ export class EditorScene extends Scene {
         minusProd.setVisible(false);
 
         container.add([plusStock, minusStock, plusProd, minusProd]);
+    }
+
+    private generateLevel() {
+        const cities = this.containerArray.map(container => {
+            const index = this.containerArray.indexOf(container);
+            return {
+                name: container.name,
+                stock: this.economyArray[index].stock,
+                production: this.economyArray[index].production,
+                x: container.x,
+                y: container.y,
+            };
+        });
+
+        const travelPaths = this.graph.edges().map(edge => {
+            return { first: edge.v, second: edge.w };
+        });
+
+        return {
+            cities,
+            travelPaths,
+            playerStock: this.backpack,
+        };
+    }
+
+    private addExportLevelButton() {
+        const button = this.add
+            .image(60, 540, "export")
+            .setInteractive()
+            .setScale(100 / 180);
+        const saveToFile = () => {
+            const data = JSON.stringify(this.generateLevel(), null, 4);
+            const blob = new Blob([data], {
+                type: "application/json",
+            });
+            saveAs(blob, "level.json");
+        };
+        button.on("pointerup", saveToFile);
+    }
+
+    private addMainSceneButton() {
+        const button = this.add
+            .image(220, 540, "play")
+            .setInteractive()
+            .setScale(100 / 200);
+
+        button.on("pointerup", () => {
+            this.sound.stopAll();
+            this.scene.add("mainScene", MainScene, true, { x: 400, y: 300 });
+        });
     }
 }

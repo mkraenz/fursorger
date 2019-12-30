@@ -1,4 +1,4 @@
-// import { saveAs } from "file-saver";
+import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { random } from "lodash";
 import { GameObjects, Scene } from "phaser";
@@ -143,7 +143,7 @@ export class MainScene extends Scene {
             const blob = new Blob([data], {
                 type: "application/json",
             });
-            // saveAs(blob, "level.json");
+            saveAs(blob, "level.json");
         };
         button.on("pointerup", saveToFile);
     }
