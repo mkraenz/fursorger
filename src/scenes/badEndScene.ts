@@ -17,8 +17,8 @@ export class BadEndScene extends Scene {
             .image(0, 0, "badEnd")
             .setOrigin(0)
             .setScale(
-                (gameConfig.width as number) / 640,
-                (gameConfig.height as number) / 512
+                (gameConfig.scale.width as number) / 640,
+                (gameConfig.scale.height as number) / 512
             );
     }
 }

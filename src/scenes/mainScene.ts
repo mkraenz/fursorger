@@ -272,8 +272,8 @@ export class MainScene extends Scene {
             .image(0, 0, "background")
             .setOrigin(0)
             .setScale(
-                (gameConfig.width as number) / 500,
-                (gameConfig.height as number) / 300
+                (gameConfig.scale.width as number) / 500,
+                (gameConfig.scale.height as number) / 300
             );
     }
 
