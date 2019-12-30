@@ -54,7 +54,7 @@
     "dependencies": {
         "file-saver": "^2.0.2",
         "graphlib": "^2.1.7",
-        "lodash": "^4.17.11",
+        "lodash": "^4.17.13",
         "phaser": "^3.18.1"
     },
     "husky": {
