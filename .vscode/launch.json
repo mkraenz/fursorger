@@ -18,6 +18,16 @@
                 "${workspaceFolder}/src/**/*.test.ts"
             ],
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome",
+            "url": "http://localhost:8080",
+            "sourceMaps": true,
+            "webRoot": "${workspaceFolder}",
+            "skipFiles": ["<node_internals>/**"],
+            "smartStep": true
         }
     ]
 }

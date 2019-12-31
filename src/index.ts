@@ -1,4 +1,4 @@
-import { Game } from "./game";
+import { Game } from "phaser";
 import { gameConfig } from "./game-config";
 
 main();

@@ -1,37 +1,38 @@
 import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
+import {
+    addProductionAnim,
+    setProductionTextColor,
+} from "../anims/addProductionAnim";
+import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
+import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
+import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
 import { gameConfig } from "../game-config";
+import { ICity } from "../levels/ILevel";
+import { levels } from "../levels/index";
+import { getAllCities, getNode } from "../logic/getNode";
+import { IPlayer } from "../logic/IPlayer";
+import { LogicBuilder } from "../logic/LogicBuilder";
+import { getLevel, setLevel } from "../registry/level";
+import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
-import { getAllCities, getNode } from "./getNode";
 import { GoodEndScene } from "./GoodEndScene";
-import { ICity } from "./ILevel";
-import { IPlayer } from "./IPlayer";
-import { levelArray } from "./levels";
-import { LogicBuilder } from "./logicBuilder";
 
-const PLAYER_INFO_X = 680;
-const CITY_NAME_X = -70;
-const CITY_NAME_Y = -25;
+const DEBUG = false;
+
+const PLAYER_INFO_X = 50;
 const textToIconOffset = -25;
+const CITY_SPRITE_SCALE = 0.18;
 
-const textStyle = {
-    font: "48px Arial",
-    fill: "#000000",
-};
-const nameTextStyle = {
-    font: "40px Arial",
-    fill: "#000000",
-};
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
-    private containerArray!: GameObjects.Container[];
+    private containers!: GameObjects.Container[];
     private playerStockInfo!: GameObjects.Text;
     private playerTurnInfo!: GameObjects.Text;
     private buildFactoryButton!: GameObjects.Image;
-    private level = 2;
-    private travelPathLines!: GameObjects.Graphics;
+    private debugText!: GameObjects.Text;
 
     constructor() {
         super({
@@ -39,112 +40,60 @@ export class MainScene extends Scene {
         });
     }
 
-    public preload(): void {
-        this.load.image(
-            "rectangleButton",
-            " ./assets/images/blank_rectangle60x160.png"
-        );
-        this.load.image("background", "./assets/images/background500x300.png");
-        this.load.image("backpack", "./assets/images/backpack64x64.png");
-        this.load.image("stock", "./assets/images/storage64x64.png");
-        this.load.image(
-            "production",
-            "./assets/images/decreasing-bars64x64.png"
-        );
-        this.load.image("plus", "./assets/images/plus64x64.png");
-        this.load.image("minus", "./assets/images/minus64x64.png");
-        this.load.image("hourglass", "./assets/images/hourglass64x64.png");
-        this.load.image(
-            "buildFactory",
-            "./assets/images/buildFactoryButton128x128.png"
-        );
-
-        this.load.audio("background", "./assets/sounds/bgm.mp3");
-    }
-
     public create(): void {
-        const cityData = levelArray[this.level - 1].cities;
-        this.travelPathLines = this.add.graphics({
-            lineStyle: { width: 4, color: 0x0 },
-        });
-        const logicObjects = LogicBuilder.create(levelArray[this.level - 1]);
+        const currentLevel = levels[getLevel(this.registry)];
+        const cityData = currentLevel.cities;
+        const logicObjects = LogicBuilder.create(currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
         this.addBackground();
-        // draw edges first, so that cities are drawn on top
-        this.drawEdges(cityData);
         this.addCities(cityData);
         this.addPlayerInfo();
         this.addLevelButton();
-        this.addLoadLevelFromFileButton();
+        this.addImportLevelButton();
         this.addExportLevelButton();
+        this.debugText = this.add
+            .text(10, 10, "", TextConfig.debug)
+            .setVisible(DEBUG);
+        this.input.keyboard.on("keydown-R", () => this.restart());
+
+        // initialUpdate
+        this.updateBuildFactoryButton();
     }
 
     public update() {
         this.playerStockInfo.setText(this.player.stock.toString());
         this.playerTurnInfo.setText(this.player.turn.toString());
-        this.updateBuildFactoryButton();
         this.updateCityInfos();
         this.updateVisibilityTradeButtons();
-    }
 
-    private defineContainerDrag(container: GameObjects.Container) {
-        this.input.setDraggable(container);
-        this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-            this.updateEdges(this.containerArray);
-            // to prevent turn advance after dragging
-            container.off("pointerup");
-            container.on("pointerdown", () =>
-                this.defineContainerClick(container)
-            );
-        });
+        this.debugText.setText([
+            `x: ${this.input.activePointer.x}`,
+            `y: ${this.input.activePointer.y}`,
+        ]);
     }
 
     private updateVisibilityTradeButtons() {
-        this.containerArray.forEach(container => {
-            (container.getAt(5) as GameObjects.Image).setVisible(
+        this.containers.forEach(container => {
+            (container.getAt(3) as GameObjects.Image).setVisible(
                 container.name === this.player.getLocationName()
             );
-            (container.getAt(6) as GameObjects.Image).setVisible(
+            (container.getAt(4) as GameObjects.Image).setVisible(
                 container.name === this.player.getLocationName()
             );
-        });
-    }
-
-    private updateEdges(containerArray: GameObjects.Container[]) {
-        this.travelPathLines.clear();
-        this.travelPathLines = this.add.graphics({
-            lineStyle: { width: 4, color: 0x0 },
-        });
-        this.graph.edges().forEach(edge => {
-            const nodeV = containerArray.find(
-                container => edge.v === container.name
-            );
-            const nodeW = containerArray.find(
-                container => edge.w === container.name
-            );
-            const line = new Phaser.Geom.Line(
-                nodeV.x,
-                nodeV.y,
-                nodeW.x,
-                nodeW.y
-            );
-            this.travelPathLines.strokeLineShape(line);
         });
     }
 
     private handleFileSelect(event: any) {
         handleFileSelect(event, () => {
-            this.toggleLevel(levelArray.length);
+            this.toggleLevel(levels.length - 1);
         });
     }
 
     private addLevelButton() {
         const button = this.add
-            .text(50, 500, "Next Level", textStyle)
+            .text(50, 500, "Next Level", TextConfig.lg)
             .setInteractive();
         button.on("pointerup", () => {
             this.toggleLevel();
@@ -152,9 +101,15 @@ export class MainScene extends Scene {
     }
 
     private addExportLevelButton() {
-        const button = this.add.text(0, 580, "Export").setInteractive();
+        const button = this.add
+            .text(132, 747, "Export", TextConfig.sm)
+            .setInteractive();
         const saveToFile = () => {
-            const data = JSON.stringify(levelArray[this.level - 1], null, 4);
+            const data = JSON.stringify(
+                levels[getLevel(this.registry)],
+                null,
+                4
+            );
             const blob = new Blob([data], {
                 type: "application/json",
             });
@@ -163,9 +118,9 @@ export class MainScene extends Scene {
         button.on("pointerup", saveToFile);
     }
 
-    private addLoadLevelFromFileButton() {
+    private addImportLevelButton() {
         const button = this.add
-            .text(400, 500, "Load Level File", textStyle)
+            .text(64, 747, "Import", TextConfig.sm)
             .setInteractive();
         const triggerFileUploadWindow = () => {
             const input = document.createElement("input");
@@ -183,7 +138,7 @@ export class MainScene extends Scene {
     }
 
     private updateCityInfos() {
-        this.containerArray.forEach(container => {
+        this.containers.forEach(container => {
             // getAt(1) returns the stock text
             (container.getAt(1) as GameObjects.Text).setText(
                 getNode(this.graph, container.name).economy.stock.toString()
@@ -194,65 +149,69 @@ export class MainScene extends Scene {
             const productionText = (container.getAt(
                 2
             ) as GameObjects.Text).setText(production.toString());
-            if (production < 0) {
-                productionText.setColor("#f80606");
-            }
-            if (production > 0) {
-                productionText.setColor("#0db80b");
-            }
-            if (production === 0) {
-                productionText.setColor("#000000");
-            }
+            setProductionTextColor(production, productionText);
         });
     }
 
     private updateBuildFactoryButton() {
         if (this.player.factories === 0) {
             this.buildFactoryButton.setAlpha(0.5).disableInteractive();
+            this.tweens
+                .getTweensOf(this.buildFactoryButton)
+                .forEach(tween => tween.stop(0));
         } else {
             this.buildFactoryButton.clearAlpha().setInteractive();
+            this.add.tween(getBuildButtonTweenConfig(this.buildFactoryButton));
         }
     }
 
     private addPlayerInfo() {
-        const IMAGE_TO_TEXT_OFFSET_Y = -25;
+        const IMAGE_TO_TEXT_OFFSET_Y = -15;
         const IMAGE_TO_TEXT_OFFSET_X = 40;
-        const STOCK_Y = 40;
-        this.add.image(PLAYER_INFO_X, STOCK_Y, "backpack");
+        const STOCK_Y = 200;
+        const TURN_Y = STOCK_Y + 80;
+        const FACTORY_Y = TURN_Y + 90;
+        const RESTART_Y = FACTORY_Y + 90;
+        this.add.image(PLAYER_INFO_X, STOCK_Y, "backpack").setScale(0.8);
         this.playerStockInfo = this.add.text(
             PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
             STOCK_Y + IMAGE_TO_TEXT_OFFSET_Y,
             "",
-            textStyle
+            TextConfig.lg
         );
 
-        const TURN_Y = 120;
-        this.add.image(PLAYER_INFO_X, TURN_Y, "hourglass");
+        this.add.image(PLAYER_INFO_X, TURN_Y, "hourglass").setScale(0.8);
         this.playerTurnInfo = this.add.text(
             PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
             TURN_Y + IMAGE_TO_TEXT_OFFSET_Y,
             "",
-            textStyle
+            TextConfig.lg
         );
 
         this.buildFactoryButton = this.add
-            .image(PLAYER_INFO_X, 220, "buildFactory")
+            .image(PLAYER_INFO_X, FACTORY_Y, "buildFactory")
             .setScale(0.5);
         this.buildFactoryButton.on("pointerup", () => {
             this.handleBuildButtonClicked();
         });
+        const restartIcon = this.add
+            .image(PLAYER_INFO_X, RESTART_Y, "restart")
+            .setInteractive();
+        restartIcon.on("pointerup", () => this.restart());
     }
 
     private handleBuildButtonClicked() {
         const locationName = this.player.getLocationName();
         getNode(this.graph, locationName).economy.production++;
         this.player.factories--;
+        this.updateBuildFactoryButton();
         if (this.isWin()) {
             this.sound.stopAll();
             this.scene.add("GoodEndScene", GoodEndScene, true, {
                 x: 400,
                 y: 300,
             });
+            this.scene.remove(this);
         }
     }
 
@@ -272,152 +231,163 @@ export class MainScene extends Scene {
             .image(0, 0, "background")
             .setOrigin(0)
             .setScale(
-                (gameConfig.scale.width as number) / 500,
-                (gameConfig.scale.height as number) / 300
+                (gameConfig.scale.width as number) / 1024,
+                (gameConfig.scale.height as number) / 768
             );
     }
 
     private addCities(cities: ICity[]) {
-        this.containerArray = [];
+        this.containers = [];
         cities.forEach(city => {
             const name = city.name;
-            const nameText = this.add.text(
-                CITY_NAME_X,
-                CITY_NAME_Y,
-                name,
-                nameTextStyle
-            );
-            const button = this.addFittingButton(nameText);
-            const {
-                stockText,
-                prodText,
-                stock,
-                production,
-            } = this.addEconomyInfo(nameText);
-            const plus = this.add
-                .image(-105, -30, "plus")
-                .setScale(0.5)
-                .setInteractive();
-            plus.on("pointerup", () => {
-                this.player.store();
-            });
+            const button = this.add
+                .image(0, 0, "city")
+                .setScale(CITY_SPRITE_SCALE);
+            const { stockText, prodText } = this.addEconomyInfo();
 
-            const minus = this.add
-                .image(-105, 30, "minus")
-                .setScale(0.5)
-                .setInteractive();
-            minus.on("pointerup", () => {
-                this.player.take();
-            });
+            const plus = this.addPlus();
+            const minus = this.addMinus();
 
             const container = this.add.container(city.x, city.y, [
                 button,
                 stockText,
                 prodText,
-                stock,
-                production,
                 plus,
                 minus,
-                nameText,
             ]);
             container.setDepth(1);
             container.setName(name);
-            this.containerArray.push(container);
+            this.containers.push(container);
         });
-        this.containerArray.forEach(container => {
+        this.containers.forEach(container => {
             container.setSize(170, 60);
-            if (container.name === this.player.getLocationName()) {
-                (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
+            if (
+                this.graph.hasEdge(
+                    this.player.getLocationName(),
+                    container.name
+                )
+            ) {
+                this.tweens.add(
+                    getCityTweenConfig(container.getAt(0) as GameObjects.Image)
+                );
             }
             this.defineContainerClick(container);
-            this.defineContainerDrag(container);
         });
     }
 
+    private addPlus() {
+        const plus = this.add
+            .image(-60, -30, "plus")
+            .setScale(0.5)
+            .setInteractive();
+        plus.on("pointerup", () => {
+            this.player.store();
+        });
+        plus.on("pointerover", () => {
+            this.tweens.add(getPlusMinusButtonTweenConfig(plus));
+        });
+        plus.on("pointerout", () => {
+            this.tweens.getTweensOf(plus).forEach(x => {
+                x.stop(0);
+            });
+        });
+        return plus;
+    }
+
+    private addMinus() {
+        const minus = this.add
+            .image(-60, 30, "minus")
+            .setScale(0.5)
+            .setInteractive();
+        minus.on("pointerup", () => {
+            this.player.take();
+        });
+        minus.on("pointerover", () => {
+            this.tweens.add(getPlusMinusButtonTweenConfig(minus));
+        });
+        minus.on("pointerout", () => {
+            this.tweens.getTweensOf(minus).forEach(x => {
+                x.stop(0);
+            });
+        });
+        return minus;
+    }
+
     private defineContainerClick(container: GameObjects.Container) {
-        const index = this.containerArray.indexOf(container);
         container.setInteractive();
         container.on("pointerup", () => {
             if (
-                // no edges between city and itself
+                // move player
                 this.graph.hasEdge(
                     this.player.getLocationName(),
                     container.name
                 )
             ) {
                 this.player.setLocation(getNode(this.graph, container.name));
-                (container.getAt(0) as GameObjects.Image).setTint(0x44ff44);
-                this.containerArray.forEach(cont => {
+                this.containers.forEach(cont => {
                     const consumCity = getNode(this.graph, cont.name);
                     consumCity.economize();
                     if (consumCity.economy.stock < 0) {
                         this.badEndScene();
                     }
                 });
-                this.containerArray.forEach((other, otherIndex) => {
-                    if (!(index === otherIndex)) {
-                        const otherImg = other.getAt(0) as GameObjects.Image;
-                        otherImg.clearTint();
+
+                // stop bouncing neighboring cities
+                this.tweens
+                    .getTweensOf(this.containers.map(cont => cont.getAt(0)))
+                    .forEach(tween => {
+                        tween.stop(0);
+                    });
+                this.containers.forEach(cont => {
+                    addProductionAnim(this, cont);
+
+                    if (
+                        this.graph.hasEdge(
+                            this.player.getLocationName(),
+                            cont.name
+                        )
+                    ) {
+                        this.tweens.add(
+                            getCityTweenConfig(cont.getAt(
+                                0
+                            ) as GameObjects.Image)
+                        );
                     }
                 });
+                this.updateBuildFactoryButton();
             }
         });
     }
 
-    private addEconomyInfo(nameText: GameObjects.Text) {
-        const midOfButton = nameText.width / 2 + nameText.x;
-        const stock = this.add.image(midOfButton, -60, "stock");
+    private addEconomyInfo() {
         const stockText = this.add.text(
-            midOfButton + 40,
-            -60 + textToIconOffset,
-            "",
-            textStyle
-        );
-        const production = this.add.image(midOfButton, 60, "production");
-        const prodText = this.add.text(
-            midOfButton + 40,
+            -40,
             60 + textToIconOffset,
             "",
-            textStyle
+            TextConfig.lg
         );
-        return { stockText, prodText, stock, production };
-    }
-
-    private addFittingButton(nameText: GameObjects.Text) {
-        const button = this.add.image(0, 0, "rectangleButton");
-        button.scaleX = (nameText.width + 20) / 160;
-        button.x += (nameText.width - button.width) / 2 + 10;
-        return button;
-    }
-
-    private drawEdges(cities: ICity[]) {
-        this.addLineGraphics(4, 0x0);
-        this.graph.edges().forEach(edge => {
-            const nodeV = cities.find(city => edge.v === city.name);
-            const nodeW = cities.find(city => edge.w === city.name);
-            const line = new Phaser.Geom.Line(
-                nodeV.x,
-                nodeV.y,
-                nodeW.x,
-                nodeW.y
-            );
-            this.travelPathLines.strokeLineShape(line);
-        });
-    }
-
-    private addLineGraphics(thickness: number, hexDecimal: number) {
-        this.travelPathLines = this.add.graphics({
-            lineStyle: { width: thickness, color: hexDecimal },
-        });
+        const prodText = this.add.text(
+            0,
+            60 + textToIconOffset,
+            "",
+            TextConfig.lg
+        );
+        return { stockText, prodText };
     }
 
     private badEndScene() {
         this.sound.stopAll();
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
+        this.scene.remove(this);
     }
 
     private toggleLevel(selectedLevel?: number) {
-        this.level = selectedLevel || (this.level % levelArray.length) + 1;
+        const nextLevel = (getLevel(this.registry) + 1) % levels.length;
+        setLevel(this.registry, selectedLevel || nextLevel);
+        this.restart();
+    }
+
+    private restart() {
         this.sound.stopAll();
         this.scene.restart();
     }
@@ -433,7 +403,7 @@ function handleFileSelect(event: any, cb: () => void) {
             // tslint:disable-next-line: no-console
             console.log(json);
             // TODO #55 maybe not ideal to modify the levelArray from unintuitive, hidden position in code
-            levelArray.push(json);
+            levels.push(json);
             cb();
         } catch (err) {
             alert(

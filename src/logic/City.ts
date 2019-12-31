@@ -1,7 +1,6 @@
-import { ICity } from "./ICity";
 import { ILocation } from "./ILocation";
 
-export class City implements ICity, ILocation {
+export class City implements ILocation {
     constructor(
         public readonly name: string,
         public economy: {
