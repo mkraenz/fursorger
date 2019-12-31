@@ -6,13 +6,14 @@
 **Play now at [fursorger-game.herokuapp.com](https://fursorger-game.herokuapp.com).**
 
 ```
-I am the care taker who 
-tries to keep the dying world alive 
+I am the care taker who
+tries to keep the dying world alive
 as long as possible
 by traveling to cities,
 redistributing goods among cities,
 and building factories to build more goods
 ```
+
 [Big Hairy Audacious Goal](https://en.wikipedia.org/wiki/Big_Hairy_Audacious_Goal) Number 1.
 
 A phaser3 survival trading game in TypeScript.
@@ -28,13 +29,13 @@ Assumes you have globally installed
 
 Clone the git repository
 
-```
+```bash
 git clone https://github.com/proSingularity/fursorger.git
 ```
 
 Install, test and start:
 
-```
+```bash
 npm run sanity-check
 ```
 
@@ -42,18 +43,29 @@ npm run sanity-check
 
 Perform a quick build (bundle.js) and start server:
 
-```
+```bash
 npm run dev
 ```
 
 ### Running with Docker
 
-```
+```bash
 # Assumes local installation of Docker.
 npm run build && docker-compose up
 ```
 
 In your browser, navigate to [localhost:8080](http://localhost:8080).
+
+## Debugging
+
+```bash
+npm run dev
+# STEP: you can close the window that opens automatically
+# STEP: Set a breakpoint in VS CODE
+# STEP: Start 'Chrome' debug config in VS Code
+# STEP: Maybe reload the window
+# STEP: Trigger the breakpoint
+```
 
 ## Deployment
 

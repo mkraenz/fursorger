@@ -1,11 +1,16 @@
 import { Graph } from "graphlib";
+import { ILevel } from "../levels/ILevel";
 import { City } from "./City";
-import { ILevel } from "./ILevel";
-import { IMainSceneParams } from "./IMainSceneParams";
+import { IPlayer } from "./IPlayer";
 import { Player } from "./Player";
 
 export class LogicBuilder {
-    public static create(level: ILevel): IMainSceneParams {
+    public static create(
+        level: ILevel
+    ): {
+        player: IPlayer;
+        graph: Graph;
+    } {
         const graph = new Graph({ directed: false });
         level.cities.forEach(city => {
             graph.setNode(
