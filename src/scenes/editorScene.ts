@@ -160,8 +160,8 @@ export class EditorScene extends Scene {
             .image(0, 0, "background")
             .setOrigin(0)
             .setScale(
-                (gameConfig.width as number) / 500,
-                (gameConfig.height as number) / 300
+                (gameConfig.scale.width as number) / 500,
+                (gameConfig.scale.height as number) / 300
             );
     }
 
@@ -254,8 +254,8 @@ export class EditorScene extends Scene {
     private addCityCreationButton() {
         const creationButton = this.add
             .image(
-                (gameConfig.width as number) - 100,
-                (gameConfig.height as number) - 100,
+                (gameConfig.scale.width as number) - 100,
+                (gameConfig.scale.height as number) - 100,
                 "plus"
             )
             .setInteractive();
