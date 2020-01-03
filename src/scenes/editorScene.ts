@@ -60,11 +60,20 @@ export class EditorScene extends Scene {
         this.economyArray = [];
         this.selectedContainer = [];
         this.graph = new Graph({ directed: false });
-        this.addBackground();
         this.addCityCreationButton();
         this.addBackpackContainer();
         this.addExportLevelButton();
         this.addMainSceneButton();
+        const textField = document.createElement("input");
+        textField.type = "text";
+        textField.id = "text";
+        this.add.dom(100, 50, textField);
+        textField.addEventListener("change", () => {
+            if (this.selectedContainer.length === 1) {
+                this.selectedContainer[0].name = textField.value;
+            }
+            textField.value = "";
+        });
     }
 
     public update() {
@@ -397,6 +406,8 @@ export class EditorScene extends Scene {
         button.on("pointerup", () => {
             this.sound.stopAll();
             this.scene.add("mainScene", MainScene, true, { x: 400, y: 300 });
+            const textField = document.getElementById("text");
+            textField.remove();
         });
     }
 }
