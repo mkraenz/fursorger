@@ -95,8 +95,11 @@ export class LoadingScene extends Scene {
         );
         this.load.image("goodEnd", "./assets/images/goodEnd1280×853.jpg");
         this.load.image("badEnd", "./assets/images/badEnd640x512.jpg");
-        this.load.image("city", "./assets/images/town-01-no-prod387x295.png");
-        this.load.image("background", "./assets/images/map1024x768.png");
+        this.load.image("city", "./assets/images/town-01-inkarnate387x295.png");
+        this.load.image(
+            "background",
+            "./assets/images/map-inkarnate1024x768.png"
+        );
         this.load.image("backpack", "./assets/images/backpack64x64.png");
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
