@@ -1,8 +1,8 @@
 {
     "name": "fursorger",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Fursorger - a Phaser 3 game in Typescript",
-    "license": "MIT",
+    "license": "UNLICENSED",
     "scripts": {
         "prebuild": "del-cli build",
         "build": "webpack --mode production",
