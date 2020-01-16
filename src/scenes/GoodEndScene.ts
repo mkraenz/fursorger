@@ -1,10 +1,9 @@
 import { Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { levels } from "../levels";
+import { getLevel, setLevel } from "../registry/level";
 import { MainScene } from "./mainScene";
-const textStyle = {
-    font: "48px Arial",
-    fill: "#000000",
-};
+
 export class GoodEndScene extends Scene {
     constructor() {
         super({
@@ -22,6 +21,10 @@ export class GoodEndScene extends Scene {
             )
             .setInteractive();
         bg.addListener("pointerup", () => {
+            setLevel(
+                this.registry,
+                (getLevel(this.registry) + 1) % levels.length
+            );
             this.scene.add("MainScene", MainScene, true);
             this.scene.remove(this);
         });
