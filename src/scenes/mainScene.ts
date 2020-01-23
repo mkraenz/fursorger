@@ -5,7 +5,13 @@ import {
     addProductionAnim,
     setProductionTextColor,
 } from "../anims/addProductionAnim";
-import { balloonDisturbances } from "../anims/balloon-movements";
+import {
+    balloonDisturbances,
+    getCaseOfPath,
+    incrementCaseOfPath,
+    numberOfCases,
+    pathCaseArray,
+} from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
@@ -61,7 +67,7 @@ export class MainScene extends Scene {
 
         // initialUpdate
         this.updateBuildFactoryButton();
-        this.addZeppelins();
+        this.addBalloons();
     }
 
     public update() {
@@ -76,28 +82,33 @@ export class MainScene extends Scene {
         ]);
     }
 
-    private addZeppelins() {
+    private addBalloons() {
         this.graph.edges().forEach(edge => {
-            const firstCity = this.containers.find(
-                container => container.name === edge.v
-            );
-            const secondCity = this.containers.find(
-                container => container.name === edge.w
-            );
-
-            this.addZeppelinForPath(
-                firstCity.x,
-                firstCity.y,
-                secondCity.x,
-                secondCity.y
-            );
+            const index = pathCaseArray.length;
+            const pathCase = {
+                v: edge.v,
+                w: edge.w,
+                case: index % numberOfCases,
+            };
+            pathCaseArray.push(pathCase);
+            this.addBalloonForEdge(edge.v, edge.w);
         });
     }
 
-    private addZeppelinForPath(x1: number, y1: number, x2: number, y2: number) {
+    private addBalloonForEdge(firstCityName: string, secondCityName: string) {
+        const firstContainer = this.containers.find(
+            container => container.name === firstCityName
+        );
+        const secondContainer = this.containers.find(
+            container => container.name === secondCityName
+        );
+        const x1 = firstContainer.x;
+        const y1 = firstContainer.y;
+        const x2 = secondContainer.x;
+        const y2 = secondContainer.y;
         const image = this.add
             .image(x1, y1, "balloon")
-            .setScale(50 / 1600, 50 / 1600);
+            .setScale(30 / 1600, 30 / 1600);
         const tween = this.tweens.add({
             targets: image,
             x: x2,
@@ -112,11 +123,17 @@ export class MainScene extends Scene {
                     y1 +
                     Math.floor(
                         ((image.x - x1) * (y2 - y1)) / (x2 - x1) +
-                            balloonDisturbances(image.x, x1, x2, 5)
+                            balloonDisturbances(
+                                image.x,
+                                x1,
+                                x2,
+                                getCaseOfPath(firstCityName, secondCityName)
+                            )
                     );
             },
             onYoyo() {
                 tween.setTimeScale(Math.max(0.2, Math.random()));
+                incrementCaseOfPath(firstCityName, secondCityName);
             },
         });
     }
