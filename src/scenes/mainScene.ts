@@ -5,6 +5,7 @@ import {
     addProductionAnim,
     setProductionTextColor,
 } from "../anims/addProductionAnim";
+import { balloonDisturbances } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
@@ -63,7 +64,19 @@ export class MainScene extends Scene {
         this.addZeppelins();
     }
 
-    public addZeppelins() {
+    public update() {
+        this.playerStockInfo.setText(this.player.stock.toString());
+        this.playerTurnInfo.setText(this.player.turn.toString());
+        this.updateCityInfos();
+        this.updateVisibilityTradeButtons();
+
+        this.debugText.setText([
+            `x: ${this.input.activePointer.x}`,
+            `y: ${this.input.activePointer.y}`,
+        ]);
+    }
+
+    private addZeppelins() {
         this.graph.edges().forEach(edge => {
             const firstCity = this.containers.find(
                 container => container.name === edge.v
@@ -81,7 +94,7 @@ export class MainScene extends Scene {
         });
     }
 
-    public addZeppelinForPath(x1: number, y1: number, x2: number, y2: number) {
+    private addZeppelinForPath(x1: number, y1: number, x2: number, y2: number) {
         const image = this.add
             .image(x1, y1, "balloon")
             .setScale(50 / 1600, 50 / 1600);
@@ -96,24 +109,16 @@ export class MainScene extends Scene {
             repeat: -1,
             onUpdate() {
                 image.y =
-                    y1 + Math.floor(((image.x - x1) * (y2 - y1)) / (x2 - x1));
+                    y1 +
+                    Math.floor(
+                        ((image.x - x1) * (y2 - y1)) / (x2 - x1) +
+                            balloonDisturbances(image.x, x1, x2, 5)
+                    );
             },
             onYoyo() {
                 tween.setTimeScale(Math.max(0.2, Math.random()));
             },
         });
-    }
-
-    public update() {
-        this.playerStockInfo.setText(this.player.stock.toString());
-        this.playerTurnInfo.setText(this.player.turn.toString());
-        this.updateCityInfos();
-        this.updateVisibilityTradeButtons();
-
-        this.debugText.setText([
-            `x: ${this.input.activePointer.x}`,
-            `y: ${this.input.activePointer.y}`,
-        ]);
     }
 
     private updateVisibilityTradeButtons() {
