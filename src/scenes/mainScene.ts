@@ -60,6 +60,48 @@ export class MainScene extends Scene {
 
         // initialUpdate
         this.updateBuildFactoryButton();
+        this.addZeppelins();
+    }
+
+    public addZeppelins() {
+        this.graph.edges().forEach(edge => {
+            const firstCity = this.containers.find(
+                container => container.name === edge.v
+            );
+            const secondCity = this.containers.find(
+                container => container.name === edge.w
+            );
+
+            this.addZeppelinForPath(
+                firstCity.x,
+                firstCity.y,
+                secondCity.x,
+                secondCity.y
+            );
+        });
+    }
+
+    public addZeppelinForPath(x1: number, y1: number, x2: number, y2: number) {
+        const image = this.add
+            .image(x1, y1, "balloon")
+            .setScale(50 / 1600, 50 / 1600);
+        const tween = this.tweens.add({
+            targets: image,
+            x: x2,
+            ease: t => {
+                return t;
+            },
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            onUpdate() {
+                image.y =
+                    y1 + Math.floor(((image.x - x1) * (y2 - y1)) / (x2 - x1));
+            },
+            onYoyo() {
+                tween.setTimeScale(Math.max(0.2, Math.random()));
+            },
+        });
     }
 
     public update() {
