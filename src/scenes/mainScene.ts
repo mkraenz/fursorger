@@ -8,9 +8,9 @@ import {
 import {
     balloonDisturbances,
     getCaseOfPath,
-    incrementCaseOfPath,
     numberOfCases,
     pathCaseArray,
+    randomCaseOfPath,
 } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
@@ -115,9 +115,11 @@ export class MainScene extends Scene {
             ease: t => {
                 return t;
             },
-            duration: 1000,
+            duration: 2000,
             yoyo: true,
             repeat: -1,
+            delay: Math.random() * 1000,
+            hold: Math.random() * 1000,
             onUpdate() {
                 image.y =
                     y1 +
@@ -132,8 +134,12 @@ export class MainScene extends Scene {
                     );
             },
             onYoyo() {
-                tween.setTimeScale(Math.max(0.2, Math.random()));
-                incrementCaseOfPath(firstCityName, secondCityName);
+                tween.setTimeScale(Math.max(Math.random(), 0.4));
+                randomCaseOfPath(firstCityName, secondCityName);
+            },
+            onLoop() {
+                tween.setTimeScale(Math.max(Math.random(), 0.4));
+                randomCaseOfPath(firstCityName, secondCityName);
             },
         });
     }
