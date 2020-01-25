@@ -25,7 +25,6 @@ import { getLevel, setLevel } from "../registry/level";
 import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { GoodEndScene } from "./GoodEndScene";
-
 const DEBUG = false;
 
 const PLAYER_INFO_X = 50;
@@ -106,42 +105,79 @@ export class MainScene extends Scene {
         const y1 = firstContainer.y;
         const x2 = secondContainer.x;
         const y2 = secondContainer.y;
+        // may have to switch axes for good-looking and well defined movement
         const image = this.add
             .image(x1, y1, "balloon")
             .setScale(30 / 1600, 30 / 1600);
-        const tween = this.tweens.add({
-            targets: image,
-            x: x2,
-            ease: t => {
-                return t;
-            },
-            duration: 2000,
-            yoyo: true,
-            repeat: -1,
-            delay: Math.random() * 1000,
-            hold: Math.random() * 1000,
-            onUpdate() {
-                image.y =
-                    y1 +
-                    Math.floor(
-                        ((image.x - x1) * (y2 - y1)) / (x2 - x1) +
-                            balloonDisturbances(
-                                image.x,
-                                x1,
-                                x2,
-                                getCaseOfPath(firstCityName, secondCityName)
-                            )
-                    );
-            },
-            onYoyo() {
-                tween.setTimeScale(Math.max(Math.random(), 0.4));
-                randomCaseOfPath(firstCityName, secondCityName);
-            },
-            onLoop() {
-                tween.setTimeScale(Math.max(Math.random(), 0.4));
-                randomCaseOfPath(firstCityName, secondCityName);
-            },
-        });
+        if (Math.abs(x1 - x2) >= Math.abs(y1 - y2)) {
+            const tween = this.tweens.add({
+                targets: image,
+                x: x2,
+                ease: t => {
+                    return t;
+                },
+                duration: 2000,
+                yoyo: true,
+                repeat: -1,
+                delay: Math.random() * 1000,
+                hold: Math.random() * 1000,
+                onUpdate() {
+                    image.y =
+                        y1 +
+                        Math.floor(
+                            ((image.x - x1) * (y2 - y1)) / (x2 - x1) +
+                                balloonDisturbances(
+                                    image.x,
+                                    x1,
+                                    x2,
+                                    getCaseOfPath(firstCityName, secondCityName)
+                                )
+                        );
+                },
+                onYoyo() {
+                    tween.setTimeScale(Math.max(Math.random(), 0.4));
+                    randomCaseOfPath(firstCityName, secondCityName);
+                },
+                onLoop() {
+                    tween.setTimeScale(Math.max(Math.random(), 0.4));
+                    randomCaseOfPath(firstCityName, secondCityName);
+                },
+            });
+        } else {
+            const tween = this.tweens.add({
+                targets: image,
+                y: y2,
+                ease: t => {
+                    return t;
+                },
+                duration: 2000,
+                yoyo: true,
+                repeat: -1,
+                delay: Math.random() * 1000,
+                hold: Math.random() * 1000,
+                onUpdate() {
+                    image.x =
+                        x1 +
+                        Math.floor(
+                            ((image.y - y1) * (x2 - x1)) / (y2 - y1) +
+                                balloonDisturbances(
+                                    image.y,
+                                    y1,
+                                    y2,
+                                    getCaseOfPath(firstCityName, secondCityName)
+                                )
+                        );
+                },
+                onYoyo() {
+                    tween.setTimeScale(Math.max(Math.random(), 0.4));
+                    randomCaseOfPath(firstCityName, secondCityName);
+                },
+                onLoop() {
+                    tween.setTimeScale(Math.max(Math.random(), 0.4));
+                    randomCaseOfPath(firstCityName, secondCityName);
+                },
+            });
+        }
     }
 
     private updateVisibilityTradeButtons() {
