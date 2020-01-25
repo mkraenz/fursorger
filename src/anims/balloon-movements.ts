@@ -6,7 +6,7 @@ export const balloonDisturbances = (
 ) => {
     switch (disturbenceCase) {
         case 1: {
-            return Math.floor(((t - x1) * (x2 - t)) / 100);
+            return Math.floor(((t - x1) * (x2 - t)) / 1000);
         }
         case 2: {
             return Math.floor(
@@ -32,7 +32,7 @@ export const balloonDisturbances = (
         }
         // numberOfCases should be the highest possible case + 1
         default: {
-            return Math.floor(((t - x1) * (x2 - t)) / 10000);
+            return Math.floor(((t - x1) * (x2 - t) * (x2 - t)) / 1000000);
         }
     }
 };
@@ -49,11 +49,12 @@ export const getCaseOfPath = (firstName: string, secondName: string) => {
     return pathCase.case;
 };
 
-export const incrementCaseOfPath = (firstName: string, secondName: string) => {
+export const randomCaseOfPath = (firstName: string, secondName: string) => {
     const possibleEdge = { v: firstName, w: secondName };
     const pathCase = this.pathCaseArray.find(
         path => path.v === firstName && path.w === secondName
     );
-    // returns undefined if secondName should be firstName and vice versa
-    pathCase.case = (pathCase.case + 1) % numberOfCases;
+
+    pathCase.case =
+        (pathCase.case + Math.floor(Math.random() * 6)) % numberOfCases;
 };
