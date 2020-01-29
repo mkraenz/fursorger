@@ -1,4 +1,9 @@
-export const balloonDisturbances = (
+import { random } from "lodash";
+import { GameObjects, Tweens } from "phaser";
+
+export type CustomTween = Tweens.Tween & { movementPattern: number };
+
+const balloonDisturbances = (
     t: number,
     x1: number,
     x2: number,
@@ -39,22 +44,78 @@ export const balloonDisturbances = (
 
 export const numberOfCases = 6;
 
-export let pathCaseArray = [];
+export function getBalloonTweenConfig(
+    image: GameObjects.Image,
+    x1: number,
+    x2: number,
+    y1: number,
+    y2: number
+) {
+    const MIN_BALLOON_SPEED = 0.4;
 
-export const getCaseOfPath = (firstName: string, secondName: string) => {
-    const pathCase = pathCaseArray.find(
-        path => path.v === firstName && path.w === secondName
-    );
-    // returns undefined if secondName should be firstName and vice versa
-    return pathCase.case;
-};
-
-export const randomCaseOfPath = (firstName: string, secondName: string) => {
-    const possibleEdge = { v: firstName, w: secondName };
-    const pathCase = this.pathCaseArray.find(
-        path => path.v === firstName && path.w === secondName
-    );
-
-    pathCase.case =
-        (pathCase.case + Math.floor(Math.random() * 6)) % numberOfCases;
-};
+    if (Math.abs(x1 - x2) >= Math.abs(y1 - y2)) {
+        return {
+            targets: image,
+            x: x2,
+            ease: t => t,
+            duration: 2000,
+            yoyo: true,
+            repeat: -1,
+            delay: Math.random() * 1000,
+            hold: Math.random() * 1000,
+            onUpdate() {
+                image.y =
+                    y1 +
+                    Math.floor(
+                        ((image.x - x1) * (y2 - y1)) / (x2 - x1) +
+                            balloonDisturbances(
+                                image.x,
+                                x1,
+                                x2,
+                                (this as CustomTween).movementPattern
+                            )
+                    );
+            },
+            onYoyo() {
+                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
+                (this as CustomTween).movementPattern = random(numberOfCases);
+            },
+            onRepeat() {
+                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
+                (this as CustomTween).movementPattern = random(numberOfCases);
+            },
+        };
+    } else {
+        return {
+            targets: image,
+            y: y2,
+            ease: t => t,
+            duration: 2000,
+            yoyo: true,
+            repeat: -1,
+            delay: Math.random() * 1000,
+            hold: Math.random() * 1000,
+            onUpdate() {
+                image.x =
+                    x1 +
+                    Math.floor(
+                        ((image.y - y1) * (x2 - x1)) / (y2 - y1) +
+                            balloonDisturbances(
+                                image.y,
+                                y1,
+                                y2,
+                                (this as CustomTween).movementPattern
+                            )
+                    );
+            },
+            onYoyo() {
+                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
+                (this as CustomTween).movementPattern = random(numberOfCases);
+            },
+            onRepeat() {
+                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
+                (this as CustomTween).movementPattern = random(numberOfCases);
+            },
+        };
+    }
+}
