@@ -1,17 +1,12 @@
 import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
+import { random } from "lodash";
 import { GameObjects, Scene } from "phaser";
 import {
     addProductionAnim,
     setProductionTextColor,
 } from "../anims/addProductionAnim";
-import {
-    balloonDisturbances,
-    getCaseOfPath,
-    numberOfCases,
-    pathCaseArray,
-    randomCaseOfPath,
-} from "../anims/balloon-movements";
+import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
@@ -82,16 +77,9 @@ export class MainScene extends Scene {
     }
 
     private addBalloons() {
-        this.graph.edges().forEach(edge => {
-            const index = pathCaseArray.length;
-            const pathCase = {
-                v: edge.v,
-                w: edge.w,
-                case: index % numberOfCases,
-            };
-            pathCaseArray.push(pathCase);
-            this.addBalloonForEdge(edge.v, edge.w);
-        });
+        this.graph
+            .edges()
+            .forEach(edge => this.addBalloonForEdge(edge.v, edge.w));
     }
 
     private addBalloonForEdge(firstCityName: string, secondCityName: string) {
@@ -101,83 +89,19 @@ export class MainScene extends Scene {
         const secondContainer = this.containers.find(
             container => container.name === secondCityName
         );
-        const x1 = firstContainer.x;
-        const y1 = firstContainer.y;
-        const x2 = secondContainer.x;
-        const y2 = secondContainer.y;
-        // may have to switch axes for good-looking and well defined movement
-        const image = this.add
-            .image(x1, y1, "balloon")
+        const balloon = this.add
+            .image(firstContainer.x, firstContainer.y, "balloon")
             .setScale(30 / 1600, 30 / 1600);
-        if (Math.abs(x1 - x2) >= Math.abs(y1 - y2)) {
-            const tween = this.tweens.add({
-                targets: image,
-                x: x2,
-                ease: t => {
-                    return t;
-                },
-                duration: 2000,
-                yoyo: true,
-                repeat: -1,
-                delay: Math.random() * 1000,
-                hold: Math.random() * 1000,
-                onUpdate() {
-                    image.y =
-                        y1 +
-                        Math.floor(
-                            ((image.x - x1) * (y2 - y1)) / (x2 - x1) +
-                                balloonDisturbances(
-                                    image.x,
-                                    x1,
-                                    x2,
-                                    getCaseOfPath(firstCityName, secondCityName)
-                                )
-                        );
-                },
-                onYoyo() {
-                    tween.setTimeScale(Math.max(Math.random(), 0.4));
-                    randomCaseOfPath(firstCityName, secondCityName);
-                },
-                onLoop() {
-                    tween.setTimeScale(Math.max(Math.random(), 0.4));
-                    randomCaseOfPath(firstCityName, secondCityName);
-                },
-            });
-        } else {
-            const tween = this.tweens.add({
-                targets: image,
-                y: y2,
-                ease: t => {
-                    return t;
-                },
-                duration: 2000,
-                yoyo: true,
-                repeat: -1,
-                delay: Math.random() * 1000,
-                hold: Math.random() * 1000,
-                onUpdate() {
-                    image.x =
-                        x1 +
-                        Math.floor(
-                            ((image.y - y1) * (x2 - x1)) / (y2 - y1) +
-                                balloonDisturbances(
-                                    image.y,
-                                    y1,
-                                    y2,
-                                    getCaseOfPath(firstCityName, secondCityName)
-                                )
-                        );
-                },
-                onYoyo() {
-                    tween.setTimeScale(Math.max(Math.random(), 0.4));
-                    randomCaseOfPath(firstCityName, secondCityName);
-                },
-                onLoop() {
-                    tween.setTimeScale(Math.max(Math.random(), 0.4));
-                    randomCaseOfPath(firstCityName, secondCityName);
-                },
-            });
-        }
+        const config = getBalloonTweenConfig(
+            balloon,
+            firstContainer.x,
+            secondContainer.x,
+            firstContainer.y,
+            secondContainer.y
+        );
+
+        const tween = this.tweens.add(config);
+        (tween as CustomTween).movementPattern = random(5);
     }
 
     private updateVisibilityTradeButtons() {
