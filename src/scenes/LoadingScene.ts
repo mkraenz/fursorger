@@ -108,6 +108,7 @@ export class LoadingScene extends Scene {
             "buildFactory",
             "./assets/images/buildFactoryButton128x128.png"
         );
+        this.load.image("balloon", "./assets/images/balloon1600x1600.png");
         this.load.svg("restart", "./assets/images/reload64x64.svg");
 
         this.load.audio("background", "./assets/sounds/bgm.mp3");

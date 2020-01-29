@@ -1,10 +1,12 @@
 import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
+import { random } from "lodash";
 import { GameObjects, Scene } from "phaser";
 import {
     addProductionAnim,
     setProductionTextColor,
 } from "../anims/addProductionAnim";
+import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
@@ -18,7 +20,6 @@ import { getLevel, setLevel } from "../registry/level";
 import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { GoodEndScene } from "./GoodEndScene";
-
 const DEBUG = false;
 
 const PLAYER_INFO_X = 50;
@@ -60,6 +61,7 @@ export class MainScene extends Scene {
 
         // initialUpdate
         this.updateBuildFactoryButton();
+        this.addBalloons();
     }
 
     public update() {
@@ -72,6 +74,34 @@ export class MainScene extends Scene {
             `x: ${this.input.activePointer.x}`,
             `y: ${this.input.activePointer.y}`,
         ]);
+    }
+
+    private addBalloons() {
+        this.graph
+            .edges()
+            .forEach(edge => this.addBalloonForEdge(edge.v, edge.w));
+    }
+
+    private addBalloonForEdge(firstCityName: string, secondCityName: string) {
+        const firstContainer = this.containers.find(
+            container => container.name === firstCityName
+        );
+        const secondContainer = this.containers.find(
+            container => container.name === secondCityName
+        );
+        const balloon = this.add
+            .image(firstContainer.x, firstContainer.y, "balloon")
+            .setScale(30 / 1600, 30 / 1600);
+        const config = getBalloonTweenConfig(
+            balloon,
+            firstContainer.x,
+            secondContainer.x,
+            firstContainer.y,
+            secondContainer.y
+        );
+
+        const tween = this.tweens.add(config);
+        (tween as CustomTween).movementPattern = random(5);
     }
 
     private updateVisibilityTradeButtons() {
