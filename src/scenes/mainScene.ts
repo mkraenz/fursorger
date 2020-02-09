@@ -6,7 +6,11 @@ import {
     addProductionAnim,
     setProductionTextColor,
 } from "../anims/addProductionAnim";
-import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
+import {
+    CustomTween,
+    getBalloonTweenConfig,
+    numberOfCases,
+} from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
@@ -25,6 +29,7 @@ const DEBUG = false;
 const PLAYER_INFO_X = 50;
 const textToIconOffset = -25;
 const CITY_SPRITE_SCALE = 0.18;
+const DELAY_TO_NEXT_TWEEN = 250;
 
 export class MainScene extends Scene {
     private player!: IPlayer;
@@ -92,16 +97,51 @@ export class MainScene extends Scene {
         const balloon = this.add
             .image(firstContainer.x, firstContainer.y, "balloon")
             .setScale(30 / 1600, 30 / 1600);
-        const config = getBalloonTweenConfig(
+        const balloon2 = this.add
+            .image(firstContainer.x, firstContainer.y, "balloon")
+            .setScale(30 / 1600, 30 / 1600);
+        balloon2.setAlpha(0.5);
+        const balloon3 = this.add
+            .image(firstContainer.x, firstContainer.y, "balloon")
+            .setScale(30 / 1600, 30 / 1600);
+        balloon3.setAlpha(0.25);
+        const randomDelay = Math.random();
+        const randomMovement = random(numberOfCases);
+        const frontConfig = getBalloonTweenConfig(
             balloon,
             firstContainer.x,
             secondContainer.x,
             firstContainer.y,
-            secondContainer.y
+            secondContainer.y,
+            randomDelay
+        );
+        const frontTween = this.tweens.add(frontConfig);
+        (frontTween as CustomTween).movementPattern = randomMovement;
+        const config2 = getBalloonTweenConfig(
+            balloon2,
+            firstContainer.x,
+            secondContainer.x,
+            firstContainer.y,
+            secondContainer.y,
+            randomDelay + DELAY_TO_NEXT_TWEEN
         );
 
-        const tween = this.tweens.add(config);
-        (tween as CustomTween).movementPattern = random(5);
+        const tween2 = this.tweens.add(config2);
+        (tween2 as CustomTween).movementPattern = randomMovement;
+        (tween2 as CustomTween).frontTween = frontTween as CustomTween;
+
+        const config3 = getBalloonTweenConfig(
+            balloon3,
+            firstContainer.x,
+            secondContainer.x,
+            firstContainer.y,
+            secondContainer.y,
+            randomDelay + 2 * DELAY_TO_NEXT_TWEEN
+        );
+
+        const tween3 = this.tweens.add(config3);
+        (tween3 as CustomTween).movementPattern = randomMovement;
+        (tween3 as CustomTween).frontTween = tween2 as CustomTween;
     }
 
     private updateVisibilityTradeButtons() {

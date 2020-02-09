@@ -1,7 +1,10 @@
 import { random } from "lodash";
 import { GameObjects, Tweens } from "phaser";
 
-export type CustomTween = Tweens.Tween & { movementPattern: number };
+export type CustomTween = Tweens.Tween & { movementPattern: number } & {
+    startDelay: number;
+    frontTween?: CustomTween;
+};
 
 const balloonDisturbances = (
     t: number,
@@ -49,9 +52,11 @@ export function getBalloonTweenConfig(
     x1: number,
     x2: number,
     y1: number,
-    y2: number
+    y2: number,
+    startDelay: number
 ) {
     const MIN_BALLOON_SPEED = 0.4;
+    const MAX_BALLOON_SPEED = 0.6;
 
     if (Math.abs(x1 - x2) >= Math.abs(y1 - y2)) {
         return {
@@ -61,8 +66,7 @@ export function getBalloonTweenConfig(
             duration: 2000,
             yoyo: true,
             repeat: -1,
-            delay: Math.random() * 1000,
-            hold: Math.random() * 1000,
+            delay: startDelay,
             onUpdate() {
                 image.y =
                     y1 +
@@ -77,12 +81,40 @@ export function getBalloonTweenConfig(
                     );
             },
             onYoyo() {
-                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                if ((this as CustomTween).frontTween === undefined) {
+                    this.setTimeScale(
+                        Math.min(
+                            Math.max(Math.random(), MIN_BALLOON_SPEED),
+                            MAX_BALLOON_SPEED
+                        )
+                    );
+                    (this as CustomTween).movementPattern = random(
+                        numberOfCases
+                    );
+                } else {
+                    this.setTimeScale(
+                        (this as CustomTween).frontTween.timeScale
+                    );
+                    (this as CustomTween).movementPattern = (this as CustomTween).frontTween.movementPattern;
+                }
             },
             onRepeat() {
-                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                if ((this as CustomTween).frontTween === undefined) {
+                    this.setTimeScale(
+                        Math.min(
+                            Math.max(Math.random(), MIN_BALLOON_SPEED),
+                            MAX_BALLOON_SPEED
+                        )
+                    );
+                    (this as CustomTween).movementPattern = random(
+                        numberOfCases
+                    );
+                } else {
+                    this.setTimeScale(
+                        (this as CustomTween).frontTween.timeScale
+                    );
+                    (this as CustomTween).movementPattern = (this as CustomTween).frontTween.movementPattern;
+                }
             },
         };
     } else {
@@ -93,8 +125,7 @@ export function getBalloonTweenConfig(
             duration: 2000,
             yoyo: true,
             repeat: -1,
-            delay: Math.random() * 1000,
-            hold: Math.random() * 1000,
+            delay: startDelay,
             onUpdate() {
                 image.x =
                     x1 +
@@ -109,12 +140,40 @@ export function getBalloonTweenConfig(
                     );
             },
             onYoyo() {
-                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                if ((this as CustomTween).frontTween === undefined) {
+                    this.setTimeScale(
+                        Math.min(
+                            Math.max(Math.random(), MIN_BALLOON_SPEED),
+                            MAX_BALLOON_SPEED
+                        )
+                    );
+                    (this as CustomTween).movementPattern = random(
+                        numberOfCases
+                    );
+                } else {
+                    this.setTimeScale(
+                        (this as CustomTween).frontTween.timeScale
+                    );
+                    (this as CustomTween).movementPattern = (this as CustomTween).frontTween.movementPattern;
+                }
             },
             onRepeat() {
-                this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                if ((this as CustomTween).frontTween === undefined) {
+                    this.setTimeScale(
+                        Math.min(
+                            Math.max(Math.random(), MIN_BALLOON_SPEED),
+                            MAX_BALLOON_SPEED
+                        )
+                    );
+                    (this as CustomTween).movementPattern = random(
+                        numberOfCases
+                    );
+                } else {
+                    this.setTimeScale(
+                        (this as CustomTween).frontTween.timeScale
+                    );
+                    (this as CustomTween).movementPattern = (this as CustomTween).frontTween.movementPattern;
+                }
             },
         };
     }
