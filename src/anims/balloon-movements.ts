@@ -1,10 +1,31 @@
 import { random } from "lodash";
 import { GameObjects, Tweens } from "phaser";
 
+const TWEEN_AFTERIMAGE_STEPS = 10;
 export type CustomTween = Tweens.Tween & { movementPattern: number } & {
     startDelay: number;
     frontTween?: CustomTween;
+    // counter should be between 1 and TWEEN_AFTERIMAGE_STEP - 1
+    // TODO: better name than "counter"
+    counter: number;
 };
+
+export const markedPoints = [];
+
+function isTimeToMark(x: number, x1: number, x2: number, counter: number) {
+    if (counter < TWEEN_AFTERIMAGE_STEPS) {
+        return (
+            Math.abs(x - x1) >
+            (Math.abs(x2 - x1) / TWEEN_AFTERIMAGE_STEPS) * counter
+        );
+    } else {
+        return (
+            Math.abs(x - x1) <
+            (Math.abs(x2 - x1) / TWEEN_AFTERIMAGE_STEPS) *
+                (2 * TWEEN_AFTERIMAGE_STEPS - counter)
+        );
+    }
+}
 
 const balloonDisturbances = (
     t: number,
@@ -79,6 +100,14 @@ export function getBalloonTweenConfig(
                                 (this as CustomTween).movementPattern
                             )
                     );
+
+                if (
+                    (this as CustomTween).frontTween === undefined &&
+                    isTimeToMark(image.x, x1, x2, (this as CustomTween).counter)
+                ) {
+                    markedPoints.push({ x: image.x, y: image.y });
+                    (this as CustomTween).counter += 1;
+                }
             },
             onYoyo() {
                 if ((this as CustomTween).frontTween === undefined) {
@@ -109,6 +138,7 @@ export function getBalloonTweenConfig(
                     (this as CustomTween).movementPattern = random(
                         numberOfCases
                     );
+                    (this as CustomTween).counter = 1;
                 } else {
                     this.setTimeScale(
                         (this as CustomTween).frontTween.timeScale
