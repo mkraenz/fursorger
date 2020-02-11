@@ -48,7 +48,7 @@ export class MainScene extends Scene {
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         this.addBackgroundMusic();
-        this.addBackground();
+        this.addBackground(currentLevel.background);
         this.addCities(cityData);
         this.addPlayerInfo();
         this.addLevelButton();
@@ -256,14 +256,13 @@ export class MainScene extends Scene {
         this.sound.add("background").play("", { loop: true });
     }
 
-    private addBackground() {
-        this.add
-            .image(0, 0, "background")
-            .setOrigin(0)
-            .setScale(
-                (gameConfig.scale.width as number) / 1024,
-                (gameConfig.scale.height as number) / 768
-            );
+    private addBackground(key: string) {
+        const background = this.add.image(0, 0, key).setOrigin(0);
+
+        background.setScale(
+            (gameConfig.scale.width as number) / background.width,
+            (gameConfig.scale.height as number) / background.height
+        );
     }
 
     private addCities(cities: ICity[]) {
