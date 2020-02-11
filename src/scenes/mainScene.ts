@@ -19,6 +19,7 @@ import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
 import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
+import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
 const DEBUG = false;
 
@@ -52,6 +53,7 @@ export class MainScene extends Scene {
         this.addCities(cityData);
         this.addPlayerInfo();
         this.addLevelButton();
+        this.addEditorButton();
         this.addImportLevelButton();
         this.addExportLevelButton();
         this.debugText = this.add
@@ -127,6 +129,17 @@ export class MainScene extends Scene {
             .setInteractive();
         button.on("pointerup", () => {
             this.toggleLevel();
+        });
+    }
+
+    private addEditorButton() {
+        const button = this.add
+            .text(202, 747, "Editor", TextConfig.sm)
+            .setInteractive();
+        button.on("pointerup", () => {
+            this.sound.stopAll();
+            this.scene.add("EditorScene", EditorScene, true);
+            this.scene.remove(this);
         });
     }
 

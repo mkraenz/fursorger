@@ -53,6 +53,13 @@ export class EditorScene extends Scene {
 
         this.backpack = 0;
 
+        this.add
+            .image(0, 0, "background")
+            .setOrigin(0)
+            .setScale(
+                (gameConfig.scale.width as number) / 1024,
+                (gameConfig.scale.height as number) / 768
+            );
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
