@@ -11,4 +11,5 @@ export const level1: ILevel = {
         { first: "Ablesh", second: "Eflar" },
     ],
     playerStock: 3,
+    background: "background2",
 };

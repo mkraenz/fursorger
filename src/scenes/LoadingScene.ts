@@ -104,6 +104,7 @@ export class LoadingScene extends Scene {
         this.load.image("plus", "./assets/images/plus64x64.png");
         this.load.image("minus", "./assets/images/minus64x64.png");
         this.load.image("hourglass", "./assets/images/hourglass64x64.png");
+        this.load.image("background2", "./assets/images/background500x300.png");
         this.load.image(
             "buildFactory",
             "./assets/images/buildFactoryButton128x128.png"
