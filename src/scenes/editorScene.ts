@@ -433,6 +433,7 @@ export class EditorScene extends Scene {
             cities,
             travelPaths,
             playerStock: this.backpack,
+            background: "background2",
         };
     }
 
