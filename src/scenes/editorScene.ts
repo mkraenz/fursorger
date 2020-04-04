@@ -34,11 +34,7 @@ export class EditorScene extends Scene {
 
         this.backpack = 0;
 
-        const background = this.add.image(0, 0, "background2").setOrigin(0);
-        background.setScale(
-            (gameConfig.scale.width as number) / background.width,
-            (gameConfig.scale.height as number) / background.height
-        );
+        this.addBackground();
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
@@ -172,13 +168,11 @@ export class EditorScene extends Scene {
     }
 
     private addBackground() {
-        this.add
-            .image(0, 0, "background")
-            .setOrigin(0)
-            .setScale(
-                (gameConfig.scale.width as number) / 500,
-                (gameConfig.scale.height as number) / 300
-            );
+        const background = this.add.image(0, 0, "background2").setOrigin(0);
+        background.setScale(
+            (gameConfig.scale.width as number) / background.width,
+            (gameConfig.scale.height as number) / background.height
+        );
     }
 
     private creationButtonClicked() {
@@ -439,7 +433,6 @@ export class EditorScene extends Scene {
             .setScale(100 / 200);
 
         button.on("pointerup", () => {
-            this.sound.stopAll();
             this.scene.add("mainScene", MainScene, true, { x: 400, y: 300 });
             this.scene.remove(this);
             const textField = document.getElementById("text");
