@@ -111,7 +111,13 @@ export class LoadingScene extends Scene {
         );
         this.load.image("balloon", "./assets/images/balloon1600x1600.png");
         this.load.svg("restart", "./assets/images/reload64x64.svg");
-
+        this.load.image("stock", "./assets/images/storage64x64.png");
+        this.load.image(
+            "production",
+            "./assets/images/decreasing-bars64x64.png"
+        );
+        this.load.image("play", "./assets/images/playArrow300x200.png");
+        this.load.image("export", "./assets/images/export180x120.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
     }
 
