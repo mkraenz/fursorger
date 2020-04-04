@@ -29,26 +29,6 @@ export class EditorScene extends Scene {
         });
     }
 
-    public preload(): void {
-        this.load.image(
-            "rectangleButton",
-            " ./assets/images/blank_rectangle60x160.png"
-        );
-        this.load.image("background", "./assets/images/background500x300.png");
-        this.load.image("backpack", "./assets/images/backpack64x64.png");
-        this.load.image("stock", "./assets/images/storage64x64.png");
-        this.load.image(
-            "production",
-            "./assets/images/decreasing-bars64x64.png"
-        );
-        this.load.image("plus", "./assets/images/plus64x64.png");
-        this.load.image("minus", "./assets/images/minus64x64.png");
-        this.load.image("play", "./assets/images/playArrow300x200.png");
-        this.load.image("export", "./assets/images/export180x120.png");
-
-        this.load.audio("background", "./assets/sounds/bgm.mp3");
-    }
-
     public create(): void {
         // TODO #55 consider moving into title screen
 
