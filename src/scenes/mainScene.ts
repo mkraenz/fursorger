@@ -10,6 +10,7 @@ import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
+import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { gameConfig } from "../game-config";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
@@ -116,10 +117,10 @@ export class MainScene extends Scene {
         });
     }
 
-    private handleFileSelect(event: any) {
-        handleFileSelect(event, () => {
-            this.toggleLevel(levels.length - 1);
-        });
+    private async handleFileSelect(event: any) {
+        const importedLevel = await parseLevelFromJsonUpload(event);
+        levels.push(importedLevel);
+        this.toggleLevel(levels.length - 1);
     }
 
     private addLevelButton() {
@@ -423,25 +424,4 @@ export class MainScene extends Scene {
     private restart() {
         this.scene.restart();
     }
-}
-
-function handleFileSelect(event: any, cb: () => void) {
-    const files = event.target.files; // FileList object
-    const reader = new FileReader();
-    // Closure to capture the file information.
-    reader.onload = file => {
-        try {
-            const json = JSON.parse(file.target.result as string);
-            // tslint:disable-next-line: no-console
-            console.log(json);
-            // TODO #55 maybe not ideal to modify the levelArray from unintuitive, hidden position in code
-            levels.push(json);
-            cb();
-        } catch (err) {
-            alert(
-                `Error when trying to parse file as JSON. Original error: ${err.message}`
-            );
-        }
-    };
-    reader.readAsText(files[0]);
 }
