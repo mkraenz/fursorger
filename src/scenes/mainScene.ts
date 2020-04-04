@@ -10,6 +10,7 @@ import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
 import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
+import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { gameConfig } from "../game-config";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
@@ -48,7 +49,6 @@ export class MainScene extends Scene {
         const logicObjects = LogicBuilder.create(currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        this.addBackgroundMusic();
         this.addBackground(currentLevel.background);
         this.addCities(cityData);
         this.addPlayerInfo();
@@ -117,10 +117,10 @@ export class MainScene extends Scene {
         });
     }
 
-    private handleFileSelect(event: any) {
-        handleFileSelect(event, () => {
-            this.toggleLevel(levels.length - 1);
-        });
+    private async handleFileSelect(event: any) {
+        const importedLevel = await parseLevelFromJsonUpload(event);
+        levels.push(importedLevel);
+        this.toggleLevel(levels.length - 1);
     }
 
     private addLevelButton() {
@@ -137,7 +137,6 @@ export class MainScene extends Scene {
             .text(202, 747, "Editor", TextConfig.sm)
             .setInteractive();
         button.on("pointerup", () => {
-            this.sound.stopAll();
             this.scene.add("EditorScene", EditorScene, true);
             this.scene.remove(this);
         });
@@ -249,12 +248,11 @@ export class MainScene extends Scene {
         this.player.factories--;
         this.updateBuildFactoryButton();
         if (this.isWin()) {
-            this.sound.stopAll();
             this.scene.add("GoodEndScene", GoodEndScene, true, {
                 x: 400,
                 y: 300,
             });
-            this.scene.remove(this);
+            this.scene.remove("MainScene");
         }
     }
 
@@ -263,10 +261,6 @@ export class MainScene extends Scene {
             city => city.economy.production < 0
         );
         return endangeredCities.length === 0;
-    }
-
-    private addBackgroundMusic() {
-        this.sound.add("background").play("", { loop: true });
     }
 
     private addBackground(key: string) {
@@ -417,9 +411,8 @@ export class MainScene extends Scene {
     }
 
     private badEndScene() {
-        this.sound.stopAll();
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
-        this.scene.remove(this);
+        this.scene.remove("MainScene");
     }
 
     private toggleLevel(selectedLevel?: number) {
@@ -429,28 +422,6 @@ export class MainScene extends Scene {
     }
 
     private restart() {
-        this.sound.stopAll();
         this.scene.restart();
     }
-}
-
-function handleFileSelect(event: any, cb: () => void) {
-    const files = event.target.files; // FileList object
-    const reader = new FileReader();
-    // Closure to capture the file information.
-    reader.onload = file => {
-        try {
-            const json = JSON.parse(file.target.result as string);
-            // tslint:disable-next-line: no-console
-            console.log(json);
-            // TODO #55 maybe not ideal to modify the levelArray from unintuitive, hidden position in code
-            levels.push(json);
-            cb();
-        } catch (err) {
-            alert(
-                `Error when trying to parse file as JSON. Original error: ${err.message}`
-            );
-        }
-    };
-    reader.readAsText(files[0]);
 }
