@@ -1,5 +1,4 @@
 import { saveAs } from "file-saver";
-import { Graph } from "graphlib";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
 import { MainScene } from "./mainScene";
@@ -13,14 +12,16 @@ const nameTextStyle = {
     fill: "#000000",
 };
 const textToIconOffset = -25;
+const NAME_TEXT_TO_BUTTON_OFFSET = 20;
+const PRODUCTION_INDEX = 2;
+const STOCK_INDEX = 1;
 export class EditorScene extends Scene {
     private containerArray!: GameObjects.Container[];
-    private economyArray!: Array<{ stock: number; production: number }>;
     private backpackContainer!: GameObjects.Container;
     private backpack: number;
     private travelPathLines!: GameObjects.Graphics;
     private selectedContainer!: GameObjects.Container[];
-    private graph!: Graph;
+    private paths!: Array<{ first: string; second: string }>;
 
     constructor() {
         super({
@@ -62,9 +63,8 @@ export class EditorScene extends Scene {
             lineStyle: { width: 4, color: 0x0 },
         });
         this.containerArray = [];
-        this.economyArray = [];
+        this.paths = [];
         this.selectedContainer = [];
-        this.graph = new Graph({ directed: false });
         this.addCityCreationButton();
         this.addBackpackContainer();
         this.addExportLevelButton();
@@ -75,15 +75,28 @@ export class EditorScene extends Scene {
         this.add.dom(100, 50, textField);
         textField.addEventListener("change", () => {
             if (this.selectedContainer.length === 1) {
+                const oldContainerName = this.selectedContainer[0].name;
                 this.selectedContainer[0].name = textField.value;
+                this.adjustPathsToNameChange(oldContainerName, textField.value);
             }
             textField.value = "";
         });
     }
 
+    public adjustPathsToNameChange(oldName: string, newName: string) {
+        this.paths.forEach(path => {
+            if (path.first === oldName) {
+                path.first = newName;
+            }
+            if (path.second === oldName) {
+                path.second = newName;
+            }
+        });
+    }
+
     public update() {
         this.updateEdges();
-        this.updateEconomyText();
+        this.updateTextAndButton();
         (this.backpackContainer.getAt(0) as GameObjects.Text).setText(
             this.backpack.toString()
         );
@@ -138,12 +151,12 @@ export class EditorScene extends Scene {
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
-        this.graph.edges().forEach(edge => {
+        this.paths.forEach(path => {
             const nodeV = this.containerArray.find(
-                container => edge.v === container.name
+                container => path.first === container.name
             );
             const nodeW = this.containerArray.find(
-                container => edge.w === container.name
+                container => path.second === container.name
             );
             const line = new Phaser.Geom.Line(
                 nodeV.x,
@@ -155,17 +168,26 @@ export class EditorScene extends Scene {
         });
     }
 
-    private updateEconomyText() {
+    private updateTextAndButton() {
         this.containerArray.forEach(container => {
-            const economy = this.economyArray[
-                this.containerArray.indexOf(container)
-            ];
-            (container.getAt(1) as GameObjects.Text).setText(
-                economy.stock.toString()
-            );
-            (container.getAt(2) as GameObjects.Text).setText(
-                economy.production.toString()
-            );
+            const prodText = container.getAt(
+                PRODUCTION_INDEX
+            ) as GameObjects.Text;
+            prodText.setText(prodText.w.toString());
+            const stockText = container.getAt(STOCK_INDEX) as GameObjects.Text;
+            stockText.setText(stockText.w.toString());
+            const nameText = container.getAt(
+                container.length - 1
+            ) as GameObjects.Text;
+            nameText.setText(container.name);
+            const button = container.getAt(0) as GameObjects.Image;
+            const xScale =
+                (nameText.width + 2 * NAME_TEXT_TO_BUTTON_OFFSET) /
+                button.width;
+            button.setScale(xScale, 1);
+            nameText.x =
+                (-button.width * xScale) / 2 + NAME_TEXT_TO_BUTTON_OFFSET;
+            nameText.y = -button.height / 2;
         });
     }
 
@@ -182,9 +204,10 @@ export class EditorScene extends Scene {
     private creationButtonClicked() {
         const button = this.add.image(0, 0, "rectangleButton");
         const container = this.add.container(230, 170, [button]);
-        this.addEconomy(container);
         // setSize() is crucial to avoid "gameObject.input is null"
         container.setSize(button.width, button.height);
+        this.addEconomy(container);
+        this.addNameText(container);
         container.setInteractive();
         container.setName(this.containerArray.length.toString());
         container.setDepth(1);
@@ -192,9 +215,12 @@ export class EditorScene extends Scene {
         this.defineContainerDrag(container);
         this.defineContainerClickUp(container);
         this.defineContainerClickDown(container);
-        this.graph.setNode(container.name);
         this.containerArray.push(container);
-        this.economyArray.push({ stock: 0, production: 0 });
+    }
+
+    private addNameText(container: GameObjects.Container) {
+        const textField = this.add.text(0, 0, container.name, textStyle);
+        container.add(textField);
     }
 
     private setButtonVisible(isVisible: boolean) {
@@ -253,16 +279,16 @@ export class EditorScene extends Scene {
         container: GameObjects.Container,
         stockAdd: number
     ) {
-        const index = this.containerArray.indexOf(container);
-        this.economyArray[index].stock += stockAdd;
+        (container.getAt(STOCK_INDEX) as GameObjects.Text).w += stockAdd;
     }
 
     private addContainerProduction(
         container: GameObjects.Container,
         productionAdd: number
     ) {
-        const index = this.containerArray.indexOf(container);
-        this.economyArray[index].production += productionAdd;
+        (container.getAt(
+            PRODUCTION_INDEX
+        ) as GameObjects.Text).w += productionAdd;
     }
 
     private addCityCreationButton() {
@@ -286,41 +312,59 @@ export class EditorScene extends Scene {
                 "selectedCities has wrong length for redrawEdges()"
             );
         }
+        const firstName = cityPair[0].name;
+        const secondName = cityPair[1].name;
 
-        if (this.graph.hasEdge(cityPair[0].name, cityPair[1].name)) {
-            this.graph.removeEdge(cityPair[0].name, cityPair[1].name);
-        } else {
-            if (cityPair[0] === cityPair[1]) {
+        if (!this.deletePath(firstName, secondName)) {
+            if (firstName === secondName) {
                 this.selectedContainer = [];
             } else {
-                this.graph.setEdge(cityPair[0].name, cityPair[1].name);
+                this.paths.push({ first: firstName, second: secondName });
             }
         }
     }
 
+    private deletePath(firstName: string, secondName: string) {
+        const remainingPaths = [];
+        let didDelete = false;
+        this.paths.forEach(path => {
+            if (
+                (path.first === firstName && path.second === secondName) ||
+                (path.first === secondName && path.second === firstName)
+            ) {
+                didDelete = true;
+            } else {
+                remainingPaths.push(path);
+            }
+        });
+        this.paths = remainingPaths;
+        return didDelete;
+    }
+
     private addEconomy(container: GameObjects.Container) {
-        const midOfButton = container.width / 2;
-        const imageX = midOfButton;
+        const imageX = 0;
         const stockY = -60;
         const prodY = 60;
-        const buttonX = midOfButton + 100;
+        const buttonX = 100;
         const stockButtonY = stockY;
         const prodButtonY = prodY;
 
-        const stock = this.add.image(midOfButton, stockY, "stock");
+        const stock = this.add.image(0, stockY, "stock");
         const stockText = this.add.text(
-            midOfButton + 40,
+            0 + 40,
             stockY + textToIconOffset,
             "",
             textStyle
         );
-        const production = this.add.image(midOfButton, prodY, "production");
+        stockText.w = 0;
+        const production = this.add.image(0, prodY, "production");
         const prodText = this.add.text(
-            midOfButton + 40,
+            0 + 40,
             prodY + textToIconOffset,
             "",
             textStyle
         );
+        prodText.w = 0;
         container.add([stockText, prodText, stock, production]);
 
         const plusStock = this.add
@@ -364,21 +408,26 @@ export class EditorScene extends Scene {
         container.add([plusStock, minusStock, plusProd, minusProd]);
     }
 
+    private productionOfCity(container: GameObjects.Container) {
+        return (container.getAt(PRODUCTION_INDEX) as GameObjects.Text).w;
+    }
+
+    private stockOfCity(container: GameObjects.Container) {
+        return (container.getAt(STOCK_INDEX) as GameObjects.Text).w;
+    }
+
     private generateLevel() {
         const cities = this.containerArray.map(container => {
-            const index = this.containerArray.indexOf(container);
             return {
                 name: container.name,
-                stock: this.economyArray[index].stock,
-                production: this.economyArray[index].production,
+                stock: this.stockOfCity(container),
+                production: this.productionOfCity(container),
                 x: container.x,
                 y: container.y,
             };
         });
 
-        const travelPaths = this.graph.edges().map(edge => {
-            return { first: edge.v, second: edge.w };
-        });
+        const travelPaths = this.paths;
 
         return {
             cities,
