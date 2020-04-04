@@ -48,7 +48,6 @@ export class MainScene extends Scene {
         const logicObjects = LogicBuilder.create(currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        this.addBackgroundMusic();
         this.addBackground(currentLevel.background);
         this.addCities(cityData);
         this.addPlayerInfo();
@@ -137,7 +136,6 @@ export class MainScene extends Scene {
             .text(202, 747, "Editor", TextConfig.sm)
             .setInteractive();
         button.on("pointerup", () => {
-            this.sound.stopAll();
             this.scene.add("EditorScene", EditorScene, true);
             this.scene.remove(this);
         });
@@ -249,12 +247,11 @@ export class MainScene extends Scene {
         this.player.factories--;
         this.updateBuildFactoryButton();
         if (this.isWin()) {
-            this.sound.stopAll();
             this.scene.add("GoodEndScene", GoodEndScene, true, {
                 x: 400,
                 y: 300,
             });
-            this.scene.remove(this);
+            this.scene.remove("MainScene");
         }
     }
 
@@ -263,10 +260,6 @@ export class MainScene extends Scene {
             city => city.economy.production < 0
         );
         return endangeredCities.length === 0;
-    }
-
-    private addBackgroundMusic() {
-        this.sound.add("background").play("", { loop: true });
     }
 
     private addBackground(key: string) {
@@ -417,9 +410,8 @@ export class MainScene extends Scene {
     }
 
     private badEndScene() {
-        this.sound.stopAll();
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
-        this.scene.remove(this);
+        this.scene.remove("MainScene");
     }
 
     private toggleLevel(selectedLevel?: number) {
@@ -429,7 +421,6 @@ export class MainScene extends Scene {
     }
 
     private restart() {
-        this.sound.stopAll();
         this.scene.restart();
     }
 }
