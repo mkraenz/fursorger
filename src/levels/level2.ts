@@ -17,6 +17,6 @@ export const level2: ILevel = {
         { first: "Ablesh", second: "Eflar" },
         { first: "Iechein", second: "Eflar" },
     ],
-    playerStock: 3,
+    player: { stock: 3, location: "Thudor" },
     background: "background",
 };

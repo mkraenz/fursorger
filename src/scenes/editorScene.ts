@@ -1,14 +1,11 @@
 import { saveAs } from "file-saver";
 import { GameObjects, Scene } from "phaser";
 import { gameConfig } from "../game-config";
+import { ILevel } from "../levels/ILevel";
 import { MainScene } from "./mainScene";
 
 const textStyle = {
     font: "48px Arial",
-    fill: "#000000",
-};
-const nameTextStyle = {
-    font: "40px Arial",
     fill: "#000000",
 };
 const textToIconOffset = -25;
@@ -390,7 +387,7 @@ export class EditorScene extends Scene {
         return (container.getAt(STOCK_INDEX) as GameObjects.Text).w;
     }
 
-    private generateLevel() {
+    private generateLevel(): ILevel {
         const cities = this.containerArray.map(container => {
             return {
                 name: container.name,
@@ -406,7 +403,7 @@ export class EditorScene extends Scene {
         return {
             cities,
             travelPaths,
-            playerStock: this.backpack,
+            player: { stock: this.backpack, location: cities[0].name },
             background: "background2",
         };
     }
