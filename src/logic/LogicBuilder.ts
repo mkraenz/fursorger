@@ -26,8 +26,8 @@ export class LogicBuilder {
         });
         const player = new Player(
             graph,
-            graph.node(level.cities[0].name),
-            level.playerStock
+            graph.node(level.player.location),
+            level.player.stock
         );
         return {
             graph,

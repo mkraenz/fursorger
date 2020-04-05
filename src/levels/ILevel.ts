@@ -1,8 +1,8 @@
 export interface ILevel {
     cities: ICity[];
     travelPaths: Array<{ first: string; second: string }>;
-    playerStock: number;
     background: string;
+    player: { stock: number; location: string };
 }
 
 export interface ICity {
