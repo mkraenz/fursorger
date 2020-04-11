@@ -1,0 +1,30 @@
+{
+    "defaultSeverity": "error",
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
+    "jsRules": {
+        "no-unused-expression": true
+    },
+    "rules": {
+        "lines-between-class-members": [true, 1],
+        "no-focused-test": true,
+        "prefer-template": true,
+        "prettier": true,
+        "quotemark": [true, "single"],
+        "object-literal-sort-keys": false,
+        "no-floating-promises": true,
+        "no-promise-as-boolean": true
+    },
+    "rulesDirectory": [
+        "tslint-plugin-prettier",
+        "node_modules/tslint-lines-between-class-members",
+        "tslint-no-focused-test"
+    ],
+    "linterOptions": {
+        "exclude": [
+            "node_modules/**",
+            "coverage/**",
+            "dist/**",
+            ".nyc_output/**"
+        ]
+    }
+}

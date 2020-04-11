@@ -20,6 +20,7 @@
         "sanity-check": "npm install && npm run test && npm run dev"
     },
     "devDependencies": {
+        "@types/axios": "^0.14.0",
         "@types/chai": "^4.1.7",
         "@types/file-saver": "^2.0.1",
         "@types/graphlib": "^2.1.5",
@@ -27,6 +28,7 @@
         "@types/mocha": "^5.2.5",
         "@types/sinon": "^7.0.3",
         "@types/sinon-chai": "^3.2.2",
+        "@types/socket.io-client": "^1.4.32",
         "chai": "^4.2.0",
         "commit-message-validator": "^0.1.6",
         "del-cli": "^3.0.0",
@@ -52,10 +54,12 @@
         "webpack-dev-server": "3.8.2"
     },
     "dependencies": {
+        "axios": "^0.19.2",
         "file-saver": "^2.0.2",
         "graphlib": "^2.1.7",
         "lodash": "^4.17.13",
-        "phaser": "^3.18.1"
+        "phaser": "^3.18.1",
+        "socket.io-client": "^2.3.0"
     },
     "husky": {
         "hooks": {

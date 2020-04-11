@@ -1,20 +1,5 @@
 {
     "tabWidth": 4,
-    "overrides": [
-        {
-            "files": [
-                "**/.*.md",
-                "**/.*.yaml",
-                "**/.*.yml",
-                "**/*.md",
-                "**/*.yaml",
-                "**/*.yml"
-            ],
-            "options": {
-                "tabWidth": 2
-            }
-        }
-    ],
     "trailingComma": "es5",
     "endOfLine": "auto"
 }

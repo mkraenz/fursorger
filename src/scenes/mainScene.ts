@@ -43,6 +43,10 @@ export class MainScene extends Scene {
         });
     }
 
+    public init(data) {
+        console.log({ data });
+    }
+
     public create(): void {
         const currentLevel = levels[getLevel(this.registry)];
         const cityData = currentLevel.cities;

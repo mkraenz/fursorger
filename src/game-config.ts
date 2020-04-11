@@ -15,3 +15,7 @@ export const gameConfig: Types.Core.GameConfig = {
         height: 768,
     },
 };
+
+export const connectionConfig = {
+    socketUrl: "http://localhost:3000/",
+};

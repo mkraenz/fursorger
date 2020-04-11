@@ -3,7 +3,7 @@ import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle } from "../styles/Text";
 import { BgmScene } from "./BgmScene";
-import { MainScene } from "./mainScene";
+import { TitleScene } from "./TitleScene";
 
 export class LoadingScene extends Scene {
     private halfWidth!: number;
@@ -62,7 +62,7 @@ export class LoadingScene extends Scene {
         this.load.on("fileprogress", this.getAssetTextWriter(assetText));
         this.load.on("complete", () => {
             this.scene.add("BgmScene", BgmScene, true);
-            this.scene.add("MainScene", MainScene, true);
+            this.scene.add("Title", TitleScene, true);
             this.scene.remove(this);
         });
     }
