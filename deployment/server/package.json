@@ -4,9 +4,14 @@
     "description": "Fursorger-server - hosting server for the Phaser 3 game in Typescript",
     "license": "MIT",
     "scripts": {
+        "dev": "nodemon index.js",
         "start": "node index.js"
     },
     "dependencies": {
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "socket.io": "^2.3.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.3"
     }
 }
