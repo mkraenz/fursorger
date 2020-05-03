@@ -42,13 +42,13 @@ export class MainScene extends Scene {
             this.socket.emit("moveDown");
         }
         if (this.cursors.up.isDown) {
-            this.player.moveUp();
+            this.socket.emit("moveUp");
         }
         if (this.cursors.left.isDown) {
-            this.player.moveLeft();
+            this.socket.emit("moveLeft");
         }
         if (this.cursors.right.isDown) {
-            this.player.moveRight();
+            this.socket.emit("moveRight");
         }
     }
 

@@ -8,16 +8,4 @@ export class Player extends GameObjects.Image {
         scene.add.existing(this);
         this.id = id;
     }
-
-    public moveRight() {
-        this.x += 10;
-    }
-
-    public moveLeft() {
-        this.x -= 10;
-    }
-
-    public moveUp() {
-        this.y -= 10;
-    }
 }

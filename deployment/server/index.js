@@ -19,6 +19,18 @@ io.on("connection", socket => {
         players[socket.id].y += 10;
         io.emit("setPosition", players[socket.id]);
     });
+    socket.on("moveUp", () => {
+        players[socket.id].y -= 10;
+        io.emit("setPosition", players[socket.id]);
+    });
+    socket.on("moveRight", () => {
+        players[socket.id].x += 10;
+        io.emit("setPosition", players[socket.id]);
+    });
+    socket.on("moveLeft", () => {
+        players[socket.id].x -= 10;
+        io.emit("setPosition", players[socket.id]);
+    });
 });
 
 http.listen(3000, () => {
