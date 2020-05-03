@@ -8,12 +8,12 @@ app.get("/", (req, res) => {
 });
 io.origins("*:*");
 io.on("connection", socket => {
-    console.log(socket.id);
     players[socket.id] = { x: 100, y: 100, id: socket.id };
-    io.emit("newPlayer", players);
+    io.emit("syncJoinedPlayers", { players });
     console.log({ players });
     socket.on("disconnect", () => {
         delete players[socket.id];
+        io.emit("delete", { id: socket.id });
     });
     socket.on("moveDown", () => {
         players[socket.id].y += 10;

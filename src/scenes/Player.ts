@@ -5,6 +5,7 @@ export class Player extends GameObjects.Image {
 
     constructor(scene: Scene, x: number, y: number, id: string) {
         super(scene, x, y, "plus");
+        scene.add.existing(this);
         this.id = id;
     }
 
