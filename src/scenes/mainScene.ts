@@ -9,12 +9,13 @@ import {
 import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
-import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
+import { PlusMinusButton } from "../components/PlusMinusButton";
 import { gameConfig } from "../game-config";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
+import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
@@ -280,8 +281,12 @@ export class MainScene extends Scene {
                 .setScale(CITY_SPRITE_SCALE);
             const { stockText, prodText } = this.addEconomyInfo();
 
-            const plus = this.addPlus();
-            const minus = this.addMinus();
+            const plus = new PlusMinusButton(this, "plus", () =>
+                this.player.store()
+            );
+            const minus = new PlusMinusButton(this, "minus", () =>
+                this.player.take()
+            );
 
             const container = this.add.container(city.x, city.y, [
                 button,
@@ -310,88 +315,45 @@ export class MainScene extends Scene {
         });
     }
 
-    private addPlus() {
-        const plus = this.add
-            .image(-60, -30, "plus")
-            .setScale(0.5)
-            .setInteractive();
-        plus.on("pointerup", () => {
-            this.player.store();
-        });
-        plus.on("pointerover", () => {
-            this.tweens.add(getPlusMinusButtonTweenConfig(plus));
-        });
-        plus.on("pointerout", () => {
-            this.tweens.getTweensOf(plus).forEach(x => {
-                x.stop(0);
-            });
-        });
-        return plus;
-    }
-
-    private addMinus() {
-        const minus = this.add
-            .image(-60, 30, "minus")
-            .setScale(0.5)
-            .setInteractive();
-        minus.on("pointerup", () => {
-            this.player.take();
-        });
-        minus.on("pointerover", () => {
-            this.tweens.add(getPlusMinusButtonTweenConfig(minus));
-        });
-        minus.on("pointerout", () => {
-            this.tweens.getTweensOf(minus).forEach(x => {
-                x.stop(0);
-            });
-        });
-        return minus;
-    }
-
     private defineContainerClick(container: GameObjects.Container) {
         container.setInteractive();
         container.on("pointerup", () => {
-            if (
-                // move player
-                this.graph.hasEdge(
-                    this.player.getLocationName(),
-                    container.name
-                )
-            ) {
-                this.player.setLocation(getNode(this.graph, container.name));
-                this.containers.forEach(cont => {
-                    const consumCity = getNode(this.graph, cont.name);
-                    consumCity.economize();
-                    if (consumCity.economy.stock < 0) {
-                        this.badEndScene();
-                    }
-                });
-
-                // stop bouncing neighboring cities
-                this.tweens
-                    .getTweensOf(this.containers.map(cont => cont.getAt(0)))
-                    .forEach(tween => {
-                        tween.stop(0);
-                    });
-                this.containers.forEach(cont => {
-                    addProductionAnim(this, cont);
-
-                    if (
-                        this.graph.hasEdge(
-                            this.player.getLocationName(),
-                            cont.name
-                        )
-                    ) {
-                        this.tweens.add(
-                            getCityTweenConfig(cont.getAt(
-                                0
-                            ) as GameObjects.Image)
-                        );
-                    }
-                });
-                this.updateBuildFactoryButton();
+            const isValidMovement = this.graph.hasEdge(
+                this.player.getLocationName(),
+                container.name
+            );
+            if (isValidMovement) {
+                this.moveAndEndTurn(getNode(this.graph, container.name));
             }
         });
+    }
+
+    private moveAndEndTurn(location: ILocation) {
+        this.player.setLocation(location);
+        this.containers.forEach(cont => {
+            const consumCity = getNode(this.graph, cont.name);
+            consumCity.economize();
+            if (consumCity.economy.stock < 0) {
+                this.badEndScene();
+            }
+        });
+
+        // stop bouncing neighboring cities
+        this.tweens
+            .getTweensOf(this.containers.map(cont => cont.getAt(0)))
+            .forEach(tween => {
+                tween.stop(0);
+            });
+        this.containers.forEach(cont => {
+            addProductionAnim(this, cont);
+            if (this.graph.hasEdge(this.player.getLocationName(), cont.name)) {
+                this.tweens.add(
+                    getCityTweenConfig(cont.getAt(0) as GameObjects.Image)
+                );
+            }
+        });
+
+        this.updateBuildFactoryButton();
     }
 
     private addEconomyInfo() {
