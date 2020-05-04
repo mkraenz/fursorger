@@ -9,8 +9,8 @@ import {
 import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
 import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
-import { getPlusMinusButtonTweenConfig } from "../anims/plus-minus-tween-config";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
+import { PlusMinusButton } from "../components/PlusMinusButton";
 import { gameConfig } from "../game-config";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
@@ -280,8 +280,12 @@ export class MainScene extends Scene {
                 .setScale(CITY_SPRITE_SCALE);
             const { stockText, prodText } = this.addEconomyInfo();
 
-            const plus = this.addPlus();
-            const minus = this.addMinus();
+            const plus = new PlusMinusButton(this, "plus", () =>
+                this.player.store()
+            );
+            const minus = new PlusMinusButton(this, "minus", () =>
+                this.player.take()
+            );
 
             const container = this.add.container(city.x, city.y, [
                 button,
@@ -308,44 +312,6 @@ export class MainScene extends Scene {
             }
             this.defineContainerClick(container);
         });
-    }
-
-    private addPlus() {
-        const plus = this.add
-            .image(-60, -30, "plus")
-            .setScale(0.5)
-            .setInteractive();
-        plus.on("pointerup", () => {
-            this.player.store();
-        });
-        plus.on("pointerover", () => {
-            this.tweens.add(getPlusMinusButtonTweenConfig(plus));
-        });
-        plus.on("pointerout", () => {
-            this.tweens.getTweensOf(plus).forEach(x => {
-                x.stop(0);
-            });
-        });
-        return plus;
-    }
-
-    private addMinus() {
-        const minus = this.add
-            .image(-60, 30, "minus")
-            .setScale(0.5)
-            .setInteractive();
-        minus.on("pointerup", () => {
-            this.player.take();
-        });
-        minus.on("pointerover", () => {
-            this.tweens.add(getPlusMinusButtonTweenConfig(minus));
-        });
-        minus.on("pointerout", () => {
-            this.tweens.getTweensOf(minus).forEach(x => {
-                x.stop(0);
-            });
-        });
-        return minus;
     }
 
     private defineContainerClick(container: GameObjects.Container) {
