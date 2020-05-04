@@ -6,9 +6,19 @@
     <meta name="author" content="Fursorger" />
     <title>Fursorger</title>
     <script src="build/bundle.js"></script>
+    <style>
+        @font-face {
+            font-family: "FellEnglishSC";
+            src: url('/assets/font/IMFellEnglishSC-Regular.ttf');
+            font-weight: 400;
+            font-weight: normal;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- "loads" the font so phaser can use it -->
+    <div style="font-family:FellEnglishSC; position: absolute; left:-1000px; visibility:hidden;">.</div>
     <div class="container">
         <div id="game"></div>
     </div>

@@ -265,9 +265,9 @@ export class MainScene extends Scene {
 
     private addBackground(key: string) {
         const background = this.add.image(0, 0, key).setOrigin(0);
-        background.setScale(
-            (gameConfig.scale.width as number) / background.width,
-            (gameConfig.scale.height as number) / background.height
+        background.setDisplaySize(
+            gameConfig.scale.width as number,
+            gameConfig.scale.height as number
         );
     }
 
