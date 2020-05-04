@@ -91,3 +91,16 @@ See [.travis.yml](.travis.yml).
 - [Littera](http://kvazars.com/littera)
 - [MagicTools](https://github.com/ellisonleao/magictools)
 - [Tiled](https://www.mapeditor.org)
+- [Favicon Generator](https://favicon.io/favicon-generator/)
+
+### Generating favicon.ico
+
+Thanks to [Favicon Generator](https://favicon.io/favicon-generator/) for allowing us to easily create a nice favicon.
+We used the following settings:
+
+- Text: Für
+- Background: rounded
+- Font family: Tillana
+- Font size: 90
+- Font color: #F0F2E8
+- Background color: #537169
