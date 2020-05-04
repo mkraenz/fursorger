@@ -15,6 +15,7 @@ import { gameConfig } from "../game-config";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
+import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
@@ -317,47 +318,42 @@ export class MainScene extends Scene {
     private defineContainerClick(container: GameObjects.Container) {
         container.setInteractive();
         container.on("pointerup", () => {
-            if (
-                // move player
-                this.graph.hasEdge(
-                    this.player.getLocationName(),
-                    container.name
-                )
-            ) {
-                this.player.setLocation(getNode(this.graph, container.name));
-                this.containers.forEach(cont => {
-                    const consumCity = getNode(this.graph, cont.name);
-                    consumCity.economize();
-                    if (consumCity.economy.stock < 0) {
-                        this.badEndScene();
-                    }
-                });
-
-                // stop bouncing neighboring cities
-                this.tweens
-                    .getTweensOf(this.containers.map(cont => cont.getAt(0)))
-                    .forEach(tween => {
-                        tween.stop(0);
-                    });
-                this.containers.forEach(cont => {
-                    addProductionAnim(this, cont);
-
-                    if (
-                        this.graph.hasEdge(
-                            this.player.getLocationName(),
-                            cont.name
-                        )
-                    ) {
-                        this.tweens.add(
-                            getCityTweenConfig(cont.getAt(
-                                0
-                            ) as GameObjects.Image)
-                        );
-                    }
-                });
-                this.updateBuildFactoryButton();
+            const isValidMovement = this.graph.hasEdge(
+                this.player.getLocationName(),
+                container.name
+            );
+            if (isValidMovement) {
+                this.moveAndEndTurn(getNode(this.graph, container.name));
             }
         });
+    }
+
+    private moveAndEndTurn(location: ILocation) {
+        this.player.setLocation(location);
+        this.containers.forEach(cont => {
+            const consumCity = getNode(this.graph, cont.name);
+            consumCity.economize();
+            if (consumCity.economy.stock < 0) {
+                this.badEndScene();
+            }
+        });
+
+        // stop bouncing neighboring cities
+        this.tweens
+            .getTweensOf(this.containers.map(cont => cont.getAt(0)))
+            .forEach(tween => {
+                tween.stop(0);
+            });
+        this.containers.forEach(cont => {
+            addProductionAnim(this, cont);
+            if (this.graph.hasEdge(this.player.getLocationName(), cont.name)) {
+                this.tweens.add(
+                    getCityTweenConfig(cont.getAt(0) as GameObjects.Image)
+                );
+            }
+        });
+
+        this.updateBuildFactoryButton();
     }
 
     private addEconomyInfo() {
