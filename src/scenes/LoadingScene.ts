@@ -3,7 +3,7 @@ import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle } from "../styles/Text";
 import { BgmScene } from "./BgmScene";
-import { MainScene } from "./mainScene";
+import { TitleScene } from "./TitleScene";
 
 export class LoadingScene extends Scene {
     private halfWidth!: number;
@@ -60,7 +60,7 @@ export class LoadingScene extends Scene {
         this.load.on("fileprogress", this.getAssetTextWriter(assetText));
         this.load.on("complete", () => {
             this.scene.add("BgmScene", BgmScene, true);
-            this.scene.add("MainScene", MainScene, true);
+            this.scene.add("TitleScene", TitleScene, true);
             this.scene.remove("LoadingScene");
         });
     }
@@ -119,6 +119,11 @@ export class LoadingScene extends Scene {
         this.load.image("play", "./assets/images/playArrow300x200.png");
         this.load.image("export", "./assets/images/export180x120.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
+        this.load.image(
+            "titleSceneBG",
+            "./assets/images/FursorgerTitlescreen2048x1536.jpg"
+        );
+        this.load.image("startArrow", "assets/images/StartArrow140x324.png");
     }
 
     private addTitles() {
