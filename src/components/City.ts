@@ -1,8 +1,16 @@
 import { GameObjects, Scene } from "phaser";
-import { CityImage } from "./CityImage";
+import { CityImage, CityImageState } from "./CityImage";
 import { PlusMinusButton } from "./PlusMinusButton";
 
+export enum CityState {
+    Base,
+    PlayerIsNeighboring,
+    PlayerInCity,
+}
+
 export class City extends GameObjects.Container {
+    public state = CityState.Base;
+
     constructor(
         scene: Scene,
         x: number,
@@ -25,9 +33,6 @@ export class City extends GameObjects.Container {
         ]);
         scene.add.existing(this);
         this.setName(name);
-
-        this.setDepth(1);
-        this.setSize(170, 1000); // must specify Shape or setSize for interactivity
     }
 
     get citySprite() {
@@ -48,5 +53,51 @@ export class City extends GameObjects.Container {
 
     get minusTradeButton() {
         return this.getAt(4) as PlusMinusButton;
+    }
+
+    public nextState(state: CityState) {
+        switch (state) {
+            case CityState.Base:
+                this.setStateBase();
+                break;
+            case CityState.PlayerIsNeighboring:
+                this.setStatePlayerIsNeighboring();
+                break;
+            case CityState.PlayerInCity:
+                this.setStatePlayerInCity();
+                break;
+        }
+    }
+
+    public setStatePlayerIsNeighboring() {
+        if (this.state === CityState.PlayerIsNeighboring) {
+            return;
+        }
+        this.state = CityState.PlayerIsNeighboring;
+        this.citySprite.nextState(CityImageState.PlayerIsNeighboring);
+        this.setTradeButtonVisible(false);
+    }
+
+    public setStateBase() {
+        if (this.state === CityState.Base) {
+            return;
+        }
+        this.state = CityState.Base;
+        this.citySprite.nextState(CityImageState.Base);
+        this.setTradeButtonVisible(false);
+    }
+
+    public setStatePlayerInCity() {
+        if (this.state === CityState.PlayerInCity) {
+            return;
+        }
+        this.state = CityState.PlayerInCity;
+        this.citySprite.nextState(CityImageState.PlayerInCity);
+        this.setTradeButtonVisible(true);
+    }
+
+    private setTradeButtonVisible(value: boolean) {
+        this.plusTradeButton.setVisible(value);
+        this.minusTradeButton.setVisible(value);
     }
 }
