@@ -12,7 +12,11 @@ export class BuildFactoryButton extends GameObjects.Image {
     private readonly baseScale = 0.5;
     private readonly anim: Tweens.Tween;
 
-    constructor(scene: Scene, onPointerup: () => void) {
+    constructor(
+        scene: Scene,
+        onPointerup: () => void,
+        private dataSrc: () => number
+    ) {
         super(
             scene,
             MainSceneCfg.buildFactory.x,
@@ -27,7 +31,11 @@ export class BuildFactoryButton extends GameObjects.Image {
         this.on("pointerup", onPointerup);
     }
 
-    public nextState(playerFactories: number) {
+    public preUpdate() {
+        this.nextState(this.dataSrc());
+    }
+
+    private nextState(playerFactories: number) {
         if (playerFactories === 0) {
             this.disable();
         } else {

@@ -34,7 +34,6 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private cities!: City[];
-    private buildFactoryButton!: BuildFactoryButton;
 
     constructor() {
         super({
@@ -160,10 +159,12 @@ export class MainScene extends Scene {
     }
 
     private addPlayerInfo() {
-        this.buildFactoryButton = new BuildFactoryButton(this, () =>
-            this.handleBuildButtonClicked()
-        );
         // tslint:disable: no-unused-expression
+        new BuildFactoryButton(
+            this,
+            () => this.handleBuildButtonClicked(),
+            () => this.player.factories
+        );
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
         new RestartButton(this, () => this.restart());
@@ -174,7 +175,6 @@ export class MainScene extends Scene {
         const locationName = this.player.getLocationName();
         getNode(this.graph, locationName).economy.production++;
         this.player.factories--;
-        this.buildFactoryButton.nextState(this.player.factories);
         if (this.isWin()) {
             this.win();
         }
@@ -239,7 +239,6 @@ export class MainScene extends Scene {
         });
         this.setCityStates();
         this.cities.forEach(city => addProductionAnim(this, city));
-        this.buildFactoryButton.nextState(this.player.factories);
     }
 
     private setCityStates() {
