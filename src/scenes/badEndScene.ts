@@ -13,9 +13,9 @@ export class BadEndScene extends Scene {
         const bg = this.add
             .image(0, 0, "badEnd")
             .setOrigin(0)
-            .setScale(
-                (gameConfig.scale.width as number) / 640,
-                (gameConfig.scale.height as number) / 512
+            .setDisplaySize(
+                gameConfig.scale.width as number,
+                gameConfig.scale.height as number
             )
             .setInteractive();
         bg.addListener("pointerup", () => {

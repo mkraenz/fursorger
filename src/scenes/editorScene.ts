@@ -5,7 +5,7 @@ import { ILevel } from "../levels/ILevel";
 import { MainScene } from "./mainScene";
 
 const textStyle = {
-    font: "48px Arial",
+    font: "48px FellEnglishSC",
     fill: "#000000",
 };
 const textToIconOffset = -25;
@@ -166,9 +166,9 @@ export class EditorScene extends Scene {
 
     private addBackground() {
         const background = this.add.image(0, 0, "background2").setOrigin(0);
-        background.setScale(
-            (gameConfig.scale.width as number) / background.width,
-            (gameConfig.scale.height as number) / background.height
+        background.setDisplaySize(
+            gameConfig.scale.width as number,
+            gameConfig.scale.height as number
         );
     }
 

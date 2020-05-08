@@ -31,7 +31,7 @@ export class LoadingScene extends Scene {
             y: this.halfHeight - 50,
             text: "Loading...",
             style: {
-                font: "30px Arial",
+                font: "30px FellEnglishSC",
                 fill: Color.White,
             },
         });
@@ -52,7 +52,7 @@ export class LoadingScene extends Scene {
             y: this.halfHeight + 65,
             text: "",
             style: {
-                font: "18px Arial",
+                font: "18px FellEnglishSC",
                 fill: Color.White,
             },
         });
