@@ -3,7 +3,7 @@ import { MainSceneCfg as Cfg } from "../styles/MainSceneCfg";
 import { TextConfig } from "../styles/Text";
 
 export class PlayerStockDisplay extends GameObjects.Text {
-    constructor(scene: Scene, private getValue: () => number) {
+    constructor(scene: Scene, private dataSrc: () => number) {
         super(
             scene,
             Cfg.playerStock.text.x,
@@ -18,6 +18,6 @@ export class PlayerStockDisplay extends GameObjects.Text {
     }
 
     public preUpdate() {
-        this.setText(`${this.getValue()}`);
+        this.setText(`${this.dataSrc()}`);
     }
 }
