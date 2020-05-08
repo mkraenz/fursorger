@@ -1,6 +1,6 @@
 import { Graph } from "graphlib";
 import { ILevel } from "../levels/ILevel";
-import { City } from "./City";
+import { LogicCity } from "./City";
 import { IPlayer } from "./IPlayer";
 import { Player } from "./Player";
 
@@ -15,7 +15,7 @@ export class LogicBuilder {
         level.cities.forEach(city => {
             graph.setNode(
                 city.name,
-                new City(city.name, {
+                new LogicCity(city.name, {
                     stock: city.stock,
                     production: city.production,
                 })
