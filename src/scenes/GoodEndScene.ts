@@ -26,7 +26,7 @@ export class GoodEndScene extends Scene {
                 (getLevel(this.registry) + 1) % levels.length
             );
             this.scene.add("MainScene", MainScene, true);
-            this.scene.remove(this);
+            this.scene.remove("GoodEndScene");
         });
     }
 }
