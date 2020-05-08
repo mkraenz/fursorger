@@ -65,12 +65,10 @@
     },
     "lint-staged": {
         "*.ts": [
-            "tslint --fix",
-            "git add"
+            "tslint --fix"
         ],
         "*.{json,md,yaml,yml}": [
-            "prettier --write",
-            "git add"
+            "prettier --write"
         ]
     },
     "config": {
