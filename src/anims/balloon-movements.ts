@@ -46,12 +46,12 @@ export const numberOfCases = 6;
 
 export function getBalloonTweenConfig(
     image: GameObjects.Image,
-    x1: number,
-    x2: number,
-    y1: number,
-    y2: number
+    start: { x: number; y: number },
+    end: { x: number; y: number }
 ) {
     const MIN_BALLOON_SPEED = 0.4;
+    const { x: x1, y: y1 } = start;
+    const { x: x2, y: y2 } = end;
 
     if (Math.abs(x1 - x2) >= Math.abs(y1 - y2)) {
         return {

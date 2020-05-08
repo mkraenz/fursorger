@@ -7,8 +7,9 @@ import {
     setProductionTextColor,
 } from "../anims/addProductionAnim";
 import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
-import { getBuildButtonTweenConfig } from "../anims/build-button-tween-config";
-import { getTweenConfig as getCityTweenConfig } from "../anims/city-tween-config";
+import { BuildFactoryButton } from "../components/BuildFactoryButton";
+import { City } from "../components/City";
+import { CityImage, CityImageState } from "../components/CityImage";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { gameConfig } from "../game-config";
@@ -32,10 +33,10 @@ const CITY_SPRITE_SCALE = 0.18;
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
-    private containers!: GameObjects.Container[];
+    private cities!: City[];
     private playerStockInfo!: GameObjects.Text;
     private playerTurnInfo!: GameObjects.Text;
-    private buildFactoryButton!: GameObjects.Image;
+    private buildFactoryButton!: BuildFactoryButton;
     private debugText!: GameObjects.Text;
 
     constructor() {
@@ -61,9 +62,6 @@ export class MainScene extends Scene {
             .text(10, 10, "", TextConfig.debug)
             .setVisible(DEBUG);
         this.input.keyboard.on("keydown-R", () => this.restart());
-
-        // initialUpdate
-        this.updateBuildFactoryButton();
         this.addBalloons();
     }
 
@@ -85,36 +83,27 @@ export class MainScene extends Scene {
             .forEach(edge => this.addBalloonForEdge(edge.v, edge.w));
     }
 
-    private addBalloonForEdge(firstCityName: string, secondCityName: string) {
-        const firstContainer = this.containers.find(
-            container => container.name === firstCityName
+    private addBalloonForEdge(startCityName: string, targetCityName: string) {
+        const startCity = this.cities.find(
+            container => container.name === startCityName
         );
-        const secondContainer = this.containers.find(
-            container => container.name === secondCityName
+        const targetCity = this.cities.find(
+            container => container.name === targetCityName
         );
         const balloon = this.add
-            .image(firstContainer.x, firstContainer.y, "balloon")
+            .image(startCity.x, startCity.y, "balloon")
             .setScale(30 / 1600, 30 / 1600);
-        const config = getBalloonTweenConfig(
-            balloon,
-            firstContainer.x,
-            secondContainer.x,
-            firstContainer.y,
-            secondContainer.y
-        );
+        const config = getBalloonTweenConfig(balloon, startCity, targetCity);
 
         const tween = this.tweens.add(config);
         (tween as CustomTween).movementPattern = random(5);
     }
 
     private updateVisibilityTradeButtons() {
-        this.containers.forEach(container => {
-            (container.getAt(3) as GameObjects.Image).setVisible(
-                container.name === this.player.getLocationName()
-            );
-            (container.getAt(4) as GameObjects.Image).setVisible(
-                container.name === this.player.getLocationName()
-            );
+        this.cities.forEach(city => {
+            const playerIsInCity = city.name === this.player.getLocationName();
+            city.plusTradeButton.setVisible(playerIsInCity);
+            city.minusTradeButton.setVisible(playerIsInCity);
         });
     }
 
@@ -181,31 +170,14 @@ export class MainScene extends Scene {
     }
 
     private updateCityInfos() {
-        this.containers.forEach(container => {
-            // getAt(1) returns the stock text
-            (container.getAt(1) as GameObjects.Text).setText(
-                getNode(this.graph, container.name).economy.stock.toString()
-            );
-            const production = getNode(this.graph, container.name).economy
+        this.cities.forEach(city => {
+            const stock = getNode(this.graph, city.name).economy.stock;
+            city.stockText.setText(`${stock}`);
+            const production = getNode(this.graph, city.name).economy
                 .production;
-            // getAt(2) returns the production text
-            const productionText = (container.getAt(
-                2
-            ) as GameObjects.Text).setText(production.toString());
+            const productionText = city.productionText.setText(`${production}`);
             setProductionTextColor(production, productionText);
         });
-    }
-
-    private updateBuildFactoryButton() {
-        if (this.player.factories === 0) {
-            this.buildFactoryButton.setAlpha(0.5).disableInteractive();
-            this.tweens
-                .getTweensOf(this.buildFactoryButton)
-                .forEach(tween => tween.stop(0));
-        } else {
-            this.buildFactoryButton.clearAlpha().setInteractive();
-            this.add.tween(getBuildButtonTweenConfig(this.buildFactoryButton));
-        }
     }
 
     private addPlayerInfo() {
@@ -231,12 +203,14 @@ export class MainScene extends Scene {
             TextConfig.lg
         );
 
-        this.buildFactoryButton = this.add
-            .image(PLAYER_INFO_X, FACTORY_Y, "buildFactory")
-            .setScale(0.5);
-        this.buildFactoryButton.on("pointerup", () => {
-            this.handleBuildButtonClicked();
-        });
+        this.buildFactoryButton = new BuildFactoryButton(
+            this,
+            PLAYER_INFO_X,
+            FACTORY_Y
+        );
+        this.buildFactoryButton.on("pointerup", () =>
+            this.handleBuildButtonClicked()
+        );
         const restartIcon = this.add
             .image(PLAYER_INFO_X, RESTART_Y, "restart")
             .setInteractive();
@@ -247,7 +221,7 @@ export class MainScene extends Scene {
         const locationName = this.player.getLocationName();
         getNode(this.graph, locationName).economy.production++;
         this.player.factories--;
-        this.updateBuildFactoryButton();
+        this.buildFactoryButton.nextState(this.player.factories);
         if (this.isWin()) {
             this.scene.add("GoodEndScene", GoodEndScene, true, {
                 x: 400,
@@ -273,87 +247,67 @@ export class MainScene extends Scene {
     }
 
     private addCities(cities: ICity[]) {
-        this.containers = [];
-        cities.forEach(city => {
-            const name = city.name;
-            const button = this.add
-                .image(0, 0, "city")
-                .setScale(CITY_SPRITE_SCALE);
-            const { stockText, prodText } = this.addEconomyInfo();
-
-            const plus = new PlusMinusButton(this, "plus", () =>
-                this.player.store()
-            );
-            const minus = new PlusMinusButton(this, "minus", () =>
-                this.player.take()
-            );
-
-            const container = this.add.container(city.x, city.y, [
-                button,
-                stockText,
-                prodText,
-                plus,
-                minus,
-            ]);
-            container.setDepth(1);
-            container.setName(name);
-            this.containers.push(container);
+        this.cities = [];
+        cities.forEach(cityData => {
+            const city = this.addCity(cityData);
+            this.cities.push(city);
+            this.setOnCityClick(city);
         });
-        this.containers.forEach(container => {
-            container.setSize(170, 60);
-            if (
-                this.graph.hasEdge(
-                    this.player.getLocationName(),
-                    container.name
-                )
-            ) {
-                this.tweens.add(
-                    getCityTweenConfig(container.getAt(0) as GameObjects.Image)
-                );
-            }
-            this.defineContainerClick(container);
+        this.setCityStates();
+    }
+
+    private addCity({ name, x, y }: ICity) {
+        const cityImage = new CityImage(this, 0, 0, name);
+        const { stockText, prodText } = this.addEconomyInfo();
+
+        const plus = new PlusMinusButton(this, "plus", () =>
+            this.player.store()
+        );
+        const minus = new PlusMinusButton(this, "minus", () =>
+            this.player.take()
+        );
+        return new City(this, x, y, name, {
+            citySprite: cityImage,
+            stockText,
+            productionText: prodText,
+            plusTradeButton: plus,
+            minusTradeButton: minus,
         });
     }
 
-    private defineContainerClick(container: GameObjects.Container) {
-        container.setInteractive();
-        container.on("pointerup", () => {
+    private setOnCityClick(city: City) {
+        city.citySprite.on("pointerup", () => {
             const isValidMovement = this.graph.hasEdge(
                 this.player.getLocationName(),
-                container.name
+                city.name
             );
             if (isValidMovement) {
-                this.moveAndEndTurn(getNode(this.graph, container.name));
+                this.moveAndEndTurn(getNode(this.graph, city.name));
             }
         });
     }
 
     private moveAndEndTurn(location: ILocation) {
         this.player.setLocation(location);
-        this.containers.forEach(cont => {
+        this.cities.forEach(cont => {
             const consumCity = getNode(this.graph, cont.name);
-            consumCity.economize();
+            consumCity.consumeOrProduce();
             if (consumCity.economy.stock < 0) {
                 this.badEndScene();
             }
         });
+        this.setCityStates();
+        this.cities.forEach(city => addProductionAnim(this, city));
+        this.buildFactoryButton.nextState(this.player.factories);
+    }
 
-        // stop bouncing neighboring cities
-        this.tweens
-            .getTweensOf(this.containers.map(cont => cont.getAt(0)))
-            .forEach(tween => {
-                tween.stop(0);
-            });
-        this.containers.forEach(cont => {
-            addProductionAnim(this, cont);
-            if (this.graph.hasEdge(this.player.getLocationName(), cont.name)) {
-                this.tweens.add(
-                    getCityTweenConfig(cont.getAt(0) as GameObjects.Image)
-                );
+    private setCityStates() {
+        this.cities.forEach(city => {
+            city.citySprite.nextState(CityImageState.Base); // reset all
+            if (this.graph.hasEdge(this.player.getLocationName(), city.name)) {
+                city.citySprite.nextState(CityImageState.PlayerIsNeighboring);
             }
         });
-
-        this.updateBuildFactoryButton();
     }
 
     private addEconomyInfo() {
