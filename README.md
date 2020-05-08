@@ -67,6 +67,8 @@ npm run dev
 # STEP: Trigger the breakpoint
 ```
 
+Check out this cool [how-to](https://github.com/samme/phaser3-faq/wiki#how-do-i-fixdebug-my-game).
+
 ## Deployment
 
 Continuous deployment to github pages [https://prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/) is performed on each push to `master`.
