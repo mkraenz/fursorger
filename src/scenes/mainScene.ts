@@ -24,11 +24,9 @@ import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
-const DEBUG = false;
 
 const PLAYER_INFO_X = 50;
 const textToIconOffset = -25;
-const CITY_SPRITE_SCALE = 0.18;
 
 export class MainScene extends Scene {
     private player!: IPlayer;
@@ -37,7 +35,6 @@ export class MainScene extends Scene {
     private playerStockInfo!: GameObjects.Text;
     private playerTurnInfo!: GameObjects.Text;
     private buildFactoryButton!: BuildFactoryButton;
-    private debugText!: GameObjects.Text;
 
     constructor() {
         super({
@@ -59,9 +56,6 @@ export class MainScene extends Scene {
         this.addEditorButton();
         this.addImportLevelButton();
         this.addExportLevelButton();
-        this.debugText = this.add
-            .text(10, 10, "", TextConfig.debug)
-            .setVisible(DEBUG);
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
     }
@@ -70,11 +64,6 @@ export class MainScene extends Scene {
         this.playerStockInfo.setText(this.player.stock.toString());
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateCityInfos();
-
-        this.debugText.setText([
-            `x: ${this.input.activePointer.x}`,
-            `y: ${this.input.activePointer.y}`,
-        ]);
     }
 
     private addBalloons() {

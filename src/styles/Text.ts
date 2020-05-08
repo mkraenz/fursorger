@@ -11,8 +11,9 @@ export const TextConfig = {
         fill: "#000000",
     },
     debug: {
-        font: "16px Courier",
-        fill: "#00ff00",
+        fontFamily: "Courier",
+        fontSize: "16px",
+        color: "#00ff00",
     },
 };
 
