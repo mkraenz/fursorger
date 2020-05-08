@@ -7,12 +7,12 @@ import {
     setProductionTextColor,
 } from "../anims/addProductionAnim";
 import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
+import { BackgroundImage } from "../components/BackgroundImage";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
 import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { PlusMinusButton } from "../components/PlusMinusButton";
-import { gameConfig } from "../game-config";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
@@ -51,7 +51,8 @@ export class MainScene extends Scene {
         const logicObjects = LogicBuilder.create(currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        this.addBackground(currentLevel.background);
+        // tslint:disable-next-line: no-unused-expression
+        new BackgroundImage(this, currentLevel.background);
         this.addCities(cityData);
         this.addPlayerInfo();
         this.addLevelButton();
@@ -225,14 +226,6 @@ export class MainScene extends Scene {
         return endangeredCities.length === 0;
     }
 
-    private addBackground(key: string) {
-        const background = this.add.image(0, 0, key).setOrigin(0);
-        background.setDisplaySize(
-            gameConfig.scale.width as number,
-            gameConfig.scale.height as number
-        );
-    }
-
     private addCities(cities: ICity[]) {
         this.cities = [];
         cities.forEach(cityData => {
@@ -327,7 +320,7 @@ export class MainScene extends Scene {
     }
 
     private lose() {
-        this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
+        this.scene.add("badEndScene", BadEndScene, true);
         this.scene.remove("MainScene");
     }
 
