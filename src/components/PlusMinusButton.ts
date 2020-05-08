@@ -2,8 +2,8 @@ import { GameObjects, Scene, Tweens } from "phaser";
 import { ScalableTweenBuilderConfig } from "../anims/ScalableTweenBuilderConfig";
 
 enum State {
-    base,
-    grown,
+    Base,
+    Grown,
 }
 
 export class PlusMinusButton extends GameObjects.Image {
@@ -71,13 +71,13 @@ export class PlusMinusButton extends GameObjects.Image {
     }
 
     private transitionToGrownState() {
-        this.state = State.grown;
+        this.state = State.Grown;
         this.shrinkAnim.pause();
         this.growAnim.restart();
     }
 
     private transitionToBaseState() {
-        this.state = State.base;
+        this.state = State.Base;
         this.growAnim.pause();
         this.shrinkAnim.restart();
     }
