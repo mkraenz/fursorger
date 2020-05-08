@@ -20,7 +20,7 @@ export class BadEndScene extends Scene {
             .setInteractive();
         bg.addListener("pointerup", () => {
             this.scene.add("MainScene", MainScene, true);
-            this.scene.remove(this);
+            this.scene.remove("BadEndScene");
         });
     }
 }
