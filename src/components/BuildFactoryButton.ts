@@ -1,5 +1,6 @@
 import { GameObjects, Scene, Tweens } from "phaser";
 import { ScalableTweenBuilderConfig } from "../anims/ScalableTweenBuilderConfig";
+import { MainSceneCfg } from "../styles/MainSceneCfg";
 
 enum State {
     Disabled,
@@ -11,13 +12,19 @@ export class BuildFactoryButton extends GameObjects.Image {
     private readonly baseScale = 0.5;
     private readonly anim: Tweens.Tween;
 
-    constructor(scene: Scene, x: number, y: number) {
-        super(scene, x, y, "buildFactory");
+    constructor(scene: Scene, onPointerup: () => void) {
+        super(
+            scene,
+            MainSceneCfg.buildFactory.x,
+            MainSceneCfg.buildFactory.y,
+            "buildFactory"
+        );
         scene.add.existing(this);
 
         this.setScale(this.baseScale);
         this.anim = this.scene.add.tween(this.getTweenCfg());
         this.disable();
+        this.on("pointerup", onPointerup);
     }
 
     public nextState(playerFactories: number) {

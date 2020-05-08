@@ -13,6 +13,7 @@ import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { PlusMinusButton } from "../components/PlusMinusButton";
+import { RestartButton } from "../components/RestartButton";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
@@ -20,6 +21,7 @@ import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
+import { MainSceneCfg } from "../styles/MainSceneCfg";
 import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
@@ -162,40 +164,30 @@ export class MainScene extends Scene {
     }
 
     private addPlayerInfo() {
-        const IMAGE_TO_TEXT_OFFSET_Y = -15;
-        const IMAGE_TO_TEXT_OFFSET_X = 40;
-        const STOCK_Y = 200;
-        const TURN_Y = STOCK_Y + 80;
-        const FACTORY_Y = TURN_Y + 90;
-        const RESTART_Y = FACTORY_Y + 90;
-        this.add.image(PLAYER_INFO_X, STOCK_Y, "backpack").setScale(0.8);
+        const { playerStock: stock, turnInfo } = MainSceneCfg;
+        this.add.image(stock.img.x, stock.img.y, "backpack").setScale(0.8);
         this.playerStockInfo = this.add.text(
-            PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
-            STOCK_Y + IMAGE_TO_TEXT_OFFSET_Y,
+            stock.text.x,
+            stock.text.y,
             "",
             TextConfig.lg
         );
 
-        this.add.image(PLAYER_INFO_X, TURN_Y, "hourglass").setScale(0.8);
+        this.add
+            .image(turnInfo.img.x, turnInfo.img.y, "hourglass")
+            .setScale(0.8);
         this.playerTurnInfo = this.add.text(
-            PLAYER_INFO_X + IMAGE_TO_TEXT_OFFSET_X,
-            TURN_Y + IMAGE_TO_TEXT_OFFSET_Y,
+            turnInfo.text.x,
+            turnInfo.text.y,
             "",
             TextConfig.lg
         );
 
-        this.buildFactoryButton = new BuildFactoryButton(
-            this,
-            PLAYER_INFO_X,
-            FACTORY_Y
-        );
-        this.buildFactoryButton.on("pointerup", () =>
+        this.buildFactoryButton = new BuildFactoryButton(this, () =>
             this.handleBuildButtonClicked()
         );
-        const restartIcon = this.add
-            .image(PLAYER_INFO_X, RESTART_Y, "restart")
-            .setInteractive();
-        restartIcon.on("pointerup", () => this.restart());
+        // tslint:disable-next-line: no-unused-expression
+        new RestartButton(this, () => this.restart());
     }
 
     private handleBuildButtonClicked() {
