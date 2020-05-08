@@ -1,7 +1,7 @@
 import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { random } from "lodash";
-import { GameObjects, Scene } from "phaser";
+import { Scene } from "phaser";
 import {
     addProductionAnim,
     setProductionTextColor,
@@ -12,8 +12,10 @@ import { BuildFactoryButton } from "../components/BuildFactoryButton";
 import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
+import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
+import { TurnDisplay } from "../components/TurnDisplay";
 import { ICity } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
@@ -21,21 +23,17 @@ import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
-import { MainSceneCfg } from "../styles/MainSceneCfg";
 import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
 
-const PLAYER_INFO_X = 50;
 const textToIconOffset = -25;
 
 export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private cities!: City[];
-    private playerStockInfo!: GameObjects.Text;
-    private playerTurnInfo!: GameObjects.Text;
     private buildFactoryButton!: BuildFactoryButton;
 
     constructor() {
@@ -63,8 +61,6 @@ export class MainScene extends Scene {
     }
 
     public update() {
-        this.playerStockInfo.setText(this.player.stock.toString());
-        this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateCityInfos();
     }
 
@@ -164,30 +160,14 @@ export class MainScene extends Scene {
     }
 
     private addPlayerInfo() {
-        const { playerStock: stock, turnInfo } = MainSceneCfg;
-        this.add.image(stock.img.x, stock.img.y, "backpack").setScale(0.8);
-        this.playerStockInfo = this.add.text(
-            stock.text.x,
-            stock.text.y,
-            "",
-            TextConfig.lg
-        );
-
-        this.add
-            .image(turnInfo.img.x, turnInfo.img.y, "hourglass")
-            .setScale(0.8);
-        this.playerTurnInfo = this.add.text(
-            turnInfo.text.x,
-            turnInfo.text.y,
-            "",
-            TextConfig.lg
-        );
-
         this.buildFactoryButton = new BuildFactoryButton(this, () =>
             this.handleBuildButtonClicked()
         );
-        // tslint:disable-next-line: no-unused-expression
+        // tslint:disable: no-unused-expression
+        new TurnDisplay(this, () => this.player.turn);
+        new PlayerStockDisplay(this, () => this.player.stock);
         new RestartButton(this, () => this.restart());
+        // tslint:enable: no-unused-expression
     }
 
     private handleBuildButtonClicked() {

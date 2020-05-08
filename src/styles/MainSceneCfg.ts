@@ -1,6 +1,6 @@
 const toolbarX = 50;
 const toolbarImgToTextXOffset = 40;
-const toolbarImgToTextYOffset = -20;
+const toolbarImgToTextYOffset = -30;
 export const MainSceneCfg = {
     playerStock: {
         img: {

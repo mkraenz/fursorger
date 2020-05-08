@@ -2,6 +2,11 @@ import { GameObjects } from "phaser";
 import { Color } from "./Color";
 
 export const TextConfig = {
+    xl: {
+        fontFamily: "FellEnglishSC",
+        fontSize: "42px",
+        color: "#000000",
+    },
     lg: {
         font: "32px FellEnglishSC",
         fill: "#000000",
