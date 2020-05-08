@@ -1,6 +1,6 @@
 import { ILocation } from "./ILocation";
 
-export class City implements ILocation {
+export class LogicCity implements ILocation {
     constructor(
         public readonly name: string,
         public economy: {
@@ -9,7 +9,7 @@ export class City implements ILocation {
         }
     ) {}
 
-    public economize() {
+    public consumeOrProduce() {
         this.economy.stock += this.economy.production;
     }
 }
