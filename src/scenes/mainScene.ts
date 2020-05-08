@@ -8,8 +8,8 @@ import {
 } from "../anims/addProductionAnim";
 import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
-import { City } from "../components/City";
-import { CityImage, CityImageState } from "../components/CityImage";
+import { City, CityState } from "../components/City";
+import { CityImage } from "../components/CityImage";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { gameConfig } from "../game-config";
@@ -69,7 +69,6 @@ export class MainScene extends Scene {
         this.playerStockInfo.setText(this.player.stock.toString());
         this.playerTurnInfo.setText(this.player.turn.toString());
         this.updateCityInfos();
-        this.updateVisibilityTradeButtons();
 
         this.debugText.setText([
             `x: ${this.input.activePointer.x}`,
@@ -97,14 +96,6 @@ export class MainScene extends Scene {
 
         const tween = this.tweens.add(config);
         (tween as CustomTween).movementPattern = random(5);
-    }
-
-    private updateVisibilityTradeButtons() {
-        this.cities.forEach(city => {
-            const playerIsInCity = city.name === this.player.getLocationName();
-            city.plusTradeButton.setVisible(playerIsInCity);
-            city.minusTradeButton.setVisible(playerIsInCity);
-        });
     }
 
     private async handleFileSelect(event: any) {
@@ -223,11 +214,7 @@ export class MainScene extends Scene {
         this.player.factories--;
         this.buildFactoryButton.nextState(this.player.factories);
         if (this.isWin()) {
-            this.scene.add("GoodEndScene", GoodEndScene, true, {
-                x: 400,
-                y: 300,
-            });
-            this.scene.remove("MainScene");
+            this.win();
         }
     }
 
@@ -293,7 +280,7 @@ export class MainScene extends Scene {
             const consumCity = getNode(this.graph, cont.name);
             consumCity.consumeOrProduce();
             if (consumCity.economy.stock < 0) {
-                this.badEndScene();
+                this.lose();
             }
         });
         this.setCityStates();
@@ -303,9 +290,17 @@ export class MainScene extends Scene {
 
     private setCityStates() {
         this.cities.forEach(city => {
-            city.citySprite.nextState(CityImageState.Base); // reset all
-            if (this.graph.hasEdge(this.player.getLocationName(), city.name)) {
-                city.citySprite.nextState(CityImageState.PlayerIsNeighboring);
+            const playerInNeighboringCity = this.graph.hasEdge(
+                this.player.getLocationName(),
+                city.name
+            );
+            const playerInCity = city.name === this.player.getLocationName();
+            if (playerInNeighboringCity) {
+                city.nextState(CityState.PlayerIsNeighboring);
+            } else if (playerInCity) {
+                city.nextState(CityState.PlayerInCity);
+            } else {
+                city.nextState(CityState.Base);
             }
         });
     }
@@ -326,7 +321,12 @@ export class MainScene extends Scene {
         return { stockText, prodText };
     }
 
-    private badEndScene() {
+    private win() {
+        this.scene.add("GoodEndScene", GoodEndScene, true);
+        this.scene.remove("MainScene");
+    }
+
+    private lose() {
         this.scene.add("badEndScene", BadEndScene, true, { x: 400, y: 300 });
         this.scene.remove("MainScene");
     }
