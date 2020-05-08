@@ -32,8 +32,8 @@ deploy:
       condition: ! $TRAVIS_BRANCH =~ ^(master)$ # except master
     edge: true
 
-  - provider: pages:git
-    github_token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
+  - provider: pages
+    token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
     on:
       branch: master
     edge: true
