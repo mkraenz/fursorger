@@ -1,4 +1,3 @@
-sudo: false
 language: node_js
 node_js:
   - "11"
@@ -28,16 +27,16 @@ deploy:
   - provider: heroku
     app: fursorger-game
     api_key: ${HEROKU_API_KEY}
-    keep_history: true
-    skip_cleanup: true
     on:
       all_branches: true
-  - provider: pages
+      condition: ! $TRAVIS_BRANCH =~ ^(master)$ # except master
+    edge: true
+
+  - provider: pages:git
     github_token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
-    keep_history: true
-    skip_cleanup: true
     on:
       branch: master
+    edge: true
 after_deploy:
   - ./deployment/push-to-docker-hub.sh "${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}"
   - if [ ${TRAVIS_BRANCH} == "master" ]; then ./deployment/push-to-docker-hub.sh 'latest'; fi
