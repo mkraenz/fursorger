@@ -29,7 +29,7 @@ deploy:
     api_key: ${HEROKU_API_KEY}
     on:
       all_branches: true
-      condition: ! $TRAVIS_BRANCH =~ ^(master)$ # except master
+      condition: $TRAVIS_BRANCH != master # except master
     edge: true
 
   - provider: pages
