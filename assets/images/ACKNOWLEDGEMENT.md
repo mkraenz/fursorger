@@ -13,5 +13,6 @@
 - [decreasing-bars64x64.png](https://www.flaticon.com/free-icon/bars_558386) - Icon made by [prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
 - [reload64x64.svg](https://www.flaticon.com/free-icon/reload_159657) - Icon made by [gregor-cresnar](https://www.flaticon.com/authors/gregor-cresnar) from www.flaticon.com
 - [map-inkarnate1024x768.png] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz. Inkarnate Pro membership present.
+- [default-background.jpg] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz. Inkarnate Pro membership present.
 - [shoaw-whium.jpg] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz. Inkarnate Pro membership present.
 - [town-01-inkarnate387x295.png] - Asset created and owned by [Inkarnate](https://www.inkarnate.com). Inkarnate Pro membership present. Usage inside of the game granted by Mati from Inkarnate.
