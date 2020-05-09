@@ -32,7 +32,6 @@ export class EditorScene extends Scene {
 
         this.backpack = 0;
 
-        // tslint:disable-next-line: no-unused-expression
         new BackgroundImage(this, "background2");
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
