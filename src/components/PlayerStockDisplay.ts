@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { MainSceneCfg as Cfg } from "../styles/MainSceneCfg";
+import { setWhiteOutlineShadow } from "../styles/setWhiteOutlineShadow";
 import { TextConfig } from "../styles/Text";
 
 export class PlayerStockDisplay extends GameObjects.Text {
@@ -12,6 +13,7 @@ export class PlayerStockDisplay extends GameObjects.Text {
             TextConfig.xl
         );
         scene.add.existing(this);
+        setWhiteOutlineShadow(this);
         scene.add
             .image(Cfg.playerStock.img.x, Cfg.playerStock.img.y, "backpack")
             .setScale(0.8);
