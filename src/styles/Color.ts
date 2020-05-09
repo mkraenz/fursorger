@@ -6,5 +6,5 @@ export enum Color {
     Green = "#0db80b",
 }
 
-const to0x = (color: Color) => color.replace("#", "0x");
-export const toHex = (color: Color) => parseInt(to0x(color), 16);
+const to0x = (color: Color | string) => color.replace("#", "0x");
+export const toHex = (color: Color | string) => parseInt(to0x(color), 16);

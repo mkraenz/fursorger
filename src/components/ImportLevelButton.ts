@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from "phaser";
+import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
 import { ILevel } from "../levels/ILevel";
 import { TextConfig } from "../styles/Text";
 
@@ -10,9 +11,9 @@ export class ImportLevelButton extends GameObjects.Text {
         super(scene, 35, 747, "Import", TextConfig.sm);
         scene.add.existing(this);
         this.setInteractive();
-        // do stuff
 
         this.on("pointerup", () => this.triggerFileUploadWindow());
+        new GrowShrinkAnimPlugin(scene, this);
     }
 
     private triggerFileUploadWindow = () => {

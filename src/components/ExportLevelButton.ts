@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from "phaser";
+import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
 import { ILevel } from "../levels/ILevel";
 import { TextConfig } from "../styles/Text";
 
@@ -8,6 +9,7 @@ export class ExportLevelButton extends GameObjects.Text {
         scene.add.existing(this);
         this.setInteractive();
         this.on("pointerup", () => this.saveToFile());
+        new GrowShrinkAnimPlugin(scene, this);
     }
 
     private saveToFile() {

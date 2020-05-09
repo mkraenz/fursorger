@@ -9,8 +9,10 @@ import { CityImage } from "../components/CityImage";
 import { CityNameDisplay } from "../components/CityNameDisplay";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
+import { EditorButton } from "../components/EditorButton";
 import { ExportLevelButton } from "../components/ExportLevelButton";
 import { ImportLevelButton } from "../components/ImportLevelButton";
+import { NextLevelButton } from "../components/NextLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
@@ -22,7 +24,6 @@ import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
-import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
@@ -44,21 +45,9 @@ export class MainScene extends Scene {
         this.graph = logicObjects.graph;
         new BackgroundImage(this, currentLevel.background);
         this.addCities(cityData);
-        this.addSidebar();
-        this.addLevelButton();
-        this.addEditorButton();
-        this.addImportExportButtons();
+        this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
-    }
-
-    private addImportExportButtons() {
-        const afterLevelParsedCb = (importedLevel: ILevel) => {
-            levels.push(importedLevel);
-            this.toggleLevel(levels.length - 1);
-        };
-        new ImportLevelButton(this, afterLevelParsedCb);
-        new ExportLevelButton(this, () => levels[getLevel(this.registry)]);
     }
 
     private addBalloons() {
@@ -75,24 +64,7 @@ export class MainScene extends Scene {
         new Balloon(this, startCity, targetCity);
     }
 
-    private addLevelButton() {
-        const button = this.add
-            .text(65, 520, "Next Level", TextConfig.lg)
-            .setInteractive();
-        button.on("pointerup", () => this.toggleLevel());
-    }
-
-    private addEditorButton() {
-        const button = this.add
-            .text(155, 747, "Editor", TextConfig.sm)
-            .setInteractive();
-        button.on("pointerup", () => {
-            this.scene.add("EditorScene", EditorScene, true);
-            this.scene.remove(this);
-        });
-    }
-
-    private addSidebar() {
+    private addGui() {
         new BuildFactoryButton(
             this,
             () => this.handleBuildButtonClicked(),
@@ -101,6 +73,14 @@ export class MainScene extends Scene {
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
         new RestartButton(this, () => this.restart());
+        new NextLevelButton(this, () => this.toggleLevel());
+        const afterLevelParsedCb = (importedLevel: ILevel) => {
+            levels.push(importedLevel);
+            this.toggleLevel(levels.length - 1);
+        };
+        new ImportLevelButton(this, afterLevelParsedCb);
+        new ExportLevelButton(this, () => levels[getLevel(this.registry)]);
+        new EditorButton(this, () => this.goto("EditorScene", EditorScene));
     }
 
     private handleBuildButtonClicked() {
@@ -197,12 +177,16 @@ export class MainScene extends Scene {
     }
 
     private win() {
-        this.scene.add("GoodEndScene", GoodEndScene, true);
-        this.scene.remove("MainScene");
+        this.goto("GoodEndScene", GoodEndScene);
     }
 
     private lose() {
-        this.scene.add("badEndScene", BadEndScene, true);
+        this.goto("badEndScene", BadEndScene);
+    }
+
+    // tslint:disable-next-line: ban-types
+    private goto(key: string, sceneClass: Function) {
+        this.scene.add(key, sceneClass, true);
         this.scene.remove("MainScene");
     }
 
