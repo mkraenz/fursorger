@@ -1,6 +1,6 @@
 const sidebarX = 50;
 const sidebarImgToTextXOffset = 40;
-const sidebarImgToTextYOffset = -30;
+const sidebarImgToTextYOffset = -22;
 export const MainSceneCfg = {
     playerStock: {
         img: {

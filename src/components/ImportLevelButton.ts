@@ -7,7 +7,7 @@ export class ImportLevelButton extends GameObjects.Text {
         scene: Scene,
         private afterLevelParsedCb: (importedLevel: ILevel) => void
     ) {
-        super(scene, 64, 747, "Import", TextConfig.sm);
+        super(scene, 35, 747, "Import", TextConfig.sm);
         scene.add.existing(this);
         this.setInteractive();
         // do stuff

@@ -6,7 +6,7 @@ import { ILevel } from "../levels/ILevel";
 import { MainScene } from "./mainScene";
 
 const textStyle = {
-    font: "48px FellEnglishSC",
+    font: "48px Metamorphous",
     fill: "#000000",
 };
 const textToIconOffset = -25;

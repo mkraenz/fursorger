@@ -1,25 +1,32 @@
 import { GameObjects } from "phaser";
 import { Color } from "./Color";
 
-export const TextConfig = {
+type Style = Partial<GameObjects.TextStyle>;
+
+export const TextConfig: { [key: string]: Style } = {
     xl: {
-        fontFamily: "FellEnglishSC",
-        fontSize: "42px",
-        color: "#000000",
-    },
-    lg: {
-        fontFamily: "FellEnglishSC",
+        fontFamily: "Metamorphous",
         fontSize: "32px",
         color: "#000000",
     },
-    sm: {
-        fontFamily: "FellEnglishSC",
+    lg: {
+        fontFamily: "Metamorphous",
+        fontSize: "20px",
+        color: "#000000",
+    },
+    md: {
+        fontFamily: "Metamorphous",
         fontSize: "16px",
+        color: "#000000",
+    },
+    sm: {
+        fontFamily: "Metamorphous",
+        fontSize: "12px",
         color: "#000000",
     },
     debug: {
         fontFamily: "Courier",
-        fontSize: "16px",
+        fontSize: "12px",
         color: "#00ff00",
     },
 };

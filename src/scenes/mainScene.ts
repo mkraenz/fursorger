@@ -6,8 +6,10 @@ import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
 import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
+import { CityNameDisplay } from "../components/CityNameDisplay";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
+import { DebugMouse } from "../components/DebugMouse";
 import { ExportLevelButton } from "../components/ExportLevelButton";
 import { ImportLevelButton } from "../components/ImportLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
@@ -51,6 +53,7 @@ export class MainScene extends Scene {
         this.addImportExportButtons();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
+        new DebugMouse(this);
     }
 
     private addImportExportButtons() {
@@ -78,14 +81,14 @@ export class MainScene extends Scene {
 
     private addLevelButton() {
         const button = this.add
-            .text(50, 500, "Next Level", TextConfig.lg)
+            .text(65, 520, "Next Level", TextConfig.lg)
             .setInteractive();
         button.on("pointerup", () => this.toggleLevel());
     }
 
     private addEditorButton() {
         const button = this.add
-            .text(202, 747, "Editor", TextConfig.sm)
+            .text(155, 747, "Editor", TextConfig.sm)
             .setInteractive();
         button.on("pointerup", () => {
             this.scene.add("EditorScene", EditorScene, true);
@@ -144,12 +147,14 @@ export class MainScene extends Scene {
         const minusTradeButton = new PlusMinusButton(this, "minus", () =>
             this.player.take()
         );
+        const nameText = new CityNameDisplay(this, name);
         return new City(this, x, y, name, {
             citySprite: cityImage,
             stockText,
             productionText,
             plusTradeButton,
             minusTradeButton,
+            nameText,
         });
     }
 
