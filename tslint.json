@@ -18,6 +18,7 @@
         "no-focused-test": true,
         "prefer-template": true,
         "prettier": true,
-        "object-literal-sort-keys": false
+        "object-literal-sort-keys": false,
+        "no-unused-expression": false
     }
 }

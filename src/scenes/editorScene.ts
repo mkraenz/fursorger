@@ -1,5 +1,6 @@
 import { saveAs } from "file-saver";
 import { GameObjects, Scene } from "phaser";
+import { BackgroundImage } from "../components/BackgroundImage";
 import { gameConfig } from "../game-config";
 import { ILevel } from "../levels/ILevel";
 import { MainScene } from "./mainScene";
@@ -31,7 +32,7 @@ export class EditorScene extends Scene {
 
         this.backpack = 0;
 
-        this.addBackground();
+        new BackgroundImage(this, "background2");
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
@@ -162,14 +163,6 @@ export class EditorScene extends Scene {
                 (-button.width * xScale) / 2 + NAME_TEXT_TO_BUTTON_OFFSET;
             nameText.y = -button.height / 2;
         });
-    }
-
-    private addBackground() {
-        const background = this.add.image(0, 0, "background2").setOrigin(0);
-        background.setDisplaySize(
-            gameConfig.scale.width as number,
-            gameConfig.scale.height as number
-        );
     }
 
     private creationButtonClicked() {

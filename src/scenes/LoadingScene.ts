@@ -63,7 +63,7 @@ export class LoadingScene extends Scene {
         this.load.on("complete", () => {
             this.scene.add("BgmScene", BgmScene, true);
             this.scene.add("MainScene", MainScene, true);
-            this.scene.remove(this);
+            this.scene.remove("LoadingScene");
         });
     }
 

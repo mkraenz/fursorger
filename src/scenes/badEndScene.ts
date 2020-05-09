@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { gameConfig } from "../game-config";
+import { BackgroundImage } from "../components/BackgroundImage";
 import { MainScene } from "./mainScene";
 
 export class BadEndScene extends Scene {
@@ -10,17 +10,11 @@ export class BadEndScene extends Scene {
     }
 
     public create(): void {
-        const bg = this.add
-            .image(0, 0, "badEnd")
-            .setOrigin(0)
-            .setDisplaySize(
-                gameConfig.scale.width as number,
-                gameConfig.scale.height as number
-            )
-            .setInteractive();
+        const bg = new BackgroundImage(this, "badEnd");
+        bg.setInteractive();
         bg.addListener("pointerup", () => {
             this.scene.add("MainScene", MainScene, true);
-            this.scene.remove(this);
+            this.scene.remove("BadEndScene");
         });
     }
 }

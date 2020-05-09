@@ -27,6 +27,7 @@ export class PlusMinusButton extends GameObjects.Image {
         this.setScale(0.5);
         this.setInteractive();
         this.setInputHandlers();
+        this.setVisible(false);
         this.growAnim = this.scene.add.tween(this.getTweenCfg("grow"));
         this.shrinkAnim = this.scene.add.tween(this.getTweenCfg("shrink"));
     }

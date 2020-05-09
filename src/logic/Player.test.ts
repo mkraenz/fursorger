@@ -1,4 +1,3 @@
-// tslint:disable: no-unused-expression
 import { expect } from "chai";
 import { Graph } from "graphlib";
 import { Player } from "./Player";
