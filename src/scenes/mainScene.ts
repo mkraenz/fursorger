@@ -10,12 +10,12 @@ import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
-import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
+import { ImportLevelButton } from "../components/ImportLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
 import { TurnDisplay } from "../components/TurnDisplay";
-import { ICity } from "../levels/ILevel";
+import { ICity, ILevel } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
 import { ILocation } from "../logic/ILocation";
@@ -44,16 +44,23 @@ export class MainScene extends Scene {
         const logicObjects = LogicBuilder.create(currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        // tslint:disable-next-line: no-unused-expression
         new BackgroundImage(this, currentLevel.background);
         this.addCities(cityData);
-        this.addPlayerInfo();
+        this.addSidebar();
         this.addLevelButton();
         this.addEditorButton();
         this.addImportLevelButton();
         this.addExportLevelButton();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
+    }
+
+    private addImportLevelButton() {
+        const afterLevelParsedCb = (importedLevel: ILevel) => {
+            levels.push(importedLevel);
+            this.toggleLevel(levels.length - 1);
+        };
+        new ImportLevelButton(this, afterLevelParsedCb);
     }
 
     private addBalloons() {
@@ -77,19 +84,11 @@ export class MainScene extends Scene {
         (tween as CustomTween).movementPattern = random(5);
     }
 
-    private async handleFileSelect(event: any) {
-        const importedLevel = await parseLevelFromJsonUpload(event);
-        levels.push(importedLevel);
-        this.toggleLevel(levels.length - 1);
-    }
-
     private addLevelButton() {
         const button = this.add
             .text(50, 500, "Next Level", TextConfig.lg)
             .setInteractive();
-        button.on("pointerup", () => {
-            this.toggleLevel();
-        });
+        button.on("pointerup", () => this.toggleLevel());
     }
 
     private addEditorButton() {
@@ -120,27 +119,7 @@ export class MainScene extends Scene {
         button.on("pointerup", saveToFile);
     }
 
-    private addImportLevelButton() {
-        const button = this.add
-            .text(64, 747, "Import", TextConfig.sm)
-            .setInteractive();
-        const triggerFileUploadWindow = () => {
-            const input = document.createElement("input");
-            input.setAttribute("type", "file");
-            input.setAttribute("id", "files-input");
-            input.setAttribute("name", "files[]");
-            input.setAttribute("style", "opacity:0;");
-            input.addEventListener("change", event =>
-                this.handleFileSelect(event)
-            );
-            input.click();
-            input.remove();
-        };
-        button.on("pointerup", triggerFileUploadWindow);
-    }
-
-    private addPlayerInfo() {
-        // tslint:disable: no-unused-expression
+    private addSidebar() {
         new BuildFactoryButton(
             this,
             () => this.handleBuildButtonClicked(),
@@ -149,7 +128,6 @@ export class MainScene extends Scene {
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
         new RestartButton(this, () => this.restart());
-        // tslint:enable: no-unused-expression
     }
 
     private handleBuildButtonClicked() {

@@ -1,33 +1,33 @@
-const toolbarX = 50;
-const toolbarImgToTextXOffset = 40;
-const toolbarImgToTextYOffset = -30;
+const sidebarX = 50;
+const sidebarImgToTextXOffset = 40;
+const sidebarImgToTextYOffset = -30;
 export const MainSceneCfg = {
     playerStock: {
         img: {
-            x: toolbarX,
+            x: sidebarX,
             y: 200,
         },
         text: {
-            x: toolbarX + toolbarImgToTextXOffset,
-            y: 200 + toolbarImgToTextYOffset,
+            x: sidebarX + sidebarImgToTextXOffset,
+            y: 200 + sidebarImgToTextYOffset,
         },
     },
     turnInfo: {
         img: {
-            x: toolbarX,
+            x: sidebarX,
             y: 280,
         },
         text: {
-            x: toolbarX + toolbarImgToTextXOffset,
-            y: 280 + toolbarImgToTextYOffset,
+            x: sidebarX + sidebarImgToTextXOffset,
+            y: 280 + sidebarImgToTextYOffset,
         },
     },
     buildFactory: {
-        x: toolbarX,
+        x: sidebarX,
         y: 370,
     },
     restart: {
-        x: toolbarX,
+        x: sidebarX,
         y: 460,
     },
 };
