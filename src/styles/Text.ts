@@ -8,12 +8,14 @@ export const TextConfig = {
         color: "#000000",
     },
     lg: {
-        font: "32px FellEnglishSC",
-        fill: "#000000",
+        fontFamily: "FellEnglishSC",
+        fontSize: "32px",
+        color: "#000000",
     },
     sm: {
-        font: "16px FellEnglishSC",
-        fill: "#000000",
+        fontFamily: "FellEnglishSC",
+        fontSize: "16px",
+        color: "#000000",
     },
     debug: {
         fontFamily: "Courier",

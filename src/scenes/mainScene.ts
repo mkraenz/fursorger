@@ -2,15 +2,14 @@ import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { random } from "lodash";
 import { Scene } from "phaser";
-import {
-    addProductionAnim,
-    setProductionTextColor,
-} from "../anims/addProductionAnim";
+import { addProductionAnim } from "../anims/addProductionAnim";
 import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
 import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
+import { CityProductionDisplay } from "../components/CityProductionDisplay";
+import { CityStockDisplay } from "../components/CityStockDisplay";
 import { parseLevelFromJsonUpload } from "../components/parseLevelFromJsonUpload";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
@@ -27,8 +26,6 @@ import { TextConfig } from "../styles/Text";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
-
-const textToIconOffset = -25;
 
 export class MainScene extends Scene {
     private player!: IPlayer;
@@ -59,10 +56,6 @@ export class MainScene extends Scene {
         this.addBalloons();
     }
 
-    public update() {
-        this.updateCityInfos();
-    }
-
     private addBalloons() {
         this.graph
             .edges()
@@ -80,7 +73,6 @@ export class MainScene extends Scene {
             .image(startCity.x, startCity.y, "balloon")
             .setScale(30 / 1600, 30 / 1600);
         const config = getBalloonTweenConfig(balloon, startCity, targetCity);
-
         const tween = this.tweens.add(config);
         (tween as CustomTween).movementPattern = random(5);
     }
@@ -147,17 +139,6 @@ export class MainScene extends Scene {
         button.on("pointerup", triggerFileUploadWindow);
     }
 
-    private updateCityInfos() {
-        this.cities.forEach(city => {
-            const stock = getNode(this.graph, city.name).economy.stock;
-            city.stockText.setText(`${stock}`);
-            const production = getNode(this.graph, city.name).economy
-                .production;
-            const productionText = city.productionText.setText(`${production}`);
-            setProductionTextColor(production, productionText);
-        });
-    }
-
     private addPlayerInfo() {
         // tslint:disable: no-unused-expression
         new BuildFactoryButton(
@@ -198,21 +179,25 @@ export class MainScene extends Scene {
     }
 
     private addCity({ name, x, y }: ICity) {
+        const city = getNode(this.graph, name);
         const cityImage = new CityImage(this, 0, 0, name);
-        const { stockText, prodText } = this.addEconomyInfo();
-
-        const plus = new PlusMinusButton(this, "plus", () =>
+        const stockText = new CityStockDisplay(this, () => city.economy.stock);
+        const productionText = new CityProductionDisplay(
+            this,
+            () => city.economy.production
+        );
+        const plusTradeButton = new PlusMinusButton(this, "plus", () =>
             this.player.store()
         );
-        const minus = new PlusMinusButton(this, "minus", () =>
+        const minusTradeButton = new PlusMinusButton(this, "minus", () =>
             this.player.take()
         );
         return new City(this, x, y, name, {
             citySprite: cityImage,
             stockText,
-            productionText: prodText,
-            plusTradeButton: plus,
-            minusTradeButton: minus,
+            productionText,
+            plusTradeButton,
+            minusTradeButton,
         });
     }
 
@@ -256,22 +241,6 @@ export class MainScene extends Scene {
                 city.nextState(CityState.Base);
             }
         });
-    }
-
-    private addEconomyInfo() {
-        const stockText = this.add.text(
-            -40,
-            60 + textToIconOffset,
-            "",
-            TextConfig.lg
-        );
-        const prodText = this.add.text(
-            0,
-            60 + textToIconOffset,
-            "",
-            TextConfig.lg
-        );
-        return { stockText, prodText };
     }
 
     private win() {
