@@ -1,4 +1,3 @@
-import { saveAs } from "file-saver";
 import { Graph } from "graphlib";
 import { random } from "lodash";
 import { Scene } from "phaser";
@@ -10,6 +9,7 @@ import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
+import { ExportLevelButton } from "../components/ExportLevelButton";
 import { ImportLevelButton } from "../components/ImportLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
@@ -49,18 +49,18 @@ export class MainScene extends Scene {
         this.addSidebar();
         this.addLevelButton();
         this.addEditorButton();
-        this.addImportLevelButton();
-        this.addExportLevelButton();
+        this.addImportExportButtons();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
     }
 
-    private addImportLevelButton() {
+    private addImportExportButtons() {
         const afterLevelParsedCb = (importedLevel: ILevel) => {
             levels.push(importedLevel);
             this.toggleLevel(levels.length - 1);
         };
         new ImportLevelButton(this, afterLevelParsedCb);
+        new ExportLevelButton(this, () => levels[getLevel(this.registry)]);
     }
 
     private addBalloons() {
@@ -99,24 +99,6 @@ export class MainScene extends Scene {
             this.scene.add("EditorScene", EditorScene, true);
             this.scene.remove(this);
         });
-    }
-
-    private addExportLevelButton() {
-        const button = this.add
-            .text(132, 747, "Export", TextConfig.sm)
-            .setInteractive();
-        const saveToFile = () => {
-            const data = JSON.stringify(
-                levels[getLevel(this.registry)],
-                null,
-                4
-            );
-            const blob = new Blob([data], {
-                type: "application/json",
-            });
-            saveAs(blob, "level.json");
-        };
-        button.on("pointerup", saveToFile);
     }
 
     private addSidebar() {
