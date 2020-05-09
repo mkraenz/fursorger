@@ -92,7 +92,7 @@ export class PlusMinusButton extends GameObjects.Image {
             scaleX: targetScale,
             scaleY: targetScale,
             ease: "Linear",
-            duration: 125,
+            duration: 100,
         };
     }
 }
