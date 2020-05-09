@@ -32,6 +32,7 @@ export class City extends GameObjects.Container {
             children.minusTradeButton,
         ]);
         scene.add.existing(this);
+        this.setDepth(1); // balloons below city
         this.setName(name);
     }
 

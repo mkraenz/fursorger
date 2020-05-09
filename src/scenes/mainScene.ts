@@ -1,9 +1,8 @@
 import { Graph } from "graphlib";
-import { random } from "lodash";
 import { Scene } from "phaser";
 import { addProductionAnim } from "../anims/addProductionAnim";
-import { CustomTween, getBalloonTweenConfig } from "../anims/balloon-movements";
 import { BackgroundImage } from "../components/BackgroundImage";
+import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
 import { City, CityState } from "../components/City";
 import { CityImage } from "../components/CityImage";
@@ -70,18 +69,11 @@ export class MainScene extends Scene {
     }
 
     private addBalloonForEdge(startCityName: string, targetCityName: string) {
-        const startCity = this.cities.find(
-            container => container.name === startCityName
-        );
+        const startCity = this.cities.find(city => city.name === startCityName);
         const targetCity = this.cities.find(
-            container => container.name === targetCityName
+            city => city.name === targetCityName
         );
-        const balloon = this.add
-            .image(startCity.x, startCity.y, "balloon")
-            .setScale(30 / 1600, 30 / 1600);
-        const config = getBalloonTweenConfig(balloon, startCity, targetCity);
-        const tween = this.tweens.add(config);
-        (tween as CustomTween).movementPattern = random(5);
+        new Balloon(this, startCity, targetCity);
     }
 
     private addLevelButton() {

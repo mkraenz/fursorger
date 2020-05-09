@@ -1,7 +1,25 @@
 import { random } from "lodash";
-import { GameObjects, Tweens } from "phaser";
+import { GameObjects, Scene, Tweens } from "phaser";
 
-export type CustomTween = Tweens.Tween & { movementPattern: number };
+type CustomTween = Tweens.Tween & { movementPattern: number };
+interface ILocation {
+    x: number;
+    y: number;
+}
+
+export class Balloon extends GameObjects.Image {
+    private anim: CustomTween;
+
+    constructor(scene: Scene, start: ILocation, target: ILocation) {
+        super(scene, start.x, start.y, "balloon");
+        scene.add.existing(this);
+        this.setDisplaySize(30, 30);
+
+        const config = getBalloonTweenConfig(this, start, target);
+        this.anim = this.scene.tweens.add(config) as CustomTween;
+        this.anim.movementPattern = random(5);
+    }
+}
 
 const balloonDisturbances = (
     t: number,
@@ -42,12 +60,12 @@ const balloonDisturbances = (
     }
 };
 
-export const numberOfCases = 6;
+const numberOfCases = 6;
 
-export function getBalloonTweenConfig(
+function getBalloonTweenConfig(
     image: GameObjects.Image,
-    start: { x: number; y: number },
-    end: { x: number; y: number }
+    start: ILocation,
+    end: ILocation
 ) {
     const MIN_BALLOON_SPEED = 0.4;
     const { x: x1, y: y1 } = start;
