@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from "phaser";
+import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
 import { MainSceneCfg } from "../styles/MainSceneCfg";
 
 export class RestartButton extends GameObjects.Image {
@@ -7,5 +8,6 @@ export class RestartButton extends GameObjects.Image {
         scene.add.existing(this);
         this.setInteractive();
         this.on("pointerup", onPointerUp);
+        new GrowShrinkAnimPlugin(scene, this);
     }
 }
