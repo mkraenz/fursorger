@@ -22,12 +22,13 @@ export class PlusMinusButton extends GameObjects.Image {
         texture: "plus" | "minus",
         private onclickOrClickHold: () => void
     ) {
-        super(scene, -60, texture === "plus" ? -30 : 30, texture);
+        super(scene, -60, texture === "plus" ? -25 : 25, texture);
         scene.add.existing(this);
         this.setScale(0.5);
         this.setInteractive();
         this.setInputHandlers();
         this.setVisible(false);
+        this.setAlpha(0.8);
         this.growAnim = this.scene.add.tween(this.getTweenCfg("grow"));
         this.shrinkAnim = this.scene.add.tween(this.getTweenCfg("shrink"));
     }
@@ -57,9 +58,7 @@ export class PlusMinusButton extends GameObjects.Image {
             this.onclickOrClickHold();
         });
         this.on("pointerup", resetClicked);
-        this.on("pointerover", () => {
-            this.transitionToGrownState();
-        });
+        this.on("pointerover", () => this.transitionToGrownState());
         this.on("pointerout", () => {
             resetClicked();
             this.transitionToBaseState();

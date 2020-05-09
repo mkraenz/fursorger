@@ -1,5 +1,8 @@
 import { GameObjects, Scene } from "phaser";
 import { CityImage, CityImageState } from "./CityImage";
+import { CityNameDisplay } from "./CityNameDisplay";
+import { CityProductionDisplay } from "./CityProductionDisplay";
+import { CityStockDisplay } from "./CityStockDisplay";
 import { PlusMinusButton } from "./PlusMinusButton";
 
 export enum CityState {
@@ -18,10 +21,11 @@ export class City extends GameObjects.Container {
         name: string,
         children: {
             citySprite: CityImage;
-            stockText: GameObjects.Text;
-            productionText: GameObjects.Text;
+            stockText: CityStockDisplay;
+            productionText: CityProductionDisplay;
             plusTradeButton: PlusMinusButton;
             minusTradeButton: PlusMinusButton;
+            nameText: CityNameDisplay;
         }
     ) {
         super(scene, x, y, [
@@ -30,6 +34,7 @@ export class City extends GameObjects.Container {
             children.productionText,
             children.plusTradeButton,
             children.minusTradeButton,
+            children.nameText,
         ]);
         scene.add.existing(this);
         this.setDepth(1); // balloons below city
@@ -41,11 +46,11 @@ export class City extends GameObjects.Container {
     }
 
     get stockText() {
-        return this.getAt(1) as GameObjects.Text;
+        return this.getAt(1) as CityStockDisplay;
     }
 
     get productionText() {
-        return this.getAt(2) as GameObjects.Text;
+        return this.getAt(2) as CityProductionDisplay;
     }
 
     get plusTradeButton() {
@@ -54,6 +59,10 @@ export class City extends GameObjects.Container {
 
     get minusTradeButton() {
         return this.getAt(4) as PlusMinusButton;
+    }
+
+    get nameText() {
+        return this.getAt(5) as CityNameDisplay;
     }
 
     public nextState(state: CityState) {
