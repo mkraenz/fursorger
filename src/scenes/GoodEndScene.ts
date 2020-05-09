@@ -6,9 +6,7 @@ import { MainScene } from "./mainScene";
 
 export class GoodEndScene extends Scene {
     constructor() {
-        super({
-            key: "GoodEndScene",
-        });
+        super({ key: "GoodEndScene" });
     }
 
     public create(): void {

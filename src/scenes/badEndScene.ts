@@ -4,9 +4,7 @@ import { MainScene } from "./mainScene";
 
 export class BadEndScene extends Scene {
     constructor() {
-        super({
-            key: "BadEndScene",
-        });
+        super({ key: "BadEndScene" });
     }
 
     public create(): void {
