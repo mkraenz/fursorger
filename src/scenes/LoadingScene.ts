@@ -10,9 +10,7 @@ export class LoadingScene extends Scene {
     private halfHeight!: number;
 
     constructor() {
-        super({
-            key: "Loading",
-        });
+        super({ key: "Loading" });
     }
 
     public preload() {

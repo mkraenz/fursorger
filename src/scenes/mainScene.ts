@@ -9,7 +9,6 @@ import { CityImage } from "../components/CityImage";
 import { CityNameDisplay } from "../components/CityNameDisplay";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
-import { DebugMouse } from "../components/DebugMouse";
 import { ExportLevelButton } from "../components/ExportLevelButton";
 import { ImportLevelButton } from "../components/ImportLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
@@ -34,9 +33,7 @@ export class MainScene extends Scene {
     private cities!: City[];
 
     constructor() {
-        super({
-            key: "MainScene",
-        });
+        super({ key: "MainScene" });
     }
 
     public create(): void {
@@ -53,7 +50,6 @@ export class MainScene extends Scene {
         this.addImportExportButtons();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
-        new DebugMouse(this);
     }
 
     private addImportExportButtons() {
