@@ -2,13 +2,13 @@ import { GameObjects, Scene, Tweens } from "phaser";
 import { ScalableTweenBuilderConfig } from "./ScalableTweenBuilderConfig";
 
 enum State {
-    pointerOver,
-    pointerOut,
+    pointerover,
+    pointerout,
 }
 
-/** Warning: not working together with Containers. */
-export class GrowShrinkAnimPlugin extends GameObjects.Rectangle {
-    public state = State.pointerOut;
+/** Warning: Currently not working together with Containers. */
+export class GrowShrinkAnimPlugin {
+    public state = State.pointerout;
     private baseScale: number;
     private growAnim: Tweens.Tween;
     private shrinkAnim: Tweens.Tween;
@@ -16,47 +16,36 @@ export class GrowShrinkAnimPlugin extends GameObjects.Rectangle {
     constructor(
         scene: Scene,
         private target: GameObjects.Image | GameObjects.Text,
-        private maxScale = 1.25
+        private maxScale = 1.25,
+        private debug = false
     ) {
-        super(scene, target.x, target.y, target.width, target.height);
         this.baseScale = this.target.scale;
-        this.setOrigin(target.originX, target.originY);
-        scene.add.existing(this);
         this.growAnim = scene.add.tween(this.getTweenCfg("grow"));
         this.shrinkAnim = scene.add.tween(this.getTweenCfg("shrink"));
-        this.setInteractive();
-        this.setDepth(999999);
-
-        this.propogateEvents();
-        this.on("pointerout", () => this.setPointerOutState());
-        this.on("pointerover", () => this.setPointerOverState());
-    }
-
-    /**
-     *  needed because phaser sends input events only to the top-most game object (set via setDepth())
-     *  This is likely to cause bugs in the future.
-     *  Alternative might be to use scene.input.activePointer.x or sth like that
-     */
-    private propogateEvents() {
-        this.target.eventNames().forEach(event => {
-            this.target.listeners(event).forEach(listener =>
-                this.on(event, () => {
-                    listener();
-                })
-            );
-        });
+        this.target.on("pointerout", () => this.setPointerOutState());
+        this.target.on("pointerover", () => this.setPointerOverState());
     }
 
     private setPointerOutState() {
-        this.state = State.pointerOut;
+        this.state = State.pointerout;
         this.growAnim.pause();
         this.shrinkAnim.restart();
+
+        if (this.debug) {
+            // tslint:disable-next-line: no-console
+            console.log("pointerout");
+        }
     }
 
     private setPointerOverState() {
-        this.state = State.pointerOver;
+        this.state = State.pointerover;
         this.shrinkAnim.pause();
         this.growAnim.restart();
+
+        if (this.debug) {
+            // tslint:disable-next-line: no-console
+            console.log("pointerover");
+        }
     }
 
     private getTweenCfg(
