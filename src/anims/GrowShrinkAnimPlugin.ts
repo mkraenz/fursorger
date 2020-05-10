@@ -1,77 +1,75 @@
-import { GameObjects, Scene, Tweens } from "phaser";
-import { ScalableTweenBuilderConfig } from "./ScalableTweenBuilderConfig";
+import { GameObjects, Scene } from "phaser";
 
 enum State {
-    pointerOver,
-    pointerOut,
+    pointerover,
+    pointerout,
 }
 
-/** Warning: not working together with Containers. */
-export class GrowShrinkAnimPlugin extends GameObjects.Rectangle {
-    public state = State.pointerOut;
+const MsPerSec = 1000;
+
+export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
+    public state = State.pointerout;
     private baseScale: number;
-    private growAnim: Tweens.Tween;
-    private shrinkAnim: Tweens.Tween;
+    private maxScale: number;
 
     constructor(
         scene: Scene,
         private target: GameObjects.Image | GameObjects.Text,
-        private maxScale = 1.25
+        maxRelativeScale = 1.25,
+        private speed = 2.3,
+        private debug = false
     ) {
-        super(scene, target.x, target.y, target.width, target.height);
-        this.baseScale = this.target.scale;
-        this.setOrigin(target.originX, target.originY);
+        super(scene, "GrowShrinkAnimPlugin");
         scene.add.existing(this);
-        this.growAnim = scene.add.tween(this.getTweenCfg("grow"));
-        this.shrinkAnim = scene.add.tween(this.getTweenCfg("shrink"));
-        this.setInteractive();
-        this.setDepth(999999);
-
-        this.propogateEvents();
-        this.on("pointerout", () => this.setPointerOutState());
-        this.on("pointerover", () => this.setPointerOverState());
+        this.baseScale = this.target.scale;
+        this.maxScale = this.baseScale * maxRelativeScale;
+        this.target.on("pointerout", () => this.setPointerOutState());
+        this.target.on("pointerover", () => this.setPointerOverState());
     }
 
-    /**
-     *  needed because phaser sends input events only to the top-most game object (set via setDepth())
-     *  This is likely to cause bugs in the future.
-     *  Alternative might be to use scene.input.activePointer.x or sth like that
-     */
-    private propogateEvents() {
-        this.target.eventNames().forEach(event => {
-            this.target.listeners(event).forEach(listener =>
-                this.on(event, () => {
-                    listener();
-                })
-            );
-        });
+    public preUpdate(time: number, delta: number) {
+        if (
+            this.state === State.pointerout &&
+            this.target.scale > this.baseScale
+        ) {
+            this.shrink(delta);
+        }
+        if (
+            this.state === State.pointerover &&
+            this.target.scale < this.maxScale
+        ) {
+            this.grow(delta);
+        }
+    }
+
+    private grow(delta: number) {
+        this.target.setScale(
+            this.target.scaleX + this.speed * (delta / MsPerSec),
+            this.target.scaleY + this.speed * (delta / MsPerSec)
+        );
     }
 
     private setPointerOutState() {
-        this.state = State.pointerOut;
-        this.growAnim.pause();
-        this.shrinkAnim.restart();
+        this.state = State.pointerout;
+        if (this.debug) {
+            // tslint:disable-next-line: no-console
+            console.log("pointerout");
+        }
+    }
+
+    private shrink(delta: number) {
+        this.target.setScale(
+            this.target.scaleX - this.speed * (delta / MsPerSec),
+            this.target.scaleY - this.speed * (delta / MsPerSec)
+        );
     }
 
     private setPointerOverState() {
-        this.state = State.pointerOver;
-        this.shrinkAnim.pause();
-        this.growAnim.restart();
-    }
+        this.state = State.pointerover;
 
-    private getTweenCfg(
-        direction: "shrink" | "grow"
-    ): ScalableTweenBuilderConfig {
-        const targetScale =
-            direction === "shrink"
-                ? this.baseScale
-                : this.baseScale * this.maxScale;
-        return {
-            targets: this.target,
-            scaleX: targetScale,
-            scaleY: targetScale,
-            ease: "Linear",
-            duration: 100,
-        };
+        if (this.debug) {
+            // tslint:disable-next-line: no-console
+            console.log("pointerover");
+        }
     }
 }

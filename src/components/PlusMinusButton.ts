@@ -1,5 +1,5 @@
-import { GameObjects, Scene, Tweens } from "phaser";
-import { ScalableTweenBuilderConfig } from "../anims/ScalableTweenBuilderConfig";
+import { GameObjects, Scene } from "phaser";
+import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
 
 enum State {
     Base,
@@ -10,9 +10,6 @@ export class PlusMinusButton extends GameObjects.Image {
     private isClicked = false;
     private timeSincePointerdown = 0;
     private timeSinceLastCallback = 0;
-    private readonly baseScale = 0.5;
-    private readonly growAnim: Tweens.Tween;
-    private readonly shrinkAnim: Tweens.Tween;
 
     /**
      * @param onclickOrClickHold gets triggered on the initial pointer down and again with every few milliseconds passed
@@ -29,8 +26,7 @@ export class PlusMinusButton extends GameObjects.Image {
         this.setInputHandlers();
         this.setVisible(false);
         this.setAlpha(0.8);
-        this.growAnim = this.scene.add.tween(this.getTweenCfg("grow"));
-        this.shrinkAnim = this.scene.add.tween(this.getTweenCfg("shrink"));
+        new GrowShrinkAnimPlugin(this.scene, this, 1.25, 1.8);
     }
 
     /**
@@ -58,41 +54,11 @@ export class PlusMinusButton extends GameObjects.Image {
             this.onclickOrClickHold();
         });
         this.on("pointerup", resetClicked);
-        this.on("pointerover", () => this.transitionToGrownState());
-        this.on("pointerout", () => {
-            resetClicked();
-            this.transitionToBaseState();
-        });
+        this.on("pointerout", resetClicked);
     }
 
     private resetClicked() {
         this.isClicked = false;
         this.timeSincePointerdown = 0;
-    }
-
-    private transitionToGrownState() {
-        this.state = State.Grown;
-        this.shrinkAnim.pause();
-        this.growAnim.restart();
-    }
-
-    private transitionToBaseState() {
-        this.state = State.Base;
-        this.growAnim.pause();
-        this.shrinkAnim.restart();
-    }
-
-    private getTweenCfg(
-        direction: "shrink" | "grow"
-    ): ScalableTweenBuilderConfig {
-        const targetScale =
-            direction === "shrink" ? this.baseScale : this.baseScale * 1.4;
-        return {
-            targets: this,
-            scaleX: targetScale,
-            scaleY: targetScale,
-            ease: "Linear",
-            duration: 100,
-        };
     }
 }
