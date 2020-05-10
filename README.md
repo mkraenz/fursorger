@@ -89,6 +89,7 @@ See [.travis.yml](.travis.yml).
 - [Phaser 3 Examples Lab Github](https://github.com/photonstorm/phaser3-examples)
 - [Cheat sheets](https://github.com/digitsensitive/phaser3-typescript/blob/master/cheatsheets)
 - [Template Project - Phaser3 with TypeScript](https://github.com/digitsensitive/phaser3-typescript)
+- [RexRainbow Github Phaser 3 plugins and more](https://github.com/rexrainbow/phaser3-rex-notes/tree/master/plugins)
 
 ## Helpful tools
 
