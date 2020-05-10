@@ -9,6 +9,7 @@ import { CityImage } from "../components/CityImage";
 import { CityNameDisplay } from "../components/CityNameDisplay";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
+import { DottedLine } from "../components/DottedLine";
 import { EditorButton } from "../components/EditorButton";
 import { ExportLevelButton } from "../components/ExportLevelButton";
 import { ImportLevelButton } from "../components/ImportLevelButton";
@@ -53,9 +54,18 @@ export class MainScene extends Scene {
     }
 
     private addBalloons() {
-        this.graph
-            .edges()
-            .forEach(edge => this.addBalloonForEdge(edge.v, edge.w));
+        this.graph.edges().forEach(edge => {
+            this.addBalloonForEdge(edge.v, edge.w);
+            this.addLineForEdge(edge.v, edge.w);
+        });
+    }
+
+    private addLineForEdge(startCityName: string, targetCityName: string) {
+        const startCity = this.cities.find(city => city.name === startCityName);
+        const targetCity = this.cities.find(
+            city => city.name === targetCityName
+        );
+        new DottedLine(this, startCity, targetCity);
     }
 
     private addBalloonForEdge(startCityName: string, targetCityName: string) {
