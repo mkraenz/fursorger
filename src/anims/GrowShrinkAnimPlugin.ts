@@ -7,10 +7,12 @@ enum State {
 
 const MsPerSec = 1000;
 
+/** NOTE: The target's scale must be set before initializing the plugin. */
 export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
     public state = State.pointerout;
     private baseScale: number;
     private maxScale: number;
+    private enabled = true;
 
     constructor(
         scene: Scene,
@@ -27,7 +29,14 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
         this.target.on("pointerover", () => this.setPointerOverState());
     }
 
+    public setEnabled(value: boolean) {
+        this.enabled = value;
+    }
+
     public preUpdate(time: number, delta: number) {
+        if (!this.enabled) {
+            return;
+        }
         if (
             this.state === State.pointerout &&
             this.target.scale > this.baseScale
