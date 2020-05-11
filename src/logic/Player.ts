@@ -12,16 +12,16 @@ export class Player implements IPlayer {
     ) {}
 
     public take(): void {
-        if (this.location.economy.stock > 0) {
+        if (this.location.stock > 0) {
             this.stock += 1;
-            this.location.economy.stock -= 1;
+            this.location.stock -= 1;
         }
     }
 
     public store(): void {
         if (this.stock > 0) {
             this.stock -= 1;
-            this.location.economy.stock += 1;
+            this.location.stock += 1;
         }
     }
 

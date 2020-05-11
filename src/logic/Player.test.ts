@@ -10,7 +10,7 @@ describe("Player", () => {
             graph,
             {
                 name: "Athens",
-                economy: { stock: 1 },
+                stock: 1,
             },
             3
         );
