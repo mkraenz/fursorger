@@ -7,7 +7,5 @@ export interface IPlayer {
     locationName: string;
     take(): void;
     store(): void;
-    getLocation(): ILocation;
-    getLocationName(): string;
-    setLocation(location: ILocation): void;
+    move(location: ILocation): void;
 }

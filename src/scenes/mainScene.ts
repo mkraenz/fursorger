@@ -92,7 +92,7 @@ export class MainScene extends Scene {
     }
 
     private handleBuildButtonClicked() {
-        const locationName = this.player.getLocationName();
+        const locationName = this.player.locationName;
         getNode(this.graph, locationName).production++;
         this.player.factories--;
         if (this.isWin()) {
@@ -145,7 +145,7 @@ export class MainScene extends Scene {
     private setOnCityClick(city: City) {
         city.citySprite.on("pointerup", () => {
             const isValidMovement = this.graph.hasEdge(
-                this.player.getLocationName(),
+                this.player.locationName,
                 city.name
             );
             if (isValidMovement) {
@@ -155,7 +155,7 @@ export class MainScene extends Scene {
     }
 
     private moveAndEndTurn(location: ILocation) {
-        this.player.setLocation(location);
+        this.player.move(location);
         this.cities.forEach(cont => {
             const consumCity = getNode(this.graph, cont.name);
             consumCity.consumeOrProduce();
@@ -170,10 +170,10 @@ export class MainScene extends Scene {
     private setCityStates() {
         this.cities.forEach(city => {
             const playerInNeighboringCity = this.graph.hasEdge(
-                this.player.getLocationName(),
+                this.player.locationName,
                 city.name
             );
-            const playerInCity = city.name === this.player.getLocationName();
+            const playerInCity = city.name === this.player.locationName;
             if (playerInNeighboringCity) {
                 city.nextState(CityState.PlayerIsNeighboring);
             } else if (playerInCity) {

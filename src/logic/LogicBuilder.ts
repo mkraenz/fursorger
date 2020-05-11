@@ -22,7 +22,6 @@ export class LogicBuilder {
             graph.setEdge(edge.first, edge.second);
         });
         const player = new Player(
-            graph,
             graph.node(level.player.location),
             level.player.stock
         );

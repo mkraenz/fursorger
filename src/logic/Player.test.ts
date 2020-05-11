@@ -7,7 +7,6 @@ describe("Player", () => {
         const graph = new Graph();
 
         const result = new Player(
-            graph,
             {
                 name: "Athens",
                 stock: 1,
