@@ -79,7 +79,11 @@ export class MainScene extends Scene {
             this.toggleLevel(levels.length - 1);
         };
         new ImportLevelButton(this, afterLevelParsedCb);
-        new ExportLevelButton(this, () => levels[getLevel(this.registry)]);
+        new ExportLevelButton(
+            this,
+            () => levels[getLevel(this.registry)],
+            () => getAllCities(this.graph)
+        );
         new EditorButton(this, () => this.goto("EditorScene", EditorScene));
     }
 
