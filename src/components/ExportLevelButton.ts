@@ -34,7 +34,7 @@ export class ExportLevelButton extends GameObjects.Text {
             const cityBaseData = level.cities.find(c => c.name === city.name);
             return {
                 ...cityBaseData,
-                ...city.economy,
+                ...city,
             };
         });
         level.cities = adjustedCities;
