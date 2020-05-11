@@ -24,6 +24,7 @@ import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
+import { LevelExporter } from "../utils/LevelExporter";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
@@ -81,8 +82,11 @@ export class MainScene extends Scene {
         new ImportLevelButton(this, afterLevelParsedCb);
         new ExportLevelButton(
             this,
-            () => levels[getLevel(this.registry)],
-            () => getAllCities(this.graph)
+            new LevelExporter(
+                () => levels[getLevel(this.registry)],
+                () => getAllCities(this.graph),
+                () => this.player
+            )
         );
         new EditorButton(this, () => this.goto("EditorScene", EditorScene));
     }

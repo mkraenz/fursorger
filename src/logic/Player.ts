@@ -40,4 +40,8 @@ export class Player implements IPlayer {
     public getLocationName() {
         return this.location.name;
     }
+
+    get locationName() {
+        return this.location.name;
+    }
 }
