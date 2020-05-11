@@ -3,15 +3,14 @@
 
 # Fursorger
 
-**Play now at [fursorger-game.herokuapp.com](https://fursorger-game.herokuapp.com).**
-
+**Play now at [prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/).**
 ```
 I am the care taker who
 tries to keep the dying world alive
 as long as possible
 by traveling to cities,
 redistributing goods among cities,
-and building factories to build more goods
+and building factories to produce more goods
 ```
 
 [Big Hairy Audacious Goal](https://en.wikipedia.org/wiki/Big_Hairy_Audacious_Goal) Number 1.
@@ -74,6 +73,8 @@ Check out this cool [how-to](https://github.com/samme/phaser3-faq/wiki#how-do-i-
 Continuous deployment to github pages [https://prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/) is performed on each push to `master`.
 
 At the same time, a new Docker image is published to [Fursorger's Docker Hub repository](https://cloud.docker.com/u/nonbiri/repository/docker/nonbiri/fursorger).
+
+Every branch is automatically deployed to [fursorger-game.herokuapp.com](https://fursorger-game.herokuapp.com).
 
 See [.travis.yml](.travis.yml).
 
