@@ -192,8 +192,7 @@ export class MainScene extends Scene {
         this.goto("badEndScene", BadEndScene);
     }
 
-    // tslint:disable-next-line: ban-types
-    private goto(key: string, sceneClass: Function) {
+    private goto(key: string, sceneClass: new (name: string) => Scene) {
         this.scene.add(key, sceneClass, true);
         this.scene.remove("MainScene");
     }
