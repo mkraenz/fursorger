@@ -24,6 +24,7 @@ import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
+import { LevelExporter } from "../utils/LevelExporter";
 import { BadEndScene } from "./badEndScene";
 import { EditorScene } from "./editorScene";
 import { GoodEndScene } from "./GoodEndScene";
@@ -79,13 +80,20 @@ export class MainScene extends Scene {
             this.toggleLevel(levels.length - 1);
         };
         new ImportLevelButton(this, afterLevelParsedCb);
-        new ExportLevelButton(this, () => levels[getLevel(this.registry)]);
+        new ExportLevelButton(
+            this,
+            new LevelExporter(
+                () => levels[getLevel(this.registry)],
+                () => getAllCities(this.graph),
+                () => this.player
+            )
+        );
         new EditorButton(this, () => this.goto("EditorScene", EditorScene));
     }
 
     private handleBuildButtonClicked() {
-        const locationName = this.player.getLocationName();
-        getNode(this.graph, locationName).economy.production++;
+        const locationName = this.player.locationName;
+        getNode(this.graph, locationName).production++;
         this.player.factories--;
         if (this.isWin()) {
             this.win();
@@ -94,7 +102,7 @@ export class MainScene extends Scene {
 
     private isWin() {
         const endangeredCities = getAllCities(this.graph).filter(
-            city => city.economy.production < 0
+            city => city.production < 0
         );
         return endangeredCities.length === 0;
     }
@@ -112,10 +120,10 @@ export class MainScene extends Scene {
     private addCity({ name, x, y }: ICity) {
         const city = getNode(this.graph, name);
         const cityImage = new CityImage(this, 0, 0, name);
-        const stockText = new CityStockDisplay(this, () => city.economy.stock);
+        const stockText = new CityStockDisplay(this, () => city.stock);
         const productionText = new CityProductionDisplay(
             this,
-            () => city.economy.production
+            () => city.production
         );
         const plusTradeButton = new PlusMinusButton(this, "plus", () =>
             this.player.store()
@@ -137,7 +145,7 @@ export class MainScene extends Scene {
     private setOnCityClick(city: City) {
         city.citySprite.on("pointerup", () => {
             const isValidMovement = this.graph.hasEdge(
-                this.player.getLocationName(),
+                this.player.locationName,
                 city.name
             );
             if (isValidMovement) {
@@ -147,11 +155,11 @@ export class MainScene extends Scene {
     }
 
     private moveAndEndTurn(location: ILocation) {
-        this.player.setLocation(location);
+        this.player.move(location);
         this.cities.forEach(cont => {
             const consumCity = getNode(this.graph, cont.name);
             consumCity.consumeOrProduce();
-            if (consumCity.economy.stock < 0) {
+            if (consumCity.stock < 0) {
                 this.lose();
             }
         });
@@ -162,10 +170,10 @@ export class MainScene extends Scene {
     private setCityStates() {
         this.cities.forEach(city => {
             const playerInNeighboringCity = this.graph.hasEdge(
-                this.player.getLocationName(),
+                this.player.locationName,
                 city.name
             );
-            const playerInCity = city.name === this.player.getLocationName();
+            const playerInCity = city.name === this.player.locationName;
             if (playerInNeighboringCity) {
                 city.nextState(CityState.PlayerIsNeighboring);
             } else if (playerInCity) {
@@ -184,8 +192,7 @@ export class MainScene extends Scene {
         this.goto("badEndScene", BadEndScene);
     }
 
-    // tslint:disable-next-line: ban-types
-    private goto(key: string, sceneClass: Function) {
+    private goto(key: string, sceneClass: new (name: string) => Scene) {
         this.scene.add(key, sceneClass, true);
         this.scene.remove("MainScene");
     }

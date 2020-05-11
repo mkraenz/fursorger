@@ -15,17 +15,13 @@ export class LogicBuilder {
         level.cities.forEach(city => {
             graph.setNode(
                 city.name,
-                new LogicCity(city.name, {
-                    stock: city.stock,
-                    production: city.production,
-                })
+                new LogicCity(city.name, city.stock, city.production)
             );
         });
         level.travelPaths.forEach(edge => {
             graph.setEdge(edge.first, edge.second);
         });
         const player = new Player(
-            graph,
             graph.node(level.player.location),
             level.player.stock
         );

@@ -386,8 +386,8 @@ export class EditorScene extends Scene {
                 name: container.name,
                 stock: this.stockOfCity(container),
                 production: this.productionOfCity(container),
-                x: container.x,
-                y: container.y,
+                x: Math.floor(container.x),
+                y: Math.floor(container.y),
             };
         });
 

@@ -4,7 +4,7 @@ import { ILevel } from "../levels/ILevel";
 import { TextConfig } from "../styles/Text";
 
 export class ExportLevelButton extends GameObjects.Text {
-    constructor(scene: Scene, private dataSrc: () => ILevel) {
+    constructor(scene: Scene, private levelExporter: { get: () => ILevel }) {
         super(scene, 95, 747, "Export", TextConfig.sm);
         scene.add.existing(this);
         this.setInteractive();
@@ -13,7 +13,7 @@ export class ExportLevelButton extends GameObjects.Text {
     }
 
     private saveToFile() {
-        const level = this.dataSrc();
+        const level = this.levelExporter.get();
         const data = JSON.stringify(level, null, 4);
         const blob = new Blob([data], {
             type: "application/json",
