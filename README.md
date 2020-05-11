@@ -94,6 +94,7 @@ See [.travis.yml](.travis.yml).
 - [MagicTools](https://github.com/ellisonleao/magictools)
 - [Tiled](https://www.mapeditor.org)
 - [Favicon Generator](https://favicon.io/favicon-generator/)
+- [Awesome Github Actions](https://github.com/sdras/awesome-actions)
 
 ### Generating favicon.ico
 
