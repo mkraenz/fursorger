@@ -1,15 +1,17 @@
-import { Graph } from "graphlib";
 import { ILocation } from "./ILocation";
 import { IPlayer } from "./IPlayer";
 
 export class Player implements IPlayer {
     constructor(
-        private graph: Graph,
         private location: ILocation,
         public stock: number,
         public turn = 0,
         public factories = 0
     ) {}
+
+    get locationName() {
+        return this.location.name;
+    }
 
     public take(): void {
         if (this.location.stock > 0) {
@@ -25,23 +27,11 @@ export class Player implements IPlayer {
         }
     }
 
-    public setLocation(location: ILocation): void {
+    public move(location: ILocation): void {
         this.location = location;
         this.turn++;
         if (this.turn % 3 === 0 && this.turn > 0) {
             this.factories++;
         }
-    }
-
-    public getLocation() {
-        return this.location;
-    }
-
-    public getLocationName() {
-        return this.location.name;
-    }
-
-    get locationName() {
-        return this.location.name;
     }
 }
