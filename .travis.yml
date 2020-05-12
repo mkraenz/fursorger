@@ -1,12 +1,18 @@
 language: node_js
 node_js:
   - "11"
+dist: bionic
 
 services:
   - docker
 
 env:
-  - DOCKER_REPO='fursorger' URL='http://localhost:8080'
+  - DOCKER_REPO='fursorger' URL='http://localhost:8080' HEROKU_APP='fursorger-game'
+
+before_install:
+  # heroku client needed for wait-for-other-heroku-builds
+  - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  - heroku plugins:install --verbose heroku-builds
 
 install:
   - npm install
@@ -23,6 +29,7 @@ after_success:
 before_deploy:
   # HACK: Delete "build" from gitignore because github pages uses `git add --all`
   - ./deployment/delete-build-dir-from-gitignore.sh
+  - if [ ${TRAVIS_BRANCH} != "master" ]; then ./deployment/wait-for-other-heroku-builds.sh; fi
 deploy:
   - provider: heroku
     app: fursorger-game
