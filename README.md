@@ -4,6 +4,7 @@
 # Fursorger
 
 **Play now at [prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/).**
+
 ```
 I am the care taker who
 tries to keep the dying world alive
@@ -95,6 +96,8 @@ See [.travis.yml](.travis.yml).
 - [MagicTools](https://github.com/ellisonleao/magictools)
 - [Tiled](https://www.mapeditor.org)
 - [Favicon Generator](https://favicon.io/favicon-generator/)
+- [Aspire](https://www.aseprite.org/)
+- [Aspire - How to](https://www.youtube.com/watch?v=Md6W79jtLJM)
 - [Awesome Github Actions](https://github.com/sdras/awesome-actions)
 
 ### Generating favicon.ico
