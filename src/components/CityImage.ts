@@ -45,7 +45,7 @@ export class CityImage extends GameObjects.Image {
         }
         this.state = CityImageState.PlayerIsNeighboring;
         this.setInteractive();
-        this.growShrinkPlugin.setEnabled(true);
+        this.growShrinkPlugin.setEnabled();
     }
 
     public setStateBase(init = false) {
@@ -54,7 +54,7 @@ export class CityImage extends GameObjects.Image {
         }
         this.state = CityImageState.Base;
         this.disableInteractive();
-        this.growShrinkPlugin.setEnabled(false);
+        this.growShrinkPlugin.setDisabled();
     }
 
     public setStatePlayerInCity() {
