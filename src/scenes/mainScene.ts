@@ -136,11 +136,17 @@ export class MainScene extends Scene {
             this,
             () => city.production
         );
-        const plusTradeButton = new PlusMinusButton(this, "plus", () =>
-            this.player.store()
+        const plusTradeButton = new PlusMinusButton(
+            this,
+            "plus",
+            () => this.player.store(),
+            () => this.player.stock === 0
         );
-        const minusTradeButton = new PlusMinusButton(this, "minus", () =>
-            this.player.take()
+        const minusTradeButton = new PlusMinusButton(
+            this,
+            "minus",
+            () => this.player.take(),
+            () => city.stock === 0
         );
         const nameText = new CityNameDisplay(this, name);
         return new City(this, x, y, name, {
