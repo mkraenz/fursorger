@@ -20,6 +20,9 @@ export class EditorScene extends Scene {
     private travelPathLines!: GameObjects.Graphics;
     private selectedContainer!: GameObjects.Container[];
     private paths!: Array<{ first: string; second: string }>;
+    private startIcon!: GameObjects.Image;
+    private startCity!: GameObjects.Container;
+    private noStartIconDrag!: boolean;
 
     constructor() {
         super({
@@ -38,6 +41,8 @@ export class EditorScene extends Scene {
         });
         this.containerArray = [];
         this.paths = [];
+        this.noStartIconDrag = true;
+        this.addStartIcon();
         this.selectedContainer = [];
         this.addCityCreationButton();
         this.addBackpackContainer();
@@ -74,6 +79,53 @@ export class EditorScene extends Scene {
         (this.backpackContainer.getAt(0) as GameObjects.Text).setText(
             this.backpack.toString()
         );
+        if (this.startCity !== undefined && this.noStartIconDrag) {
+            this.moveStartIconToCity(this.startCity);
+        }
+    }
+
+    private addStartIcon() {
+        this.startIcon = this.add
+            .image(550, 360, "startArrow")
+            .setInteractive();
+        this.startIcon.setScale(0.3, 0.3);
+        this.input.setDraggable(this.startIcon);
+        this.startIcon.on("pointerdown", () => {
+            this.noStartIconDrag = false;
+            this.startIcon.once("pointerup", () => {
+                this.updateStartIconPosition();
+                this.noStartIconDrag = true;
+            });
+        });
+    }
+
+    private updateStartIconPosition() {
+        this.containerArray.forEach(container => {
+            // orientate on size of button which will change size
+            const button = container.getAt(0) as GameObjects.Image;
+            const width = button.width * button.scaleX;
+            const height = button.height * button.scaleY;
+            if (
+                Math.abs(container.x - this.getStartIconPoint().x) <
+                    width / 2 &&
+                Math.abs(container.y - this.getStartIconPoint().y) < height / 2
+            ) {
+                this.startCity = container;
+                this.moveStartIconToCity(container);
+            }
+        });
+    }
+
+    private moveStartIconToCity(container: GameObjects.Container) {
+        this.startIcon.x = container.x - 50;
+        this.startIcon.y = container.y - 80;
+    }
+
+    private getStartIconPoint() {
+        return {
+            x: this.startIcon.x,
+            y: this.startIcon.y + 162 * this.startIcon.scaleY,
+        };
     }
 
     private addBackpackContainer() {
@@ -396,7 +448,7 @@ export class EditorScene extends Scene {
         return {
             cities,
             travelPaths,
-            player: { stock: this.backpack, location: cities[0].name },
+            player: { stock: this.backpack, location: this.startCity.name },
             background: "background2",
         };
     }
