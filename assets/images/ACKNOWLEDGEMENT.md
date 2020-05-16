@@ -16,3 +16,15 @@
 - [default-background.jpg] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz. Inkarnate Pro membership present.
 - [shoaw-whium.jpg] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz. Inkarnate Pro membership present.
 - [town-01-inkarnate387x295.png] - Asset created and owned by [Inkarnate](https://www.inkarnate.com). Inkarnate Pro membership present. Usage inside of the game granted by Mati from Inkarnate.
+
+### Generating favicon.ico
+
+Thanks to [Favicon Generator](https://favicon.io/favicon-generator/) for allowing us to easily create a nice favicon.
+We used the following settings:
+
+- Text: Für
+- Background: rounded
+- Font family: Tillana
+- Font size: 90
+- Font color: #F0F2E8
+- Background color: #537169

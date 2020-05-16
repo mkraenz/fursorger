@@ -1,7 +1,6 @@
 import { saveAs } from "file-saver";
 import { GameObjects, Scene } from "phaser";
 import { BackgroundImage } from "../components/BackgroundImage";
-import { gameConfig } from "../game-config";
 import { ILevel } from "../levels/ILevel";
 import { MainScene } from "./mainScene";
 
@@ -309,11 +308,7 @@ export class EditorScene extends Scene {
 
     private addCityCreationButton() {
         const creationButton = this.add
-            .image(
-                (gameConfig.scale.width as number) - 100,
-                (gameConfig.scale.height as number) - 100,
-                "plus"
-            )
+            .image(this.scale.width - 100, this.scale.height - 100, "plus")
             .setInteractive();
 
         creationButton.on("pointerup", () => {

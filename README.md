@@ -84,7 +84,9 @@ See [.travis.yml](.travis.yml).
 - [Phaser 3 Framework](https://github.com/photonstorm/phaser)
 - [Phaser 3 Docs with TypeScript Definition File](https://github.com/photonstorm/phaser3-docs)
 - [Phaser 3 Online Docs](https://photonstorm.github.io/phaser3-docs/index.html)
-- [Phaser 3 Official Examples](https://github.com/photonstorm/phaser3-examples)
+- [Phaser 3 Examples](https://phaser.io/examples/v3)
+- [Phaser 3 Examples Lab](https://labs.phaser.io/)
+- [Phaser 3 Examples Lab Github](https://github.com/photonstorm/phaser3-examples)
 - [Cheat sheets](https://github.com/digitsensitive/phaser3-typescript/blob/master/cheatsheets)
 - [Template Project - Phaser3 with TypeScript](https://github.com/digitsensitive/phaser3-typescript)
 
@@ -96,8 +98,8 @@ See [.travis.yml](.travis.yml).
 - [MagicTools](https://github.com/ellisonleao/magictools)
 - [Tiled](https://www.mapeditor.org)
 - [Favicon Generator](https://favicon.io/favicon-generator/)
-- [Aspire](https://www.aseprite.org/)
-- [Aspire - How to](https://www.youtube.com/watch?v=Md6W79jtLJM)
+- [Aseprite](https://www.aseprite.org/)
+- [Aseprite - How to](https://www.youtube.com/watch?v=Md6W79jtLJM)
 - [Awesome Github Actions](https://github.com/sdras/awesome-actions)
 
 ### Generating favicon.ico

@@ -39,6 +39,7 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
+        this.cameras.main.fadeIn(200);
         const currentLevel = levels[getLevel(this.registry)];
         const cityData = currentLevel.cities;
         const logicObjects = LogicBuilder.create(currentLevel);
@@ -204,6 +205,9 @@ export class MainScene extends Scene {
     }
 
     private restart() {
-        this.scene.restart();
+        this.cameras.main.once("camerafadeoutcomplete", () =>
+            this.scene.restart()
+        );
+        this.cameras.main.fadeOut(100);
     }
 }
