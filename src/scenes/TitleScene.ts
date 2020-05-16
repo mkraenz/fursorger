@@ -21,22 +21,22 @@ export class TitleScene extends Scene {
             .setOrigin(0.5);
         title.setShadow(2, 2, Color.Black, 6, true, true);
         title.setAlpha(0.9);
+        this.add
+            .text(
+                this.scale.width / 2,
+                290,
+                "A Game by Mirco Kraenz and Matthias Möser",
+                TextConfig.version
+            )
+            .setOrigin(0.5);
 
         const bannerStartHeight = this.scale.height / 2 + 130;
         new BannerButton(this, bannerStartHeight, "Singleplayer", () =>
-            this.startSinglePlayer()
+            this.goto("MainScene", MainScene)
         );
         new BannerButton(this, bannerStartHeight + 75, "Editor", () =>
             this.goto("EditorScene", EditorScene)
         );
-        this.add
-            .text(
-                this.scale.width,
-                this.scale.height - 10,
-                "A Game by Mirco Kraenz and Matthias Möser",
-                TextConfig.version
-            )
-            .setOrigin(1, 0.5);
         this.add.text(
             10,
             this.scale.height - 20,
@@ -45,15 +45,11 @@ export class TitleScene extends Scene {
         );
     }
 
-    public startSinglePlayer() {
+    private goto(key: string, sceneClass: new (name: string) => Scene) {
         this.cameras.main.once("camerafadeoutcomplete", () => {
-            this.goto("MainScene", MainScene);
+            this.scene.add(key, sceneClass, true);
+            this.scene.remove("TitleScene");
         });
         this.cameras.main.fadeOut(800);
-    }
-
-    private goto(key: string, sceneClass: new (name: string) => Scene) {
-        this.scene.add(key, sceneClass, true);
-        this.scene.remove("TitleScene");
     }
 }
