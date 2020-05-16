@@ -205,6 +205,9 @@ export class MainScene extends Scene {
     }
 
     private restart() {
-        this.scene.restart();
+        this.cameras.main.once("camerafadeoutcomplete", () =>
+            this.scene.restart()
+        );
+        this.cameras.main.fadeOut(100);
     }
 }
