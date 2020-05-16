@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { MainSceneCfg as Cfg } from "../styles/MainSceneCfg";
-import { setWhiteOutlineShadow } from "../styles/setWhiteOutlineShadow";
+import { setTextShadow } from "../styles/setTextShadow";
 import { TextConfig } from "../styles/Text";
 
 export class TurnDisplay extends GameObjects.Text {
@@ -16,7 +16,7 @@ export class TurnDisplay extends GameObjects.Text {
         scene.add
             .image(Cfg.turnInfo.img.x, Cfg.turnInfo.img.y, "hourglass")
             .setScale(0.8);
-        setWhiteOutlineShadow(this);
+        setTextShadow(this);
     }
 
     public preUpdate() {
