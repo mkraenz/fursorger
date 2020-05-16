@@ -14,6 +14,7 @@ export class TitleScene extends Scene {
     }
 
     public create(): void {
+        this.cameras.main.fadeIn(200);
         new BackgroundImage(this, "title");
 
         const title = this.add
