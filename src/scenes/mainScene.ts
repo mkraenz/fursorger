@@ -39,6 +39,7 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
+        this.cameras.main.fadeIn(200);
         const currentLevel = levels[getLevel(this.registry)];
         const cityData = currentLevel.cities;
         const logicObjects = LogicBuilder.create(currentLevel);

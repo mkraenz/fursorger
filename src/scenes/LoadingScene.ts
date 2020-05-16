@@ -120,10 +120,10 @@ export class LoadingScene extends Scene {
         this.load.image("export", "./assets/images/export180x120.png");
         this.load.audio("background", "./assets/sounds/bgm.mp3");
         this.load.image(
-            "titleSceneBG",
+            "title",
             "./assets/images/FursorgerTitlescreen2048x1536.jpg"
         );
-        this.load.image("startArrow", "assets/images/StartArrow140x324.png");
+        this.load.image("startArrow", "./assets/images/StartArrow140x324.png");
     }
 
     private addTitles() {

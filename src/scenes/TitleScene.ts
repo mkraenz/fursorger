@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { gameConfig } from "../game-config";
+import { BackgroundImage } from "../components/BackgroundImage";
 import { EditorScene } from "./editorScene";
 import { MainScene } from "./mainScene";
 
@@ -11,13 +11,7 @@ export class TitleScene extends Scene {
     }
 
     public create(): void {
-        const bg = this.add
-            .image(0, 0, "titleSceneBG")
-            .setOrigin(0)
-            .setDisplaySize(
-                gameConfig.scale.width as number,
-                gameConfig.scale.height as number
-            );
+        new BackgroundImage(this, "title");
         const singlePlayerButton = this.add
             .text(200, 300, "Singleplayer")
             .setInteractive();
@@ -36,8 +30,11 @@ export class TitleScene extends Scene {
             this.scene.remove(this);
         });
         singlePlayerButton.addListener("pointerup", () => {
-            this.scene.add("MainScene", MainScene, true);
-            this.scene.remove(this);
+            this.cameras.main.once("camerafadeoutcomplete", () => {
+                this.scene.add("MainScene", MainScene, true);
+                this.scene.remove("TitleScene");
+            });
+            this.cameras.main.fadeOut(800);
         });
         lawOfTheUniverse.addListener("pointerup", () => {
             lawOfTheUniverse.setText("It's true!");
