@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from "phaser";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
-import { setDefaultTextStyle } from "../styles/Text";
+import { setDefaultTextStyle, TextConfig } from "../styles/Text";
 import { BgmScene } from "./BgmScene";
 import { TitleScene } from "./TitleScene";
 
@@ -21,6 +21,37 @@ export class LoadingScene extends Scene {
         this.addTitles();
         this.makeLoadingBar();
         setLevel(this.registry, 0);
+    }
+
+    private preloadAllAssets() {
+        this.load
+            .image(
+                "rectangleButton",
+                " ./assets/images/blank_rectangle60x160.png"
+            )
+            .image("goodEnd", "./assets/images/goodEnd1280×853.jpg")
+            .image("badEnd", "./assets/images/badEnd640x512.jpg")
+            .image("city", "./assets/images/town-01-inkarnate387x295.png")
+            .image("background", "./assets/images/shoaw-whium.jpg")
+            .image("backpack", "./assets/images/backpack64x64.png")
+            .image("plus", "./assets/images/plus64x64.png")
+            .image("minus", "./assets/images/minus64x64.png")
+            .image("hourglass", "./assets/images/hourglass64x64.png")
+            .image("background2", "./assets/images/default-background.jpg")
+            .image(
+                "buildFactory",
+                "./assets/images/buildFactoryButton128x128.png"
+            )
+            .image("balloon", "./assets/images/balloon1600x1600.png")
+            .svg("restart", "./assets/images/reload64x64.svg")
+            .image("stock", "./assets/images/storage64x64.png")
+            .image("production", "./assets/images/decreasing-bars64x64.png")
+            .image("play", "./assets/images/playArrow300x200.png")
+            .image("export", "./assets/images/export180x120.png")
+            .audio("background", "./assets/sounds/bgm.mp3")
+            .image("title", "./assets/images/title.jpg")
+            .image("banner", "./assets/images/banner.png")
+            .image("startArrow", "./assets/images/StartArrow140x324.png");
     }
 
     private makeLoadingBar() {
@@ -88,51 +119,15 @@ export class LoadingScene extends Scene {
         };
     }
 
-    private preloadAllAssets() {
-        this.load.image(
-            "rectangleButton",
-            " ./assets/images/blank_rectangle60x160.png"
-        );
-        this.load.image("goodEnd", "./assets/images/goodEnd1280×853.jpg");
-        this.load.image("badEnd", "./assets/images/badEnd640x512.jpg");
-        this.load.image("city", "./assets/images/town-01-inkarnate387x295.png");
-        this.load.image("background", "./assets/images/shoaw-whium.jpg");
-        this.load.image("backpack", "./assets/images/backpack64x64.png");
-        this.load.image("plus", "./assets/images/plus64x64.png");
-        this.load.image("minus", "./assets/images/minus64x64.png");
-        this.load.image("hourglass", "./assets/images/hourglass64x64.png");
-        this.load.image(
-            "background2",
-            "./assets/images/default-background.jpg"
-        );
-        this.load.image(
-            "buildFactory",
-            "./assets/images/buildFactoryButton128x128.png"
-        );
-        this.load.image("balloon", "./assets/images/balloon1600x1600.png");
-        this.load.svg("restart", "./assets/images/reload64x64.svg");
-        this.load.image("stock", "./assets/images/storage64x64.png");
-        this.load.image(
-            "production",
-            "./assets/images/decreasing-bars64x64.png"
-        );
-        this.load.image("play", "./assets/images/playArrow300x200.png");
-        this.load.image("export", "./assets/images/export180x120.png");
-        this.load.audio("background", "./assets/sounds/bgm.mp3");
-        this.load.image(
-            "title",
-            "./assets/images/FursorgerTitlescreen2048x1536.jpg"
-        );
-        this.load.image("startArrow", "./assets/images/StartArrow140x324.png");
-    }
-
     private addTitles() {
-        const title = this.add
-            .text(this.halfWidth, this.halfHeight - 200, "Fursorger")
+        this.add
+            .text(
+                this.halfWidth,
+                this.halfHeight - 200,
+                "Der Fürsorger",
+                TextConfig.title
+            )
             .setOrigin(0.5);
-        setDefaultTextStyle(title);
-        title.setFontSize(112);
-        title.setColor(Color.White);
 
         const subtitle = this.add
             .text(
