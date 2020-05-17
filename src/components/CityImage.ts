@@ -1,5 +1,5 @@
-import { GameObjects, Scene, Tweens } from "phaser";
-import { ScalableTweenBuilderConfig } from "../anims/ScalableTweenBuilderConfig";
+import { GameObjects, Scene } from "phaser";
+import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
 
 export enum CityImageState {
     Base,
@@ -9,14 +9,19 @@ export enum CityImageState {
 
 export class CityImage extends GameObjects.Image {
     public state = CityImageState.Base;
-    private readonly baseScale = 0.18;
-    private readonly anim: Tweens.Tween;
+    private growShrinkPlugin: GrowShrinkAnimPlugin;
 
     constructor(scene: Scene, x: number, y: number, public name: string) {
         super(scene, x, y, "city");
         scene.add.existing(this);
+        this.setScale(0.18);
 
-        this.anim = this.scene.add.tween(this.getTweenCfg());
+        this.growShrinkPlugin = new GrowShrinkAnimPlugin(
+            scene,
+            this,
+            1.25,
+            0.5
+        );
         this.setStateBase(true);
     }
 
@@ -40,11 +45,7 @@ export class CityImage extends GameObjects.Image {
         }
         this.state = CityImageState.PlayerIsNeighboring;
         this.setInteractive();
-        this.resetScale();
-        if (!this.anim.isPlaying()) {
-            this.anim.restart();
-            this.anim.resume(); // needed
-        }
+        this.growShrinkPlugin.setEnabled(true);
     }
 
     public setStateBase(init = false) {
@@ -53,28 +54,11 @@ export class CityImage extends GameObjects.Image {
         }
         this.state = CityImageState.Base;
         this.disableInteractive();
-        this.anim.pause();
-        this.resetScale();
+        this.growShrinkPlugin.setEnabled(false);
     }
 
     public setStatePlayerInCity() {
         // not used yet
         this.setStateBase();
-    }
-
-    private resetScale() {
-        this.setScale(this.baseScale);
-    }
-
-    private getTweenCfg(): ScalableTweenBuilderConfig {
-        return {
-            targets: this,
-            scaleX: 0.3,
-            scaleY: 0.3,
-            duration: 800,
-            ease: "Linear",
-            repeat: -1, // infinitely
-            yoyo: true,
-        };
     }
 }

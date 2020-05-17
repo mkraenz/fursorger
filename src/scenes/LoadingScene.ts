@@ -2,7 +2,6 @@ import { GameObjects, Scene } from "phaser";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
-import { BgmScene } from "./BgmScene";
 import { TitleScene } from "./TitleScene";
 
 export class LoadingScene extends Scene {
@@ -43,15 +42,16 @@ export class LoadingScene extends Scene {
                 "./assets/images/buildFactoryButton128x128.png"
             )
             .image("balloon", "./assets/images/balloon1600x1600.png")
-            .svg("restart", "./assets/images/reload64x64.svg")
             .image("stock", "./assets/images/storage64x64.png")
             .image("production", "./assets/images/decreasing-bars64x64.png")
             .image("play", "./assets/images/playArrow300x200.png")
             .image("export", "./assets/images/export180x120.png")
-            .audio("background", "./assets/sounds/bgm.mp3")
             .image("title", "./assets/images/title.jpg")
             .image("banner", "./assets/images/banner.png")
-            .image("startArrow", "./assets/images/StartArrow140x324.png");
+            .image("startArrow", "./assets/images/StartArrow140x324.png")
+            .svg("restart", "./assets/images/reload64x64.svg")
+            .audio("background", "./assets/sounds/bgm.mp3")
+            .audio("wind", "./assets/sounds/wind.mp3");
     }
 
     private makeLoadingBar() {
@@ -90,7 +90,6 @@ export class LoadingScene extends Scene {
         this.load.on("progress", this.getProgressBarFiller(progressBar));
         this.load.on("fileprogress", this.getAssetTextWriter(assetText));
         this.load.on("complete", () => {
-            this.scene.add("BgmScene", BgmScene, true);
             this.scene.add("TitleScene", TitleScene, true);
             this.scene.remove("LoadingScene");
         });
