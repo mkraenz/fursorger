@@ -1,11 +1,11 @@
+# Fursorger
+
 [![Build Status](https://travis-ci.com/proSingularity/fursorger.svg?branch=master)](https://travis-ci.com/proSingularity/fursorger)
 [![codecov](https://codecov.io/gh/proSingularity/fursorger/branch/master/graph/badge.svg)](https://codecov.io/gh/proSingularity/fursorger)
 
-# Fursorger
-
 **Play now at [prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/).**
 
-```
+```log
 I am the care taker who
 tries to keep the dying world alive
 as long as possible
@@ -106,15 +106,4 @@ See [.travis.yml](.travis.yml).
 - [dat.GUI.js](https://github.com/dataarts/dat.gui) Dynamically change game object props and more
 - [Audacity](https://www.audacityteam.org/) Audio software
 - [CutMp3](http://manpages.ubuntu.com/manpages/bionic/man1/cutmp3.1.html) Audacity sometimes leaves a few milliseconds of silence at the end of an mp3 file. To make those files usable for looping, use this to cut. E.g. `cutmp3 -i wind.mp3 -o no_silence -a 00:00 -b 00:17`
-
-### Generating favicon.ico
-
-Thanks to [Favicon Generator](https://favicon.io/favicon-generator/) for allowing us to easily create a nice favicon.
-We used the following settings:
-
-- Text: Für
-- Background: rounded
-- Font family: Tillana
-- Font size: 90
-- Font color: #F0F2E8
-- Background color: #537169
+- [Phaser3 Particle Editor](https://koreezgames.github.io/phaser3-particle-editor/)
