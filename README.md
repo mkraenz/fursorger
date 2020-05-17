@@ -79,7 +79,7 @@ Every branch is automatically deployed to [fursorger-game.herokuapp.com](https:/
 
 See [.travis.yml](.travis.yml).
 
-## External Resources
+## External Phaser Resources
 
 - [Phaser 3 Framework](https://github.com/photonstorm/phaser)
 - [Phaser 3 Docs with TypeScript Definition File](https://github.com/photonstorm/phaser3-docs)
@@ -91,7 +91,7 @@ See [.travis.yml](.travis.yml).
 - [Template Project - Phaser3 with TypeScript](https://github.com/digitsensitive/phaser3-typescript)
 - [RexRainbow Github Phaser 3 plugins and more](https://github.com/rexrainbow/phaser3-rex-notes/tree/master/plugins)
 
-## Helpful tools
+## Helpful tools and Resources
 
 - [Pixel Art Maker](http://pixelartmaker.com/)
 - [Leshy SpriteSheet Tool](https://www.leshylabs.com/apps/sstool)
@@ -102,6 +102,10 @@ See [.travis.yml](.travis.yml).
 - [Aseprite](https://www.aseprite.org/)
 - [Aseprite - How to](https://www.youtube.com/watch?v=Md6W79jtLJM)
 - [Awesome Github Actions](https://github.com/sdras/awesome-actions)
+- [tl;dr legal](https://tldrlegal.com/) summary of licenses
+- [dat.GUI.js](https://github.com/dataarts/dat.gui) Dynamically change game object props and more
+- [Audacity](https://www.audacityteam.org/) Audio software
+- [CutMp3](http://manpages.ubuntu.com/manpages/bionic/man1/cutmp3.1.html) Audacity sometimes leaves a few milliseconds of silence at the end of an mp3 file. To make those files usable for looping, use this to cut. E.g. `cutmp3 -i wind.mp3 -o no_silence -a 00:00 -b 00:17`
 
 ### Generating favicon.ico
 
