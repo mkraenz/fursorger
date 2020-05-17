@@ -1,0 +1,46 @@
+[
+    {
+        "active": true,
+        "visible": true,
+        "collideBottom": false,
+        "collideLeft": false,
+        "collideRight": false,
+        "collideTop": false,
+        "on": true,
+        "particleBringToTop": false,
+        "radial": false,
+        "frame": { "frames": ["smoke_08"], "cycle": false, "quantity": 1 },
+        "frequency": 18,
+        "gravityX": -1000,
+        "gravityY": -1,
+        "maxParticles": 10000,
+        "timeScale": 0.8,
+        "blendMode": 0,
+        "accelerationX": 0,
+        "accelerationY": 0,
+        "alpha": 0.1,
+        "angle": { "min": 0, "max": 360, "ease": "Linear" },
+        "bounce": 0,
+        "delay": 0,
+        "lifespan": 35000,
+        "maxVelocityX": 20,
+        "maxVelocityY": 10000,
+        "moveToX": 0,
+        "moveToY": 0,
+        "quantity": 1,
+        "rotate": 0,
+        "scale": 1,
+        "speed": 0,
+        "x": 900,
+        "y": 100,
+        "tint": [13160091],
+        "emitZone": {
+            "source": new Phaser.Geom.Line(0, 0, 0, 600),
+            "type": "random"
+        },
+        "deathZone": {
+            "source": new Phaser.Geom.Rectangle(0, 0, 1024, 25),
+            "type": "onEnter"
+        }
+    }
+]

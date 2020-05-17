@@ -18,16 +18,11 @@ export class TitleScene extends Scene {
 
     public create(): void {
         this.cameras.main.fadeIn(200);
-        this.backgroundSound = this.sound.add("wind");
-        this.backgroundSound.play("", { loop: true, volume: 0 });
-        this.tweens.add({
-            targets: this.backgroundSound,
-            volume: 0.7,
-            duration: 400,
-        });
+        this.addMap();
+        this.addHud();
+    }
 
-        new BackgroundImage(this, "title");
-
+    private addHud() {
         const title = this.add
             .text(this.scale.width / 2, 210, "Der Fürsorger", TextConfig.title)
             .setOrigin(0.5);
@@ -41,6 +36,12 @@ export class TitleScene extends Scene {
                 TextConfig.version
             )
             .setOrigin(0.5);
+        this.add.text(
+            10,
+            this.scale.height - 20,
+            "v0.10.0",
+            TextConfig.version
+        );
 
         const bannerStartHeight = this.scale.height / 2 + 130;
         new BannerButton(this, bannerStartHeight, "Singleplayer", () =>
@@ -49,11 +50,22 @@ export class TitleScene extends Scene {
         new BannerButton(this, bannerStartHeight + 75, "Editor", () =>
             this.goto("EditorScene", EditorScene)
         );
-        this.add.text(
-            10,
-            this.scale.height - 20,
-            "v0.10.0",
-            TextConfig.version
+    }
+
+    private addMap() {
+        this.backgroundSound = this.sound.add("wind");
+        this.backgroundSound.play("", { loop: true, volume: 0 });
+        this.tweens.add({
+            targets: this.backgroundSound,
+            volume: 0.7,
+            duration: 400,
+        });
+        new BackgroundImage(this, "title");
+        this.add.particles(
+            "shapes",
+            new Function(
+                `return ${this.cache.text.get("wind-particle-effect")}`
+            )()
         );
     }
 
