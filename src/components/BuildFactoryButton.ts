@@ -1,4 +1,4 @@
-import { GameObjects, Scene, Tweens } from "phaser";
+import { FOREVER, GameObjects, Scene, Tweens } from "phaser";
 import { ScalableTweenBuilderConfig } from "../anims/ScalableTweenBuilderConfig";
 import { MainSceneCfg } from "../styles/MainSceneCfg";
 
@@ -65,7 +65,7 @@ export class BuildFactoryButton extends GameObjects.Image {
             scaleX: this.baseScale * 1.4,
             scaleY: this.baseScale * 1.4,
             ease: "Linear",
-            repeat: -1, // infinitely
+            repeat: FOREVER,
             yoyo: true,
             duration: 200,
         };

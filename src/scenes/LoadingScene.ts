@@ -51,7 +51,16 @@ export class LoadingScene extends Scene {
             .image("startArrow", "./assets/images/StartArrow140x324.png")
             .svg("restart", "./assets/images/reload64x64.svg")
             .audio("background", "./assets/sounds/bgm.mp3")
-            .audio("wind", "./assets/sounds/wind.mp3");
+            .audio("wind", "./assets/sounds/wind.mp3")
+            .atlas(
+                "shapes",
+                "assets/particles/shapes.png",
+                "./assets/particles/shapes.json"
+            )
+            .text(
+                "wind-particle-effect",
+                "./assets/particles/wind-particle-effect.json"
+            );
     }
 
     private makeLoadingBar() {
