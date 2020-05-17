@@ -46,10 +46,6 @@ export class CityImage extends GameObjects.Image {
         this.state = CityImageState.PlayerIsNeighboring;
         this.setInteractive();
         this.growShrinkPlugin.setEnabled(true);
-        // if (!this.anim.isPlaying()) {
-        //     this.anim.restart();
-        //     this.anim.resume(); // needed
-        // }
     }
 
     public setStateBase(init = false) {
