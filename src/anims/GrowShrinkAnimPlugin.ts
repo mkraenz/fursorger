@@ -29,8 +29,13 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
         this.target.on("pointerover", () => this.setPointerOverState());
     }
 
-    public setEnabled(value: boolean) {
-        this.enabled = value;
+    public setEnabled() {
+        this.enabled = true;
+    }
+
+    public setDisabled() {
+        this.target.setScale(this.baseScale);
+        this.enabled = false;
     }
 
     public preUpdate(time: number, delta: number) {

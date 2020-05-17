@@ -1,7 +1,9 @@
 import { GameObjects, Scene } from "phaser";
+import { DEV } from "../config";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
+import { MainScene } from "./mainScene";
 import { TitleScene } from "./TitleScene";
 
 export class LoadingScene extends Scene {
@@ -33,8 +35,6 @@ export class LoadingScene extends Scene {
             .image("city", "./assets/images/town-01-inkarnate387x295.png")
             .image("background", "./assets/images/shoaw-whium.jpg")
             .image("backpack", "./assets/images/backpack64x64.png")
-            .image("plus", "./assets/images/plus64x64.png")
-            .image("minus", "./assets/images/minus64x64.png")
             .image("hourglass", "./assets/images/hourglass64x64.png")
             .image("background2", "./assets/images/default-background.jpg")
             .image(
@@ -60,7 +60,17 @@ export class LoadingScene extends Scene {
             .text(
                 "wind-particle-effect",
                 "./assets/particles/wind-particle-effect.json"
-            );
+            )
+            .spritesheet("plus", "./assets/images/plus-extra.png", {
+                frameWidth: 74,
+                frameHeight: 74,
+                spacing: 40,
+            })
+            .spritesheet("minus", "./assets/images/minus-extra.png", {
+                frameWidth: 74,
+                frameHeight: 74,
+                spacing: 40,
+            });
     }
 
     private makeLoadingBar() {
@@ -99,7 +109,11 @@ export class LoadingScene extends Scene {
         this.load.on("progress", this.getProgressBarFiller(progressBar));
         this.load.on("fileprogress", this.getAssetTextWriter(assetText));
         this.load.on("complete", () => {
-            this.scene.add("TitleScene", TitleScene, true);
+            if (DEV.skipTitle) {
+                this.scene.add("MainScene", MainScene, true);
+            } else {
+                this.scene.add("TitleScene", TitleScene, true);
+            }
             this.scene.remove("LoadingScene");
         });
     }
