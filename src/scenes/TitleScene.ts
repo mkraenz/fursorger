@@ -1,12 +1,15 @@
-import { Scene } from "phaser";
+import { Scene, Sound } from "phaser";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { BannerButton } from "../components/BannerButton";
 import { Color } from "../styles/Color";
 import { TextConfig } from "../styles/Text";
+import { BgmScene } from "./BgmScene";
 import { EditorScene } from "./editorScene";
 import { MainScene } from "./mainScene";
 
 export class TitleScene extends Scene {
+    private backgroundSound: Sound.BaseSound;
+
     constructor() {
         super({
             key: "TitleScene",
@@ -15,6 +18,14 @@ export class TitleScene extends Scene {
 
     public create(): void {
         this.cameras.main.fadeIn(200);
+        this.backgroundSound = this.sound.add("wind");
+        this.backgroundSound.play("", { loop: true, volume: 0 });
+        this.tweens.add({
+            targets: this.backgroundSound,
+            volume: 0.7,
+            duration: 400,
+        });
+
         new BackgroundImage(this, "title");
 
         const title = this.add
@@ -48,8 +59,14 @@ export class TitleScene extends Scene {
 
     private goto(key: string, sceneClass: new (name: string) => Scene) {
         this.cameras.main.once("camerafadeoutcomplete", () => {
+            this.scene.add("BgmScene", BgmScene, true);
+            this.tweens.add({
+                targets: this.backgroundSound,
+                volume: 0,
+                duration: 4000,
+                onComplete: () => this.scene.remove("TitleScene"),
+            });
             this.scene.add(key, sceneClass, true);
-            this.scene.remove("TitleScene");
         });
         this.cameras.main.fadeOut(800);
     }
