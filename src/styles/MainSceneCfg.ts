@@ -15,19 +15,23 @@ export const MainSceneCfg = {
     turnInfo: {
         img: {
             x: sidebarX,
-            y: 280,
+            y: 200 + 80 * 1,
         },
         text: {
             x: sidebarX + sidebarImgToTextXOffset,
-            y: 280 + sidebarImgToTextYOffset,
+            y: 200 + 80 * 1 + sidebarImgToTextYOffset,
         },
     },
     buildFactory: {
         x: sidebarX,
-        y: 370,
+        y: 200 + 80 * 2,
     },
     restart: {
         x: sidebarX,
-        y: 460,
+        y: 200 + 80 * 3,
+    },
+    nextLevel: {
+        x: sidebarX,
+        y: 200 + 80 * 4,
     },
 };

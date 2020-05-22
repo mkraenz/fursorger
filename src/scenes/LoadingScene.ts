@@ -50,6 +50,7 @@ export class LoadingScene extends Scene {
             .image("startArrow", imgPath("StartArrow140x324.png"))
             .svg("factory", imgPath("power-plant.svg"))
             .svg("restart", imgPath("reload64x64.svg"))
+            .svg("arrow-right", imgPath("arrow-right.svg"))
             .audio("background", "./assets/sounds/bgm.mp3")
             .audio("wind", "./assets/sounds/wind.mp3")
             .atlas(

@@ -13,6 +13,7 @@
 - [storage64x64.png](https://www.flaticon.com/free-icon/storage_1554623) - Icon made by [srip](https://www.flaticon.com/authors/srip) from www.flaticon.com
 - [decreasing-bars64x64.png](https://www.flaticon.com/free-icon/bars_558386) - Icon made by [prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
 - [reload64x64.svg](https://www.flaticon.com/free-icon/reload_159657) - Icon made by [gregor-cresnar](https://www.flaticon.com/authors/gregor-cresnar) from www.flaticon.com
+- [arrow-right.svg](https://www.flaticon.com/free-icon/right-arrow_271226) - Icon made by [roundicons](https://www.flaticon.com/authors/roundicons) from www.flaticon.com
 - [map-inkarnate1024x768.png] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz with Inkarnate Pro membership present.
 - [default-background.jpg] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz with Inkarnate Pro membership present.
 - [shoaw-whium.jpg] - Map created with [Inkarnate](https://www.inkarnate.com) by Mirco Kraenz with Inkarnate Pro membership present.

@@ -85,7 +85,7 @@ export class MainScene extends Scene {
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
         RestartButton(this, () => this.restart());
-        new NextLevelButton(this, () => this.toggleLevel());
+        NextLevelButton(this, () => this.toggleLevel());
         const afterLevelParsedCb = (importedLevel: ILevel) => {
             levels.push(importedLevel);
             this.toggleLevel(levels.length - 1);

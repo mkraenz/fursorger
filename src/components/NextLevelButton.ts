@@ -1,13 +1,15 @@
-import { GameObjects, Scene } from "phaser";
-import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
-import { TextConfig } from "../styles/Text";
+import { Scene } from "phaser";
+import { MainSceneCfg } from "../styles/MainSceneCfg";
+import { IconButton } from "./IconButton";
 
-export class NextLevelButton extends GameObjects.Text {
-    constructor(scene: Scene, onClick: () => void) {
-        super(scene, 65, 520, "Next Level", TextConfig.lg);
-        scene.add.existing(this);
-        this.setInteractive();
-        this.on("pointerup", () => onClick());
-        new GrowShrinkAnimPlugin(scene, this, { maxRelativeScale: 1.2 });
-    }
-}
+export const NextLevelButton = (scene: Scene, onPointerUp: () => void) =>
+    new IconButton(
+        scene,
+        onPointerUp,
+        MainSceneCfg.nextLevel.x,
+        MainSceneCfg.nextLevel.y,
+        {
+            baseScale: 0.6,
+            texture: "arrow-right",
+        }
+    );
