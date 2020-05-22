@@ -9,6 +9,8 @@ import { CityImage } from "../components/CityImage";
 import { CityNameDisplay } from "../components/CityNameDisplay";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
+import { CoveredWagon } from "../components/CoveredWagon";
+import { DebugMouse } from "../components/DebugMouse";
 import { DottedLine } from "../components/DottedLine";
 import { EditorButton } from "../components/EditorButton";
 import { ExportLevelButton } from "../components/ExportLevelButton";
@@ -34,6 +36,7 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private cities!: City[];
+    private wagons: Array<{ update: () => void }> = [];
 
     constructor() {
         super({ key: "MainScene" });
@@ -51,6 +54,51 @@ export class MainScene extends Scene {
         this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
+
+        // TODO: remove for debug
+        new DebugMouse(this);
+        const clickedPoints = [];
+        this.input.on("pointerdown", pointer => {
+            clickedPoints.push({
+                x: Math.floor(pointer.x),
+                y: Math.floor(pointer.y),
+            });
+            // tslint:disable-next-line: no-console
+            console.log(clickedPoints);
+        });
+
+        // TODO: testing around
+        if (currentLevel.travelPaths.every(({ points }) => !!points)) {
+            currentLevel.travelPaths.forEach(path => {
+                if (path.points.length === 0) {
+                    return;
+                }
+                const points = path.points.map(
+                    ({ x, y }) => new Phaser.Math.Vector2(x, y)
+                );
+                const curve = new Phaser.Curves.Spline(points);
+                const graphics = this.add.graphics();
+                graphics.lineStyle(1, 0xffffff, 1);
+                curve.draw(graphics, 64);
+                graphics.fillStyle(0x00ff00, 1);
+                graphics.setVisible(false);
+                for (const point of points) {
+                    graphics.fillCircle(point.x, point.y, 4);
+                }
+                const wagon = new CoveredWagon(this, curve);
+                wagon.startFollow({
+                    duration: 15000,
+                    from: 0.2,
+                    to: 1,
+                    rotateToPath: true,
+                });
+                this.wagons.push(wagon);
+            });
+        }
+    }
+
+    public update() {
+        this.wagons.forEach(w => w.update());
     }
 
     private addBalloons() {

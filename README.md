@@ -108,3 +108,4 @@ See [.travis.yml](.travis.yml).
 - [CutMp3](http://manpages.ubuntu.com/manpages/bionic/man1/cutmp3.1.html) Audacity sometimes leaves a few milliseconds of silence at the end of an mp3 file. To make those files usable for looping, use this to cut. E.g. `cutmp3 -i wind.mp3 -o no_silence -a 00:00 -b 00:17`
 - [Phaser3 Particle Editor](https://koreezgames.github.io/phaser3-particle-editor/)
 - [jessholland Maps](https://jessholland.artstation.com/projects/ovArq)
+- [Phaser3 Path Builder Plugin](https://github.com/samid737/phaser3-plugin-pathbuilder) (not working with newest Phaser3 version)
