@@ -25,31 +25,30 @@ export class LoadingScene extends Scene {
     }
 
     private preloadAllAssets() {
+        const imgPath = (filename: string) => `./assets/images/${filename}`;
         this.load
             .image(
                 "rectangleButton",
                 " ./assets/images/blank_rectangle60x160.png"
             )
-            .image("goodEnd", "./assets/images/goodEnd1280×853.jpg")
-            .image("badEnd", "./assets/images/badEnd640x512.jpg")
-            .image("city", "./assets/images/town-01-inkarnate387x295.png")
-            .image("background", "./assets/images/shoaw-whium.jpg")
-            .image("backpack", "./assets/images/backpack64x64.png")
-            .image("hourglass", "./assets/images/hourglass64x64.png")
-            .image("background2", "./assets/images/default-background.jpg")
-            .image(
-                "buildFactory",
-                "./assets/images/buildFactoryButton128x128.png"
-            )
-            .image("balloon", "./assets/images/balloon1600x1600.png")
-            .image("stock", "./assets/images/storage64x64.png")
-            .image("production", "./assets/images/decreasing-bars64x64.png")
-            .image("play", "./assets/images/playArrow300x200.png")
-            .image("export", "./assets/images/export180x120.png")
-            .image("title", "./assets/images/title.jpg")
-            .image("banner", "./assets/images/banner.png")
-            .image("startArrow", "./assets/images/StartArrow140x324.png")
-            .svg("restart", "./assets/images/reload64x64.svg")
+            .image("goodEnd", imgPath("goodEnd1280×853.jpg"))
+            .image("badEnd", imgPath("badEnd640x512.jpg"))
+            .image("city", imgPath("town-01-inkarnate387x295.png"))
+            .image("background", imgPath("shoaw-whium.jpg"))
+            .image("backpack", imgPath("backpack64x64.png"))
+            .image("hourglass", imgPath("hourglass64x64.png"))
+            .image("background2", imgPath("default-background.jpg"))
+            .image("map-tutorial", imgPath("map-tutorial-1.jpg"))
+            .image("buildFactory", imgPath("buildFactoryButton128x128.png"))
+            .image("balloon", imgPath("balloon1600x1600.png"))
+            .image("stock", imgPath("storage64x64.png"))
+            .image("production", imgPath("decreasing-bars64x64.png"))
+            .image("play", imgPath("playArrow300x200.png"))
+            .image("export", imgPath("export180x120.png"))
+            .image("title", imgPath("title.jpg"))
+            .image("banner", imgPath("banner.png"))
+            .image("startArrow", imgPath("StartArrow140x324.png"))
+            .svg("restart", imgPath("reload64x64.svg"))
             .audio("background", "./assets/sounds/bgm.mp3")
             .audio("wind", "./assets/sounds/wind.mp3")
             .atlas(
@@ -61,12 +60,12 @@ export class LoadingScene extends Scene {
                 "wind-particle-effect",
                 "./assets/particles/wind-particle-effect.json"
             )
-            .spritesheet("plus", "./assets/images/plus-extra.png", {
+            .spritesheet("plus", imgPath("plus-extra.png"), {
                 frameWidth: 74,
                 frameHeight: 74,
                 spacing: 40,
             })
-            .spritesheet("minus", "./assets/images/minus-extra.png", {
+            .spritesheet("minus", imgPath("minus-extra.png"), {
                 frameWidth: 74,
                 frameHeight: 74,
                 spacing: 40,
