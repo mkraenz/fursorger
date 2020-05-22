@@ -1,13 +1,12 @@
-import { GameObjects, Scene } from "phaser";
-import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
+import { Scene } from "phaser";
 import { MainSceneCfg } from "../styles/MainSceneCfg";
+import { IconButton } from "./IconButton";
 
-export class RestartButton extends GameObjects.Image {
-    constructor(scene: Scene, onPointerUp: () => void) {
-        super(scene, MainSceneCfg.restart.x, MainSceneCfg.restart.y, "restart");
-        scene.add.existing(this);
-        this.setInteractive();
-        this.on("pointerup", onPointerUp);
-        new GrowShrinkAnimPlugin(scene, this);
-    }
-}
+export const RestartButton = (scene: Scene, onPointerUp: () => void) =>
+    new IconButton(
+        scene,
+        onPointerUp,
+        MainSceneCfg.restart.x,
+        MainSceneCfg.restart.y,
+        { baseScale: 0.6, texture: "restart" }
+    );

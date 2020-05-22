@@ -16,12 +16,9 @@ export class CityImage extends GameObjects.Image {
         scene.add.existing(this);
         this.setScale(0.18);
 
-        this.growShrinkPlugin = new GrowShrinkAnimPlugin(
-            scene,
-            this,
-            1.25,
-            0.5
-        );
+        this.growShrinkPlugin = new GrowShrinkAnimPlugin(scene, this, {
+            speed: 0.5,
+        });
         this.setStateBase(true);
     }
 
