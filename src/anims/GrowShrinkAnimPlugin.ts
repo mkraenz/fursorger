@@ -13,20 +13,34 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
     private baseScale: number;
     private maxScale: number;
     private enabled = true;
+    private speed = 2.3;
+    private debug = false;
 
     constructor(
         scene: Scene,
         private target: GameObjects.Image | GameObjects.Text,
-        maxRelativeScale = 1.25,
-        private speed = 2.3,
-        private debug = false
+        cfg?: {
+            maxRelativeScale?: number;
+            speed?: number;
+            debug?: boolean;
+            parent?: GameObjects.Image;
+        }
     ) {
         super(scene, "GrowShrinkAnimPlugin");
         scene.add.existing(this);
+        const maxRelativeScale = cfg?.maxRelativeScale || 1.25;
+        this.speed = cfg?.speed || 2.3;
+        this.debug = cfg?.debug || false;
+
         this.baseScale = this.target.scale;
         this.maxScale = this.baseScale * maxRelativeScale;
-        this.target.on("pointerout", () => this.setPointerOutState());
-        this.target.on("pointerover", () => this.setPointerOverState());
+        if (cfg?.parent) {
+            cfg.parent.on("pointerout", () => this.setPointerOutState());
+            cfg.parent.on("pointerover", () => this.setPointerOverState());
+        } else {
+            this.target.on("pointerout", () => this.setPointerOutState());
+            this.target.on("pointerover", () => this.setPointerOverState());
+        }
     }
 
     public setEnabled() {

@@ -48,7 +48,9 @@ export class LoadingScene extends Scene {
             .image("title", imgPath("title.jpg"))
             .image("banner", imgPath("banner.png"))
             .image("startArrow", imgPath("StartArrow140x324.png"))
+            .svg("factory", imgPath("power-plant.svg"))
             .svg("restart", imgPath("reload64x64.svg"))
+            .svg("arrow-right", imgPath("arrow-right.svg"))
             .audio("background", "./assets/sounds/bgm.mp3")
             .audio("wind", "./assets/sounds/wind.mp3")
             .atlas(
@@ -60,6 +62,11 @@ export class LoadingScene extends Scene {
                 "wind-particle-effect",
                 "./assets/particles/wind-particle-effect.json"
             )
+            .spritesheet("octagon", imgPath("octagon.png"), {
+                frameWidth: 128,
+                frameHeight: 128,
+                spacing: 100,
+            })
             .spritesheet("plus", imgPath("plus-extra.png"), {
                 frameWidth: 74,
                 frameHeight: 74,
