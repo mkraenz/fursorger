@@ -26,12 +26,9 @@ export class PlusMinusButton extends GameObjects.Sprite {
         this.setScale(0.5);
         this.setInputHandlers();
         this.setVisible(false);
-        this.hoverScalePlugin = new GrowShrinkAnimPlugin(
-            this.scene,
-            this,
-            1.25,
-            1.8
-        );
+        this.hoverScalePlugin = new GrowShrinkAnimPlugin(this.scene, this, {
+            speed: 1.8,
+        });
         this.configureAnims();
 
         this.setInteractive({ useHandCursor: true })

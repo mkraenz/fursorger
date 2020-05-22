@@ -8,6 +8,6 @@ export class NextLevelButton extends GameObjects.Text {
         scene.add.existing(this);
         this.setInteractive();
         this.on("pointerup", () => onClick());
-        new GrowShrinkAnimPlugin(scene, this, 1.2);
+        new GrowShrinkAnimPlugin(scene, this, { maxRelativeScale: 1.2 });
     }
 }
