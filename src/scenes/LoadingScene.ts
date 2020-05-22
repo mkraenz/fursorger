@@ -73,6 +73,11 @@ export class LoadingScene extends Scene {
                 frameHeight: 74,
                 spacing: 40,
             })
+            .spritesheet("wagon", imgPath("wagon.png"), {
+                frameWidth: 261 / 3,
+                frameHeight: 252 / 3,
+                // spacing: 5,
+            })
             .spritesheet("minus", imgPath("minus-extra.png"), {
                 frameWidth: 74,
                 frameHeight: 74,
