@@ -1,6 +1,7 @@
 import { Graph } from "graphlib";
 import { Scene } from "phaser";
 import { addProductionAnim } from "../anims/addProductionAnim";
+import { PathAnimator } from "../anims/PathAnimator";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
@@ -9,8 +10,6 @@ import { CityImage } from "../components/CityImage";
 import { CityNameDisplay } from "../components/CityNameDisplay";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
-import { CoveredWagon } from "../components/CoveredWagon";
-import { DebugMouse } from "../components/DebugMouse";
 import { DottedLine } from "../components/DottedLine";
 import { EditorButton } from "../components/EditorButton";
 import { ExportLevelButton } from "../components/ExportLevelButton";
@@ -20,6 +19,7 @@ import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
 import { TurnDisplay } from "../components/TurnDisplay";
+import { DEV } from "../config";
 import { ICity, ILevel } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
@@ -36,7 +36,8 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private cities!: City[];
-    private wagons: Array<{ update: () => void }> = [];
+    private currentLevel!: ILevel;
+    private pathAnimator!: PathAnimator;
 
     constructor() {
         super({ key: "MainScene" });
@@ -44,61 +45,21 @@ export class MainScene extends Scene {
 
     public create(): void {
         this.cameras.main.fadeIn(200);
-        const currentLevel = levels[getLevel(this.registry)];
-        const cityData = currentLevel.cities;
-        const logicObjects = LogicBuilder.create(currentLevel);
+        this.currentLevel = levels[getLevel(this.registry)];
+        const cityData = this.currentLevel.cities;
+        const logicObjects = LogicBuilder.create(this.currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        new BackgroundImage(this, currentLevel.background);
+        new BackgroundImage(this, this.currentLevel.background);
         this.addCities(cityData);
         this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
-
-        // TODO: remove for debug
-        new DebugMouse(this);
-        const clickedPoints = [];
-        this.input.on("pointerdown", pointer => {
-            clickedPoints.push({
-                x: Math.floor(pointer.x),
-                y: Math.floor(pointer.y),
-            });
-            // tslint:disable-next-line: no-console
-            console.log(clickedPoints);
-        });
-
-        // TODO: testing around
-        if (currentLevel.travelPaths.every(({ points }) => !!points)) {
-            currentLevel.travelPaths.forEach(path => {
-                if (path.points.length === 0) {
-                    return;
-                }
-                const points = path.points.map(
-                    ({ x, y }) => new Phaser.Math.Vector2(x, y)
-                );
-                const curve = new Phaser.Curves.Spline(points);
-                const graphics = this.add.graphics();
-                graphics.lineStyle(1, 0xffffff, 1);
-                curve.draw(graphics, 64);
-                graphics.fillStyle(0x00ff00, 1);
-                graphics.setVisible(false);
-                for (const point of points) {
-                    graphics.fillCircle(point.x, point.y, 4);
-                }
-                const wagon = new CoveredWagon(this, curve);
-                wagon.startFollow({
-                    duration: 15000,
-                    from: 0.2,
-                    to: 1,
-                    rotateToPath: true,
-                });
-                this.wagons.push(wagon);
-            });
-        }
+        this.pathAnimator = new PathAnimator(this, this.currentLevel);
     }
 
     public update() {
-        this.wagons.forEach(w => w.update());
+        this.pathAnimator.update();
     }
 
     private addBalloons() {
@@ -163,7 +124,7 @@ export class MainScene extends Scene {
         const endangeredCities = getAllCities(this.graph).filter(
             city => city.production < 0
         );
-        return endangeredCities.length === 0;
+        return endangeredCities.length === 0 && !DEV.winDisabled;
     }
 
     private addCities(cities: ICity[]) {
@@ -219,12 +180,16 @@ export class MainScene extends Scene {
         });
     }
 
-    private moveAndEndTurn(location: ILocation) {
-        this.player.move(location);
+    private moveAndEndTurn(nextLocation: ILocation) {
+        this.pathAnimator.animatePlayerMovement(
+            this.player.locationName,
+            nextLocation.name
+        );
+        this.player.move(nextLocation);
         this.cities.forEach(cont => {
             const consumCity = getNode(this.graph, cont.name);
             consumCity.consumeOrProduce();
-            if (consumCity.stock < 0) {
+            if (consumCity.stock < 0 && !DEV.loseDisabled) {
                 this.lose();
             }
         });
