@@ -6,6 +6,7 @@ import { ILevel } from "../levels/ILevel";
 
 export class PathAnimator {
     private wagon?: GameObjects.PathFollower;
+    private enabled = false; // TODO #208 enable
 
     constructor(private scene, private currentLevel: ILevel) {
         if (DEV.showPaths) {
@@ -14,6 +15,9 @@ export class PathAnimator {
     }
 
     public update() {
+        if (!this.enabled) {
+            return;
+        }
         if (this.wagon) {
             this.wagon.update();
         }
@@ -23,6 +27,9 @@ export class PathAnimator {
         currentLocation: string,
         nextLocation: string
     ) {
+        if (!this.enabled) {
+            return;
+        }
         const allPaths = this.currentLevel.travelPaths;
         const rightDirection = allPaths.find(
             p => p.first === currentLocation && p.second === nextLocation
