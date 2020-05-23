@@ -1,6 +1,7 @@
 import { Graph } from "graphlib";
 import { Scene } from "phaser";
 import { addProductionAnim } from "../anims/addProductionAnim";
+import { PathAnimator } from "../anims/PathAnimator";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
@@ -18,6 +19,7 @@ import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
 import { TurnDisplay } from "../components/TurnDisplay";
+import { DEV } from "../dev-config";
 import { ICity, ILevel } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
@@ -34,6 +36,8 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private cities!: City[];
+    private currentLevel!: ILevel;
+    private pathAnimator!: PathAnimator;
 
     constructor() {
         super({ key: "MainScene" });
@@ -41,16 +45,21 @@ export class MainScene extends Scene {
 
     public create(): void {
         this.cameras.main.fadeIn(200);
-        const currentLevel = levels[getLevel(this.registry)];
-        const cityData = currentLevel.cities;
-        const logicObjects = LogicBuilder.create(currentLevel);
+        this.currentLevel = levels[getLevel(this.registry)];
+        const cityData = this.currentLevel.cities;
+        const logicObjects = LogicBuilder.create(this.currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        new BackgroundImage(this, currentLevel.background);
+        new BackgroundImage(this, this.currentLevel.background);
         this.addCities(cityData);
         this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
+        this.pathAnimator = new PathAnimator(this, this.currentLevel);
+    }
+
+    public update() {
+        this.pathAnimator.update();
     }
 
     private addBalloons() {
@@ -115,7 +124,7 @@ export class MainScene extends Scene {
         const endangeredCities = getAllCities(this.graph).filter(
             city => city.production < 0
         );
-        return endangeredCities.length === 0;
+        return endangeredCities.length === 0 && !DEV.winDisabled;
     }
 
     private addCities(cities: ICity[]) {
@@ -171,12 +180,16 @@ export class MainScene extends Scene {
         });
     }
 
-    private moveAndEndTurn(location: ILocation) {
-        this.player.move(location);
+    private moveAndEndTurn(nextLocation: ILocation) {
+        this.pathAnimator.animatePlayerMovement(
+            this.player.locationName,
+            nextLocation.name
+        );
+        this.player.move(nextLocation);
         this.cities.forEach(cont => {
             const consumCity = getNode(this.graph, cont.name);
             consumCity.consumeOrProduce();
-            if (consumCity.stock < 0) {
+            if (consumCity.stock < 0 && !DEV.loseDisabled) {
                 this.lose();
             }
         });

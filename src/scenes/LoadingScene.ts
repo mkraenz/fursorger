@@ -1,5 +1,5 @@
 import { GameObjects, Scene } from "phaser";
-import { DEV } from "../config";
+import { DEV } from "../dev-config";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
@@ -72,6 +72,11 @@ export class LoadingScene extends Scene {
                 frameWidth: 74,
                 frameHeight: 74,
                 spacing: 40,
+            })
+            .spritesheet("wagon", imgPath("wagon.png"), {
+                frameWidth: 261 / 3,
+                frameHeight: 252 / 3,
+                // spacing: 5,
             })
             .spritesheet("minus", imgPath("minus-extra.png"), {
                 frameWidth: 74,
