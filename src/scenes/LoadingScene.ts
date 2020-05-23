@@ -39,6 +39,7 @@ export class LoadingScene extends Scene {
             .image("hourglass", imgPath("hourglass64x64.png"))
             .image("background2", imgPath("default-background.jpg"))
             .image("map-tutorial", imgPath("map-tutorial-1.jpg"))
+            .image("map-wesnoth", imgPath("map-wesnoth.jpg"))
             .image("buildFactory", imgPath("buildFactoryButton128x128.png"))
             .image("balloon", imgPath("balloon1600x1600.png"))
             .image("stock", imgPath("storage64x64.png"))

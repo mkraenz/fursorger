@@ -13,7 +13,7 @@ export class DottedLine extends GameObjects.GameObject {
     }
 
     public draw() {
-        const alpha = 0.15;
+        const alpha = 0.25;
         const pointsEveryXPixel = 15;
         const lineShortnessFactor = 3;
         const color = Color.White;
