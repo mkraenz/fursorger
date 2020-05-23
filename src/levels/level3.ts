@@ -1,6 +1,7 @@
 import { ILevel } from "./ILevel";
 
 export const level3: ILevel = {
+    name: "To the Mountains",
     cities: [
         { name: "Thudor", stock: 3, production: -1, x: 265, y: 619 },
         { name: "Ustrela", stock: 0, production: 1, x: 520, y: 655 },
