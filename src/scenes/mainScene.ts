@@ -19,7 +19,7 @@ import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
 import { TurnDisplay } from "../components/TurnDisplay";
-import { DEV } from "../config";
+import { DEV } from "../dev-config";
 import { ICity, ILevel } from "../levels/ILevel";
 import { levels } from "../levels/index";
 import { getAllCities, getNode } from "../logic/getNode";
