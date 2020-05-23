@@ -1,4 +1,5 @@
 export interface ILevel {
+    name?: string;
     cities: ICity[];
     travelPaths: Array<{ first: string; second: string }>;
     background: string;
