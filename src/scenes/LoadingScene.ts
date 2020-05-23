@@ -1,5 +1,5 @@
 import { GameObjects, Scene } from "phaser";
-import { DEV } from "../config";
+import { DEV } from "../dev-config";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
