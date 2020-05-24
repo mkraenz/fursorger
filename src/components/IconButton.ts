@@ -18,7 +18,7 @@ export class IconButton extends GameObjects.Image {
         this.setInteractive();
         this.on("pointerup", onPointerUp);
         const icon = this.scene.add
-            .image(x, y, iconCfg.texture)
+            .image(x - 5, y - 5, iconCfg.texture)
             .setScale(iconCfg.baseScale);
         this.icon = assign(icon, { baseScale: iconCfg.baseScale });
         this.setScale(this.baseScale);

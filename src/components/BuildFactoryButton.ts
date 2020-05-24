@@ -29,8 +29,8 @@ export class BuildFactoryButton extends GameObjects.Image {
         scene.add.existing(this);
         const icon = this.scene.add
             .image(
-                MainSceneCfg.buildFactory.x,
-                MainSceneCfg.buildFactory.y,
+                MainSceneCfg.buildFactory.x - 5,
+                MainSceneCfg.buildFactory.y - 5,
                 "factory"
             )
             .setScale(0.6);

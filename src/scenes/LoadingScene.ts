@@ -54,6 +54,7 @@ export class LoadingScene extends Scene {
             .svg("arrow-right", imgPath("arrow-right.svg"))
             .audio("background", "./assets/sounds/bgm.mp3")
             .audio("wind", "./assets/sounds/wind.mp3")
+            .audio("scribbling", "./assets/sounds/scribbling.mp3")
             .atlas(
                 "shapes",
                 "assets/particles/shapes.png",
@@ -64,9 +65,8 @@ export class LoadingScene extends Scene {
                 "./assets/particles/wind-particle-effect.json"
             )
             .spritesheet("octagon", imgPath("octagon.png"), {
-                frameWidth: 128,
-                frameHeight: 128,
-                spacing: 100,
+                frameWidth: 148,
+                frameHeight: 148,
             })
             .spritesheet("plus", imgPath("plus-extra.png"), {
                 frameWidth: 74,
@@ -126,7 +126,7 @@ export class LoadingScene extends Scene {
             } else {
                 this.scene.add("TitleScene", TitleScene, true);
             }
-            this.scene.remove("LoadingScene");
+            this.scene.remove(this);
         });
     }
 
