@@ -3,6 +3,7 @@ import { DEV } from "../dev-config";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
+import { GoodEndScene } from "./GoodEndScene";
 import { MainScene } from "./mainScene";
 import { TitleScene } from "./TitleScene";
 
@@ -121,7 +122,9 @@ export class LoadingScene extends Scene {
         this.load.on("progress", this.getProgressBarFiller(progressBar));
         this.load.on("fileprogress", this.getAssetTextWriter(assetText));
         this.load.on("complete", () => {
-            if (DEV.skipTitle) {
+            if (DEV.startInWinScene) {
+                this.scene.add("GoodEndScene", GoodEndScene, true);
+            } else if (DEV.skipTitle) {
                 this.scene.add("MainScene", MainScene, true);
             } else {
                 this.scene.add("TitleScene", TitleScene, true);
