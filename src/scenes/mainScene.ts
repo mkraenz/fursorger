@@ -215,15 +215,19 @@ export class MainScene extends Scene {
     }
 
     private win() {
-        this.goto("GoodEndScene", GoodEndScene);
+        this.goto("GoodEndScene", GoodEndScene, { turns: this.player.turn });
     }
 
     private lose() {
         this.goto("badEndScene", BadEndScene);
     }
 
-    private goto(key: string, sceneClass: new (name: string) => Scene) {
-        this.scene.add(key, sceneClass, true);
+    private goto(
+        key: string,
+        sceneClass: new (name: string) => Scene,
+        data?: { [key: string]: {} }
+    ) {
+        this.scene.add(key, sceneClass, true, data);
         this.scene.remove("MainScene");
     }
 
