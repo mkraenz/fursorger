@@ -23,57 +23,60 @@ export class GoodEndScene extends Scene {
 
     public create(): void {
         new BackgroundImage(this, "goodEnd").setAlpha(0.2);
-        const worldSavedText = getWorldSavedText(getLevel(this.registry));
-        const fursorger = "— Der Fürsorger —";
-        const turns = `Turns: ${this.turns || "unknown"}`;
-        const halfWidth = this.scale.width / 2;
-        const halfHeight = this.scale.height / 2;
-        const buttonHeight = halfHeight + 100;
-        const worldSavedTextComp = this.add
-            .text(halfWidth, halfHeight - 150, "", TextConfig.xl)
-            .setColor(Color.WhiteSilver)
-            .setOrigin(0.5);
-        this.sound.play("scribbling", { loop: true });
-        typeWriter(worldSavedText, worldSavedTextComp, () =>
-            this.events.emit("quote-scribbling-finished")
-        );
-
-        this.events.once("quote-scribbling-finished", () => {
-            this.sound.stopByKey("scribbling");
-            const fursorgerText = this.add
-                .text(halfWidth, halfHeight - 100, fursorger, TextConfig.md)
+        this.cameras.main.fadeIn(200);
+        this.cameras.main.once("camerafadeincomplete", () => {
+            const worldSavedText = getWorldSavedText(getLevel(this.registry));
+            const fursorger = "— Der Fürsorger —";
+            const turns = `Turns: ${this.turns || "unknown"}`;
+            const halfWidth = this.scale.width / 2;
+            const halfHeight = this.scale.height / 2;
+            const buttonHeight = halfHeight + 120;
+            const worldSavedTextComp = this.add
+                .text(halfWidth, halfHeight - 80, "", TextConfig.xl)
                 .setColor(Color.WhiteSilver)
-                .setOrigin(0.5)
-                .setAlpha(0);
-            const turnsText = this.add
-                .text(halfWidth, halfHeight, turns, TextConfig.lg)
-                .setColor(Color.WhiteSilver)
-                .setOrigin(0.5)
-                .setAlpha(0);
-            const xCenterOffset = 125;
-            const restartButton = RestartButton(
-                this,
-                () => this.startMainScene(false),
-                halfWidth - xCenterOffset,
-                buttonHeight
-            ).setAlpha(0);
-            const nextLevelButton = NextLevelButton(
-                this,
-                () => this.startMainScene(true),
-                halfWidth + xCenterOffset,
-                buttonHeight
-            ).setAlpha(0);
+                .setOrigin(0.5);
+            this.sound.play("scribbling", { loop: true });
+            typeWriter(worldSavedText, worldSavedTextComp, () =>
+                this.events.emit("quote-scribbling-finished")
+            );
 
-            this.tweens.add({
-                targets: [
-                    fursorgerText,
-                    turnsText,
-                    restartButton,
-                    nextLevelButton,
-                ],
-                ease: "Cubic",
-                alpha: 1,
-                duration: 1500,
+            this.events.once("quote-scribbling-finished", () => {
+                this.sound.stopByKey("scribbling");
+                const fursorgerText = this.add
+                    .text(halfWidth, halfHeight - 40, fursorger, TextConfig.md)
+                    .setColor(Color.WhiteSilver)
+                    .setOrigin(0.5)
+                    .setAlpha(0);
+                const turnsText = this.add
+                    .text(halfWidth, halfHeight + 20, turns, TextConfig.lg)
+                    .setColor(Color.WhiteSilver)
+                    .setOrigin(0.5)
+                    .setAlpha(0);
+                const xCenterOffset = 100;
+                const restartButton = RestartButton(
+                    this,
+                    () => this.startMainScene(false),
+                    halfWidth - xCenterOffset,
+                    buttonHeight
+                ).setAlpha(0);
+                const nextLevelButton = NextLevelButton(
+                    this,
+                    () => this.startMainScene(true),
+                    halfWidth + xCenterOffset,
+                    buttonHeight
+                ).setAlpha(0);
+
+                this.tweens.add({
+                    targets: [
+                        fursorgerText,
+                        turnsText,
+                        restartButton,
+                        nextLevelButton,
+                    ],
+                    ease: "Cubic",
+                    alpha: 1,
+                    duration: 1500,
+                });
             });
         });
     }

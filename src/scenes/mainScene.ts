@@ -227,8 +227,11 @@ export class MainScene extends Scene {
         sceneClass: new (name: string) => Scene,
         data?: { [key: string]: {} }
     ) {
-        this.scene.add(key, sceneClass, true, data);
-        this.scene.remove("MainScene");
+        this.cameras.main.once("camerafadeoutcomplete", () => {
+            this.scene.add(key, sceneClass, true, data);
+            this.scene.remove(this);
+        });
+        this.cameras.main.fadeOut(100);
     }
 
     private toggleLevel(selectedLevel?: number) {
