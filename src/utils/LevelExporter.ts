@@ -1,11 +1,12 @@
 import { cloneDeep } from "lodash";
 import { ILevel } from "../levels/ILevel";
 import { LogicCity } from "../logic/City";
+import { Shop } from "../logic/Shop";
 
 export class LevelExporter {
     constructor(
         private leveldataSrc: () => ILevel,
-        private citiesDataSrc: () => LogicCity[],
+        private citiesDataSrc: () => Array<Shop | LogicCity>,
         private playerDataSrc: () => {
             locationName: string;
             stock: number;

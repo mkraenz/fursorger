@@ -3,6 +3,7 @@ import { ILevel } from "../levels/ILevel";
 import { LogicCity } from "./City";
 import { IPlayer } from "./IPlayer";
 import { Player } from "./Player";
+import { Shop } from "./Shop";
 
 export class LogicBuilder {
     public static create(
@@ -15,9 +16,23 @@ export class LogicBuilder {
         level.cities.forEach(city => {
             graph.setNode(
                 city.name,
-                new LogicCity(city.name, city.stock, city.production)
+                new LogicCity(
+                    city.name,
+                    city.x,
+                    city.y,
+                    city.stock,
+                    city.production
+                )
             );
         });
+
+        (level.shops || []).forEach(shop => {
+            graph.setNode(
+                shop.name,
+                new Shop(shop.name, shop.x, shop.y, shop.price)
+            );
+        });
+
         level.travelPaths.forEach(edge => {
             graph.setEdge(edge.first, edge.second);
         });

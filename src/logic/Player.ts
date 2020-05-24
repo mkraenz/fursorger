@@ -1,9 +1,9 @@
-import { ILocation } from "./ILocation";
+import { isNil } from "lodash";
 import { IPlayer } from "./IPlayer";
 
 export class Player implements IPlayer {
     constructor(
-        private location: ILocation,
+        private location: { name: string; stock?: number },
         public stock: number,
         public turn = 0,
         public factories = 0
@@ -14,20 +14,20 @@ export class Player implements IPlayer {
     }
 
     public take(): void {
-        if (this.location.stock > 0) {
+        if (!isNil(this.location.stock) && this.location.stock > 0) {
             this.stock += 1;
             this.location.stock -= 1;
         }
     }
 
     public store(): void {
-        if (this.stock > 0) {
+        if (!isNil(this.location.stock) && this.stock > 0) {
             this.stock -= 1;
             this.location.stock += 1;
         }
     }
 
-    public move(location: ILocation): void {
+    public move(location: { name: string }): void {
         this.location = location;
         this.turn++;
         if (this.turn % 1 === 0 && this.turn > 0) {

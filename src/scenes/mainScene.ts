@@ -1,5 +1,5 @@
 import { Graph } from "graphlib";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { addProductionAnim } from "../anims/addProductionAnim";
 import { PathAnimator } from "../anims/PathAnimator";
 import { BackgroundImage } from "../components/BackgroundImage";
@@ -20,13 +20,13 @@ import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
 import { TurnDisplay } from "../components/TurnDisplay";
 import { DEV } from "../dev-config";
-import { ICity, ILevel } from "../levels/ILevel";
+import { ICity, ILevel, IShop } from "../levels/ILevel";
 import { levels } from "../levels/index";
-import { getAllCities, getNode } from "../logic/getNode";
-import { ILocation } from "../logic/ILocation";
+import { LogicCity } from "../logic/City";
+import { getAllCities, getNode, getNodes } from "../logic/getNode";
+import { INode } from "../logic/INode";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
-import { Shop } from "../logic/Shop";
 import { getLevel, setLevel } from "../registry/level";
 import { LevelExporter } from "../utils/LevelExporter";
 import { BadEndScene } from "./badEndScene";
@@ -48,12 +48,13 @@ export class MainScene extends Scene {
         this.cameras.main.fadeIn(200);
         this.currentLevel = levels[getLevel(this.registry)];
         const cityData = this.currentLevel.cities;
+        const shopData = this.currentLevel.shops;
         const logicObjects = LogicBuilder.create(this.currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         new BackgroundImage(this, this.currentLevel.background);
         this.addCities(cityData);
-        this.addShop(new Shop("Boston", 0));
+        this.addShops(shopData);
         this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
@@ -67,24 +68,15 @@ export class MainScene extends Scene {
     private addBalloons() {
         this.graph.edges().forEach(edge => {
             this.addBalloonForEdge(edge.v, edge.w);
-            this.addLineForEdge(edge.v, edge.w);
         });
     }
 
-    private addLineForEdge(startCityName: string, targetCityName: string) {
-        const startCity = this.cities.find(city => city.name === startCityName);
-        const targetCity = this.cities.find(
-            city => city.name === targetCityName
-        );
-        new DottedLine(this, startCity, targetCity);
-    }
-
     private addBalloonForEdge(startCityName: string, targetCityName: string) {
-        const startCity = this.cities.find(city => city.name === startCityName);
-        const targetCity = this.cities.find(
-            city => city.name === targetCityName
-        );
+        const allNodes = getNodes(this.graph);
+        const startCity = allNodes.find(city => city.name === startCityName);
+        const targetCity = allNodes.find(city => city.name === targetCityName);
         new Balloon(this, startCity, targetCity);
+        new DottedLine(this, startCity, targetCity);
     }
 
     private addGui() {
@@ -104,9 +96,10 @@ export class MainScene extends Scene {
         new ImportLevelButton(this, afterLevelParsedCb);
         new ExportLevelButton(
             this,
+            // TODO #263
             new LevelExporter(
                 () => levels[getLevel(this.registry)],
-                () => getAllCities(this.graph),
+                () => getNodes(this.graph),
                 () => this.player
             )
         );
@@ -115,7 +108,7 @@ export class MainScene extends Scene {
 
     private handleBuildButtonClicked() {
         const locationName = this.player.locationName;
-        getNode(this.graph, locationName).production++;
+        (getNode(this.graph, locationName) as LogicCity).production++;
         this.player.factories--;
         if (this.isWin()) {
             this.win();
@@ -134,24 +127,33 @@ export class MainScene extends Scene {
         cities.forEach(cityData => {
             const city = this.addCity(cityData);
             this.cities.push(city);
-            this.setOnCityClick(city);
+            this.setOnNodeClick(city.name, city.citySprite);
         });
         this.setCityStates();
     }
 
-    private addShop(shop: Shop) {
-        const shopImage = new CityImage(this, 0, 0, name);
-        shopImage.setInteractive({ useHandCursor: true });
-        shopImage.on("pointerdown", () => {
-            if (this.player.stock > shop.price) {
-                this.player.stock -= shop.price;
-                this.player.factories += 1;
-            }
+    private addShops(shops?: IShop[]) {
+        if (!shops) {
+            return;
+        }
+        shops.forEach(shop => {
+            const shopImage = new CityImage(this, shop.x, shop.y, shop.name);
+            shopImage.setInteractive({ useHandCursor: true });
+            shopImage.on("pointerdown", () => {
+                if (
+                    this.player.stock >= shop.price &&
+                    this.player.locationName === shop.name
+                ) {
+                    this.player.stock -= shop.price;
+                    this.player.factories += 1;
+                }
+            });
+            this.setOnNodeClick(shop.name, shopImage);
         });
     }
 
     private addCity({ name, x, y }: ICity) {
-        const city = getNode(this.graph, name);
+        const city = getNode(this.graph, name) as LogicCity;
         const cityImage = new CityImage(this, 0, 0, name);
         const stockText = new CityStockDisplay(this, () => city.stock);
         const productionText = new CityProductionDisplay(
@@ -181,26 +183,26 @@ export class MainScene extends Scene {
         });
     }
 
-    private setOnCityClick(city: City) {
-        city.citySprite.on("pointerup", () => {
+    private setOnNodeClick(nodeName: string, nodeImage: GameObjects.Image) {
+        nodeImage.on("pointerup", () => {
             const isValidMovement = this.graph.hasEdge(
                 this.player.locationName,
-                city.name
+                nodeName
             );
             if (isValidMovement) {
-                this.moveAndEndTurn(getNode(this.graph, city.name));
+                this.moveAndEndTurn(getNode(this.graph, nodeName));
             }
         });
     }
 
-    private moveAndEndTurn(nextLocation: ILocation) {
+    private moveAndEndTurn(nextLocation: INode) {
         this.pathAnimator.animatePlayerMovement(
             this.player.locationName,
             nextLocation.name
         );
         this.player.move(nextLocation);
         this.cities.forEach(cont => {
-            const consumCity = getNode(this.graph, cont.name);
+            const consumCity = getNode(this.graph, cont.name) as LogicCity;
             consumCity.consumeOrProduce();
             if (consumCity.stock < 0 && !DEV.loseDisabled) {
                 this.lose();

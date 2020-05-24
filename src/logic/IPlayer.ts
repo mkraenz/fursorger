@@ -1,5 +1,3 @@
-import { ILocation } from "./ILocation";
-
 export interface IPlayer {
     factories: number;
     turn: number;
@@ -7,5 +5,5 @@ export interface IPlayer {
     locationName: string;
     take(): void;
     store(): void;
-    move(location: ILocation): void;
+    move(location: { name: string }): void;
 }

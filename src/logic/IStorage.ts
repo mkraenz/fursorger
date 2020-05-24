@@ -1,4 +1,4 @@
-export interface ILocation {
+export interface IStorage {
     name: string;
     stock: number;
 }
