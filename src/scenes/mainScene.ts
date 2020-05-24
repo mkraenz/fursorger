@@ -26,6 +26,7 @@ import { getAllCities, getNode } from "../logic/getNode";
 import { ILocation } from "../logic/ILocation";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
+import { Shop } from "../logic/Shop";
 import { getLevel, setLevel } from "../registry/level";
 import { LevelExporter } from "../utils/LevelExporter";
 import { BadEndScene } from "./badEndScene";
@@ -52,6 +53,7 @@ export class MainScene extends Scene {
         this.graph = logicObjects.graph;
         new BackgroundImage(this, this.currentLevel.background);
         this.addCities(cityData);
+        this.addShop(new Shop("Boston", 0));
         this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
@@ -135,6 +137,17 @@ export class MainScene extends Scene {
             this.setOnCityClick(city);
         });
         this.setCityStates();
+    }
+
+    private addShop(shop: Shop) {
+        const shopImage = new CityImage(this, 0, 0, name);
+        shopImage.setInteractive({ useHandCursor: true });
+        shopImage.on("pointerdown", () => {
+            if (this.player.stock > shop.price) {
+                this.player.stock -= shop.price;
+                this.player.factories += 1;
+            }
+        });
     }
 
     private addCity({ name, x, y }: ICity) {

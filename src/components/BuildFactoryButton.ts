@@ -14,6 +14,7 @@ export class BuildFactoryButton extends GameObjects.Image {
     private readonly anim: Tweens.Tween;
     private readonly iconAnim: Tweens.Tween;
     private readonly icon: GameObjects.Image & { baseScale: number };
+    private counter: GameObjects.Text;
 
     constructor(
         scene: Scene,
@@ -40,10 +41,12 @@ export class BuildFactoryButton extends GameObjects.Image {
         this.disable();
         this.iconAnim.resume();
         this.on("pointerup", onPointerup);
+        this.counter = this.scene.add.text(this.x + 50, this.y, "");
     }
 
     public preUpdate() {
         this.nextState(this.dataSrc());
+        this.counter.setText(this.dataSrc().toString());
     }
 
     private nextState(playerFactories: number) {

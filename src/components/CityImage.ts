@@ -19,24 +19,24 @@ export class CityImage extends GameObjects.Image {
         this.growShrinkPlugin = new GrowShrinkAnimPlugin(scene, this, {
             speed: 0.5,
         });
-        this.setStateBase(true);
+        this.enterBaseState(true);
     }
 
     public nextState(state: CityImageState) {
         switch (state) {
             case CityImageState.Base:
-                this.setStateBase();
+                this.enterBaseState();
                 break;
             case CityImageState.PlayerIsNeighboring:
-                this.setStatePlayerIsNeighboring();
+                this.enterPlayerIsNeighboringState();
                 break;
             case CityImageState.PlayerInCity:
-                this.setStatePlayerInCity();
+                this.enterPlayerInCityState();
                 break;
         }
     }
 
-    public setStatePlayerIsNeighboring() {
+    public enterPlayerIsNeighboringState() {
         if (this.state === CityImageState.PlayerIsNeighboring) {
             return;
         }
@@ -45,7 +45,7 @@ export class CityImage extends GameObjects.Image {
         this.growShrinkPlugin.setEnabled();
     }
 
-    public setStateBase(init = false) {
+    public enterBaseState(init = false) {
         if (this.state === CityImageState.Base && !init) {
             return;
         }
@@ -54,8 +54,8 @@ export class CityImage extends GameObjects.Image {
         this.growShrinkPlugin.setDisabled();
     }
 
-    public setStatePlayerInCity() {
+    public enterPlayerInCityState() {
         // not used yet
-        this.setStateBase();
+        this.enterBaseState();
     }
 }
