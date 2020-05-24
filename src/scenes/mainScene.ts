@@ -215,16 +215,23 @@ export class MainScene extends Scene {
     }
 
     private win() {
-        this.goto("GoodEndScene", GoodEndScene);
+        this.goto("GoodEndScene", GoodEndScene, { turns: this.player.turn });
     }
 
     private lose() {
         this.goto("badEndScene", BadEndScene);
     }
 
-    private goto(key: string, sceneClass: new (name: string) => Scene) {
-        this.scene.add(key, sceneClass, true);
-        this.scene.remove("MainScene");
+    private goto(
+        key: string,
+        sceneClass: new (name: string) => Scene,
+        data?: { [key: string]: {} }
+    ) {
+        this.cameras.main.once("camerafadeoutcomplete", () => {
+            this.scene.add(key, sceneClass, true, data);
+            this.scene.remove(this);
+        });
+        this.cameras.main.fadeOut(100);
     }
 
     private toggleLevel(selectedLevel?: number) {

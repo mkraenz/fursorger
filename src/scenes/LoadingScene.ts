@@ -3,6 +3,7 @@ import { DEV } from "../dev-config";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
+import { GoodEndScene } from "./GoodEndScene";
 import { MainScene } from "./mainScene";
 import { TitleScene } from "./TitleScene";
 
@@ -54,6 +55,7 @@ export class LoadingScene extends Scene {
             .svg("arrow-right", imgPath("arrow-right.svg"))
             .audio("background", "./assets/sounds/bgm.mp3")
             .audio("wind", "./assets/sounds/wind.mp3")
+            .audio("scribbling", "./assets/sounds/scribbling.mp3")
             .atlas(
                 "shapes",
                 "assets/particles/shapes.png",
@@ -64,9 +66,8 @@ export class LoadingScene extends Scene {
                 "./assets/particles/wind-particle-effect.json"
             )
             .spritesheet("octagon", imgPath("octagon.png"), {
-                frameWidth: 128,
-                frameHeight: 128,
-                spacing: 100,
+                frameWidth: 148,
+                frameHeight: 148,
             })
             .spritesheet("plus", imgPath("plus-extra.png"), {
                 frameWidth: 74,
@@ -121,12 +122,14 @@ export class LoadingScene extends Scene {
         this.load.on("progress", this.getProgressBarFiller(progressBar));
         this.load.on("fileprogress", this.getAssetTextWriter(assetText));
         this.load.on("complete", () => {
-            if (DEV.skipTitle) {
+            if (DEV.startInWinScene) {
+                this.scene.add("GoodEndScene", GoodEndScene, true);
+            } else if (DEV.skipTitle) {
                 this.scene.add("MainScene", MainScene, true);
             } else {
                 this.scene.add("TitleScene", TitleScene, true);
             }
-            this.scene.remove("LoadingScene");
+            this.scene.remove(this);
         });
     }
 
