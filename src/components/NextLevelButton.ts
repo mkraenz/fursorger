@@ -9,6 +9,6 @@ export const NextLevelButton = (
     y = MainSceneCfg.nextLevel.y
 ) =>
     new IconButton(scene, onPointerUp, x, y, {
-        baseScale: 0.6,
+        baseScale: 1,
         texture: "arrow-right",
     });

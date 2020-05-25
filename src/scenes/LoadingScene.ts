@@ -22,7 +22,7 @@ export class LoadingScene extends Scene {
         this.preloadAllAssets();
         this.addTitles();
         this.makeLoadingBar();
-        setLevel(this.registry, 0);
+        setLevel(this.registry, DEV.initialLevel || 0);
     }
 
     private preloadAllAssets() {
@@ -66,8 +66,8 @@ export class LoadingScene extends Scene {
                 "./assets/particles/wind-particle-effect.json"
             )
             .spritesheet("octagon", imgPath("octagon.png"), {
-                frameWidth: 148,
-                frameHeight: 148,
+                frameWidth: 168,
+                frameHeight: 168,
             })
             .spritesheet("plus", imgPath("plus-extra.png"), {
                 frameWidth: 74,

@@ -9,6 +9,6 @@ export const RestartButton = (
     y = MainSceneCfg.restart.y
 ) =>
     new IconButton(scene, onPointerUp, x, y, {
-        baseScale: 0.6,
+        baseScale: 1,
         texture: "restart",
     });
