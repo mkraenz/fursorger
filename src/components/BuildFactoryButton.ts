@@ -27,14 +27,12 @@ export class BuildFactoryButton extends GameObjects.Image {
             "octagon"
         );
         scene.add.existing(this);
-        const icon = this.scene.add
-            .image(
-                MainSceneCfg.buildFactory.x - 5,
-                MainSceneCfg.buildFactory.y - 5,
-                "factory"
-            )
-            .setScale(0.6);
-        this.icon = assign(icon, { baseScale: 0.6 });
+        const icon = this.scene.add.image(
+            MainSceneCfg.buildFactory.x,
+            MainSceneCfg.buildFactory.y,
+            "factory"
+        );
+        this.icon = assign(icon, { baseScale: 1 });
 
         this.setScale(this.baseScale);
         this.anim = this.scene.add.tween(this.getTweenCfg());
