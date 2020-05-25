@@ -22,6 +22,9 @@ export class IconButton extends GameObjects.Image {
         this.icon = assign(icon, { baseScale: iconCfg.baseScale });
         this.setScale(this.baseScale);
         new GrowShrinkAnimPlugin(scene, this);
-        new GrowShrinkAnimPlugin(scene, this.icon, { parent: this });
+        new GrowShrinkAnimPlugin(scene, this.icon, {
+            maxRelativeScale: 1.15,
+            parent: this,
+        });
     }
 }
