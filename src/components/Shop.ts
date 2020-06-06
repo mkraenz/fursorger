@@ -1,17 +1,10 @@
 import { GameObjects, Scene } from "phaser";
+import { CityState } from "./City";
 import { CityImage, CityImageState } from "./CityImage";
-import { CityProductionDisplay } from "./CityProductionDisplay";
-import { CityStockDisplay } from "./CityStockDisplay";
 import { NameDisplay } from "./NameDisplay";
 import { PlusMinusButton } from "./PlusMinusButton";
 
-export enum CityState {
-    Base,
-    PlayerIsNeighboring,
-    PlayerInCity,
-}
-
-export class City extends GameObjects.Container {
+export class Shop extends GameObjects.Container {
     public state = CityState.Base;
 
     constructor(
@@ -20,49 +13,31 @@ export class City extends GameObjects.Container {
         y: number,
         name: string,
         children: {
-            citySprite: CityImage;
-            stockText: CityStockDisplay;
-            productionText: CityProductionDisplay;
-            plusTradeButton: PlusMinusButton;
-            minusTradeButton: PlusMinusButton;
+            sprite: CityImage;
             nameText: NameDisplay;
+            buyButton: PlusMinusButton;
         }
     ) {
         super(scene, x, y, [
-            children.citySprite,
-            children.stockText,
-            children.productionText,
-            children.plusTradeButton,
-            children.minusTradeButton,
+            children.sprite,
             children.nameText,
+            children.buyButton,
         ]);
         scene.add.existing(this);
         this.setDepth(1); // balloons below city
         this.setName(name);
     }
 
-    get citySprite() {
+    get sprite() {
         return this.getAt(0) as CityImage;
     }
 
-    get stockText() {
-        return this.getAt(1) as CityStockDisplay;
-    }
-
-    get productionText() {
-        return this.getAt(2) as CityProductionDisplay;
+    get nameText() {
+        return this.getAt(1) as NameDisplay;
     }
 
     get plusTradeButton() {
-        return this.getAt(3) as PlusMinusButton;
-    }
-
-    get minusTradeButton() {
-        return this.getAt(4) as PlusMinusButton;
-    }
-
-    get nameText() {
-        return this.getAt(5) as NameDisplay;
+        return this.getAt(2) as PlusMinusButton;
     }
 
     public nextState(state: CityState) {
@@ -84,7 +59,7 @@ export class City extends GameObjects.Container {
             return;
         }
         this.state = CityState.PlayerIsNeighboring;
-        this.citySprite.nextState(CityImageState.PlayerIsNeighboring);
+        this.sprite.nextState(CityImageState.PlayerIsNeighboring);
         this.setTradeButtonVisible(false);
     }
 
@@ -93,7 +68,7 @@ export class City extends GameObjects.Container {
             return;
         }
         this.state = CityState.Base;
-        this.citySprite.nextState(CityImageState.Base);
+        this.sprite.nextState(CityImageState.Base);
         this.setTradeButtonVisible(false);
     }
 
@@ -102,12 +77,11 @@ export class City extends GameObjects.Container {
             return;
         }
         this.state = CityState.PlayerInCity;
-        this.citySprite.nextState(CityImageState.PlayerInCity);
+        this.sprite.nextState(CityImageState.PlayerInCity);
         this.setTradeButtonVisible(true);
     }
 
     private setTradeButtonVisible(value: boolean) {
         this.plusTradeButton.setVisible(value);
-        this.minusTradeButton.setVisible(value);
     }
 }

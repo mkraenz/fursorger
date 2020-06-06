@@ -30,7 +30,7 @@ export class Player implements IPlayer {
     public move(location: { name: string }): void {
         this.location = location;
         this.turn++;
-        if (this.turn % 1 === 0 && this.turn > 0) {
+        if (this.turn % 3 === 0 && this.turn > 0) {
             this.factories++;
         }
     }
