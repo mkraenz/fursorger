@@ -6,7 +6,7 @@ import { BackgroundImage } from "../components/BackgroundImage";
 import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
 import { City, CityState } from "../components/City";
-import { CityImage } from "../components/CityImage";
+import { CityImage, NodeNames } from "../components/CityImage";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
 import { DottedLine } from "../components/DottedLine";
@@ -41,6 +41,7 @@ export class MainScene extends Scene {
     private shops!: Shop[];
     private currentLevel!: ILevel;
     private pathAnimator!: PathAnimator;
+    private pictureCounter!: number;
 
     constructor() {
         super({ key: "MainScene" });
@@ -49,12 +50,21 @@ export class MainScene extends Scene {
     public create(): void {
         this.cameras.main.fadeIn(200);
         this.currentLevel = levels[getLevel(this.registry)];
+        this.pictureCounter = 0;
         const cityData = this.currentLevel.cities;
         const shopData = this.currentLevel.shops;
         const logicObjects = LogicBuilder.create(this.currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        new BackgroundImage(this, this.currentLevel.background);
+        const background = new BackgroundImage(
+            this,
+            this.currentLevel.background
+        ).setInteractive();
+        background.on("pointerdown", () => {
+            this.pictureCounter = (this.pictureCounter + 1) % 8;
+            this.shops.forEach(shop => shop.destroy());
+            this.addShops(this.currentLevel.shops);
+        });
         this.addCities(cityData);
         this.addShops(shopData);
         this.setNodesStates();
@@ -140,7 +150,9 @@ export class MainScene extends Scene {
             return;
         }
         shops.forEach(({ name, price, x, y }) => {
-            const shopImage = new CityImage(this, 0, 0, name);
+            const shopPictureName =
+                NodeNames.shop1 + this.pictureCounter.toString();
+            const shopImage = new CityImage(this, 0, 0, shopPictureName, name);
             const buyButton = new PlusMinusButton(
                 this,
                 "plus",
@@ -163,7 +175,7 @@ export class MainScene extends Scene {
 
     private addCity({ name, x, y }: ICity) {
         const city = getNode(this.graph, name) as LogicCity;
-        const cityImage = new CityImage(this, 0, 0, name);
+        const cityImage = new CityImage(this, 0, 0, NodeNames.city, name);
         const stockText = new CityStockDisplay(this, () => city.stock);
         const productionText = new CityProductionDisplay(
             this,

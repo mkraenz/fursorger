@@ -7,7 +7,7 @@ export const level1: ILevel = {
         { name: "Ablesh", stock: 6, production: -1, x: 811, y: 395 },
         { name: "Eflar", stock: 6, production: -1, x: 540, y: 282 },
     ],
-    shops: [{ name: "shop1", price: 3, x: 570, y: 550 }],
+    shops: [{ name: "shop1", price: 3, x: 480, y: 520 }],
 
     travelPaths: [
         {

@@ -7,12 +7,30 @@ export enum CityImageState {
     PlayerInCity,
 }
 
+export enum NodeNames {
+    city = "city",
+    shop1 = "shop",
+    shop2 = "shop2",
+    shop3 = "shop3",
+    shop4 = "shop4",
+    shop5 = "shop5",
+    shop6 = "shop6",
+    shop7 = "shop7",
+    shop8 = "shop8",
+}
+
 export class CityImage extends GameObjects.Image {
     public state = CityImageState.Base;
     private growShrinkPlugin: GrowShrinkAnimPlugin;
 
-    constructor(scene: Scene, x: number, y: number, public name: string) {
-        super(scene, x, y, "city");
+    constructor(
+        scene: Scene,
+        x: number,
+        y: number,
+        nodeName: string,
+        public name: string
+    ) {
+        super(scene, x, y, nodeName);
         scene.add.existing(this);
         this.setScale(0.18);
 
