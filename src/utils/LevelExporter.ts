@@ -15,7 +15,7 @@ export class LevelExporter {
 
     public get(): ILevel {
         const level = cloneDeep(this.leveldataSrc());
-        const cities = this.citiesDataSrc();
+        const cities = this.citiesDataSrc().filter(LogicCity.instanceOf);
         const adjustedCities: ILevel["cities"] = cities.map(city => {
             const cityBaseData = level.cities.find(c => c.name === city.name);
             return {

@@ -106,7 +106,6 @@ export class MainScene extends Scene {
         new ImportLevelButton(this, afterLevelParsedCb);
         new ExportLevelButton(
             this,
-            // TODO #236
             new LevelExporter(
                 () => levels[getLevel(this.registry)],
                 () => getNodes(this.graph),
