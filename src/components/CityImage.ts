@@ -7,16 +7,9 @@ export enum CityImageState {
     PlayerInCity,
 }
 
-export enum NodeNames {
-    city = "city",
-    shop1 = "shop",
-    shop2 = "shop2",
-    shop3 = "shop3",
-    shop4 = "shop4",
-    shop5 = "shop5",
-    shop6 = "shop6",
-    shop7 = "shop7",
-    shop8 = "shop8",
+export enum NodeName {
+    City = "city",
+    Shop = "shop",
 }
 
 export class CityImage extends GameObjects.Image {
