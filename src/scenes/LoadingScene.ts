@@ -50,6 +50,7 @@ export class LoadingScene extends Scene {
             .image("title", imgPath("title.jpg"))
             .image("banner", imgPath("banner.png"))
             .image("startArrow", imgPath("StartArrow140x324.png"))
+            .svg("shop", imgPath("shop.svg"))
             .svg("factory", imgPath("power-plant.svg"))
             .svg("restart", imgPath("reload64x64.svg"))
             .svg("arrow-right", imgPath("arrow-right.svg"))

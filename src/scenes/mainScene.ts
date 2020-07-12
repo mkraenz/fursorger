@@ -1,29 +1,32 @@
 import { Graph } from "graphlib";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { addProductionAnim } from "../anims/addProductionAnim";
 import { PathAnimator } from "../anims/PathAnimator";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
+import { BuildFactoryText } from "../components/BuildFactoryText";
 import { City, CityState } from "../components/City";
-import { CityImage } from "../components/CityImage";
-import { CityNameDisplay } from "../components/CityNameDisplay";
+import { CityImage, NodeName } from "../components/CityImage";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
 import { CityStockDisplay } from "../components/CityStockDisplay";
 import { DottedLine } from "../components/DottedLine";
 import { EditorButton } from "../components/EditorButton";
 import { ExportLevelButton } from "../components/ExportLevelButton";
 import { ImportLevelButton } from "../components/ImportLevelButton";
+import { NameDisplay } from "../components/NameDisplay";
 import { NextLevelButton } from "../components/NextLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
+import { Shop } from "../components/Shop";
 import { TurnDisplay } from "../components/TurnDisplay";
 import { DEV } from "../dev-config";
-import { ICity, ILevel } from "../levels/ILevel";
+import { ICity, ILevel, IShop } from "../levels/ILevel";
 import { levels } from "../levels/index";
-import { getAllCities, getNode } from "../logic/getNode";
-import { ILocation } from "../logic/ILocation";
+import { LogicCity } from "../logic/City";
+import { getAllCities, getNode, getNodes } from "../logic/getNode";
+import { INode } from "../logic/INode";
 import { IPlayer } from "../logic/IPlayer";
 import { LogicBuilder } from "../logic/LogicBuilder";
 import { getLevel, setLevel } from "../registry/level";
@@ -36,6 +39,7 @@ export class MainScene extends Scene {
     private player!: IPlayer;
     private graph!: Graph;
     private cities!: City[];
+    private shops!: Shop[];
     private currentLevel!: ILevel;
     private pathAnimator!: PathAnimator;
 
@@ -47,11 +51,14 @@ export class MainScene extends Scene {
         this.cameras.main.fadeIn(200);
         this.currentLevel = levels[getLevel(this.registry)];
         const cityData = this.currentLevel.cities;
+        const shopData = this.currentLevel.shops;
         const logicObjects = LogicBuilder.create(this.currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
         new BackgroundImage(this, this.currentLevel.background);
         this.addCities(cityData);
+        this.addShops(shopData);
+        this.setNodesStates();
         this.addGui();
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
@@ -65,32 +72,24 @@ export class MainScene extends Scene {
     private addBalloons() {
         this.graph.edges().forEach(edge => {
             this.addBalloonForEdge(edge.v, edge.w);
-            this.addLineForEdge(edge.v, edge.w);
         });
     }
 
-    private addLineForEdge(startCityName: string, targetCityName: string) {
-        const startCity = this.cities.find(city => city.name === startCityName);
-        const targetCity = this.cities.find(
-            city => city.name === targetCityName
-        );
-        new DottedLine(this, startCity, targetCity);
-    }
-
     private addBalloonForEdge(startCityName: string, targetCityName: string) {
-        const startCity = this.cities.find(city => city.name === startCityName);
-        const targetCity = this.cities.find(
-            city => city.name === targetCityName
-        );
+        const allNodes = getNodes(this.graph);
+        const startCity = allNodes.find(city => city.name === startCityName);
+        const targetCity = allNodes.find(city => city.name === targetCityName);
         new Balloon(this, startCity, targetCity);
+        new DottedLine(this, startCity, targetCity);
     }
 
     private addGui() {
         new BuildFactoryButton(
             this,
             () => this.handleBuildButtonClicked(),
-            () => this.player.factories
+            () => !this.player.isInCity() || !this.player.hasFactory()
         );
+        new BuildFactoryText(this, () => this.player.factories);
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
         RestartButton(this, () => this.restart());
@@ -104,7 +103,7 @@ export class MainScene extends Scene {
             this,
             new LevelExporter(
                 () => levels[getLevel(this.registry)],
-                () => getAllCities(this.graph),
+                () => getNodes(this.graph),
                 () => this.player
             )
         );
@@ -112,11 +111,13 @@ export class MainScene extends Scene {
     }
 
     private handleBuildButtonClicked() {
-        const locationName = this.player.locationName;
-        getNode(this.graph, locationName).production++;
-        this.player.factories--;
-        if (this.isWin()) {
-            this.win();
+        if (this.player.isInCity()) {
+            const locationName = this.player.locationName;
+            (getNode(this.graph, locationName) as LogicCity).production++;
+            this.player.factories--;
+            if (this.isWin()) {
+                this.win();
+            }
         }
     }
 
@@ -132,14 +133,37 @@ export class MainScene extends Scene {
         cities.forEach(cityData => {
             const city = this.addCity(cityData);
             this.cities.push(city);
-            this.setOnCityClick(city);
+            this.setOnNodeClick(city.name, city.citySprite);
         });
-        this.setCityStates();
+    }
+
+    private addShops(shops: IShop[] = []) {
+        this.shops = [];
+        shops.forEach(({ name, price, x, y }) => {
+            const shopImage = new CityImage(this, 0, 0, NodeName.Shop, name);
+            const buyButton = new PlusMinusButton(
+                this,
+                "plus",
+                () => {
+                    this.player.stock -= price;
+                    this.player.factories += 1;
+                },
+                () => this.player.stock < price
+            );
+            const nameText = new NameDisplay(this, name);
+            const shop = new Shop(this, x, y, name, {
+                sprite: shopImage,
+                nameText,
+                buyButton,
+            });
+            this.shops.push(shop);
+            this.setOnNodeClick(name, shopImage);
+        });
     }
 
     private addCity({ name, x, y }: ICity) {
-        const city = getNode(this.graph, name);
-        const cityImage = new CityImage(this, 0, 0, name);
+        const city = getNode(this.graph, name) as LogicCity;
+        const cityImage = new CityImage(this, 0, 0, NodeName.City, name);
         const stockText = new CityStockDisplay(this, () => city.stock);
         const productionText = new CityProductionDisplay(
             this,
@@ -157,7 +181,7 @@ export class MainScene extends Scene {
             () => this.player.take(),
             () => city.stock === 0
         );
-        const nameText = new CityNameDisplay(this, name);
+        const nameText = new NameDisplay(this, name);
         return new City(this, x, y, name, {
             citySprite: cityImage,
             stockText,
@@ -168,48 +192,49 @@ export class MainScene extends Scene {
         });
     }
 
-    private setOnCityClick(city: City) {
-        city.citySprite.on("pointerup", () => {
+    private setOnNodeClick(nodeName: string, nodeImage: GameObjects.Image) {
+        nodeImage.on("pointerup", () => {
             const isValidMovement = this.graph.hasEdge(
                 this.player.locationName,
-                city.name
+                nodeName
             );
             if (isValidMovement) {
-                this.moveAndEndTurn(getNode(this.graph, city.name));
+                this.moveAndEndTurn(getNode(this.graph, nodeName));
             }
         });
     }
 
-    private moveAndEndTurn(nextLocation: ILocation) {
+    private moveAndEndTurn(nextLocation: INode) {
         this.pathAnimator.animatePlayerMovement(
             this.player.locationName,
             nextLocation.name
         );
         this.player.move(nextLocation);
         this.cities.forEach(cont => {
-            const consumCity = getNode(this.graph, cont.name);
+            const consumCity = getNode(this.graph, cont.name) as LogicCity;
             consumCity.consumeOrProduce();
             if (consumCity.stock < 0 && !DEV.loseDisabled) {
                 this.lose();
             }
         });
-        this.setCityStates();
+        this.setNodesStates();
         this.cities.forEach(city => addProductionAnim(this, city));
     }
 
-    private setCityStates() {
-        this.cities.forEach(city => {
+    private setNodesStates() {
+        const nodes = [...this.cities, ...this.shops];
+        nodes.forEach(node => {
             const playerInNeighboringCity = this.graph.hasEdge(
                 this.player.locationName,
-                city.name
+                node.name
             );
-            const playerInCity = city.name === this.player.locationName;
+            const playerInCity = node.name === this.player.locationName;
             if (playerInNeighboringCity) {
-                city.nextState(CityState.PlayerIsNeighboring);
+                node.nextState(CityState.PlayerIsNeighboring);
             } else if (playerInCity) {
-                city.nextState(CityState.PlayerInCity);
+                node.nextState(CityState.PlayerInCity);
             } else {
-                city.nextState(CityState.Base);
+                node.nextState(CityState.Base);
             }
         });
     }

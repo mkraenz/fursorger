@@ -7,36 +7,47 @@ export enum CityImageState {
     PlayerInCity,
 }
 
+export enum NodeName {
+    City = "city",
+    Shop = "shop",
+}
+
 export class CityImage extends GameObjects.Image {
     public state = CityImageState.Base;
     private growShrinkPlugin: GrowShrinkAnimPlugin;
 
-    constructor(scene: Scene, x: number, y: number, public name: string) {
-        super(scene, x, y, "city");
+    constructor(
+        scene: Scene,
+        x: number,
+        y: number,
+        nodeName: string,
+        public name: string
+    ) {
+        super(scene, x, y, nodeName);
         scene.add.existing(this);
         this.setScale(0.18);
 
         this.growShrinkPlugin = new GrowShrinkAnimPlugin(scene, this, {
             speed: 0.5,
         });
-        this.setStateBase(true);
+        this.enterBaseState(true);
     }
 
     public nextState(state: CityImageState) {
         switch (state) {
             case CityImageState.Base:
-                this.setStateBase();
+                this.enterBaseState();
                 break;
             case CityImageState.PlayerIsNeighboring:
-                this.setStatePlayerIsNeighboring();
+                this.enterPlayerIsNeighboringState();
                 break;
             case CityImageState.PlayerInCity:
-                this.setStatePlayerInCity();
+                this.enterPlayerInCityState();
                 break;
         }
     }
 
-    public setStatePlayerIsNeighboring() {
+    public enterPlayerIsNeighboringState() {
         if (this.state === CityImageState.PlayerIsNeighboring) {
             return;
         }
@@ -45,7 +56,7 @@ export class CityImage extends GameObjects.Image {
         this.growShrinkPlugin.setEnabled();
     }
 
-    public setStateBase(init = false) {
+    public enterBaseState(init = false) {
         if (this.state === CityImageState.Base && !init) {
             return;
         }
@@ -54,8 +65,8 @@ export class CityImage extends GameObjects.Image {
         this.growShrinkPlugin.setDisabled();
     }
 
-    public setStatePlayerInCity() {
+    public enterPlayerInCityState() {
         // not used yet
-        this.setStateBase();
+        this.enterBaseState();
     }
 }
