@@ -1,0 +1,118 @@
+{
+    "cities": [
+        {
+            "name": "Everich",
+            "stock": 0,
+            "production": 0,
+            "x": 862,
+            "y": 101
+        },
+        {
+            "name": "Happy Town",
+            "stock": 9,
+            "production": -1,
+            "x": 562,
+            "y": 214
+        },
+        {
+            "name": "Forest Deep",
+            "stock": 3,
+            "production": -1,
+            "x": 466,
+            "y": 485
+        },
+        {
+            "name": "Ironhill",
+            "stock": 17,
+            "production": -1,
+            "x": 540,
+            "y": 668
+        },
+        {
+            "name": "Thirstery",
+            "stock": 18,
+            "production": -1,
+            "x": 885,
+            "y": 378
+        },
+        {
+            "name": "Elderbridge",
+            "stock": 10,
+            "production": -1,
+            "x": 758,
+            "y": 568
+        },
+        {
+            "name": "Salty Harbor",
+            "stock": 16,
+            "production": -1,
+            "x": 233,
+            "y": 670
+        },
+        {
+            "name": "Ghost City",
+            "stock": 0,
+            "production": 0,
+            "x": 286,
+            "y": 109
+        },
+        {
+            "name": "Caballjo Porto",
+            "stock": 13,
+            "production": -1,
+            "x": 164,
+            "y": 336
+        }
+    ],
+    "travelPaths": [
+        {
+            "first": "Ironhill",
+            "second": "Thirstery"
+        },
+        {
+            "first": "Forest Deep",
+            "second": "Happy Town"
+        },
+        {
+            "first": "Caballjo Porto",
+            "second": "Forest Deep"
+        },
+        {
+            "first": "Ironhill",
+            "second": "Forest Deep"
+        },
+        {
+            "first": "Happy Town",
+            "second": "Thirstery"
+        },
+        {
+            "first": "Happy Town",
+            "second": "Everich"
+        },
+        {
+            "first": "Salty Harbor",
+            "second": "Ironhill"
+        },
+        {
+            "first": "Elderbridge",
+            "second": "Ghost City"
+        },
+        {
+            "first": "Happy Town",
+            "second": "Ghost City"
+        },
+        {
+            "first": "Everich",
+            "second": "Thirstery"
+        },
+        {
+            "first": "Ironhill",
+            "second": "Elderbridge"
+        }
+    ],
+    "player": {
+        "stock": 0,
+        "location": "Happy Town"
+    },
+    "background": "background2"
+}
