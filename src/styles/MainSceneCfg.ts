@@ -23,8 +23,14 @@ export const MainSceneCfg = {
         },
     },
     buildFactory: {
-        x: sidebarX,
-        y: 200 + 80 * 2,
+        img: {
+            x: sidebarX,
+            y: 200 + 80 * 2,
+        },
+        text: {
+            x: sidebarX + sidebarImgToTextXOffset,
+            y: 200 + 80 * 2 + sidebarImgToTextYOffset,
+        },
     },
     restart: {
         x: sidebarX,

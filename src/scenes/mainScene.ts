@@ -5,6 +5,7 @@ import { PathAnimator } from "../anims/PathAnimator";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { Balloon } from "../components/Balloon";
 import { BuildFactoryButton } from "../components/BuildFactoryButton";
+import { BuildFactoryText } from "../components/BuildFactoryText";
 import { City, CityState } from "../components/City";
 import { CityImage, NodeName } from "../components/CityImage";
 import { CityProductionDisplay } from "../components/CityProductionDisplay";
@@ -86,9 +87,9 @@ export class MainScene extends Scene {
         new BuildFactoryButton(
             this,
             () => this.handleBuildButtonClicked(),
-            () => this.player.factories,
             () => !this.player.isInCity() || !this.player.hasFactory()
         );
+        new BuildFactoryText(this, () => this.player.factories);
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
         RestartButton(this, () => this.restart());

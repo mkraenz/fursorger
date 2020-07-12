@@ -8,32 +8,23 @@ enum State {
     Enabled,
 }
 
+const cfg = MainSceneCfg.buildFactory.img;
+
 export class BuildFactoryButton extends GameObjects.Image {
     public state = State.Disabled;
     private readonly baseScale = 0.5;
     private readonly anim: Tweens.Tween;
     private readonly iconAnim: Tweens.Tween;
     private readonly icon: GameObjects.Image & { baseScale: number };
-    private counter: GameObjects.Text;
 
     constructor(
         scene: Scene,
         onPointerup: () => void,
-        private dataSrc: () => number,
         private disabledCondition: () => boolean
     ) {
-        super(
-            scene,
-            MainSceneCfg.buildFactory.x,
-            MainSceneCfg.buildFactory.y,
-            "octagon"
-        );
+        super(scene, cfg.x, cfg.y, "octagon");
         scene.add.existing(this);
-        const icon = this.scene.add.image(
-            MainSceneCfg.buildFactory.x,
-            MainSceneCfg.buildFactory.y,
-            "factory"
-        );
+        const icon = this.scene.add.image(cfg.x, cfg.y, "factory");
         this.icon = assign(icon, { baseScale: 1 });
 
         this.setScale(this.baseScale);
@@ -42,12 +33,10 @@ export class BuildFactoryButton extends GameObjects.Image {
         this.disable();
         this.iconAnim.resume();
         this.on("pointerup", onPointerup);
-        this.counter = this.scene.add.text(this.x + 50, this.y, "");
     }
 
     public preUpdate() {
         this.nextState();
-        this.counter.setText(this.dataSrc().toString());
     }
 
     private nextState() {
