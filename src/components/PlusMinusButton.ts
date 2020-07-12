@@ -1,11 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
 
-enum State {
-    Base,
-    Grown,
-}
-
 export class PlusMinusButton extends GameObjects.Sprite {
     private isClicked = false;
     private timeSincePointerdown = 0;

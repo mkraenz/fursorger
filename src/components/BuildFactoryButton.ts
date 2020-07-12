@@ -8,6 +8,8 @@ enum State {
     Enabled,
 }
 
+const cfg = MainSceneCfg.buildFactory.img;
+
 export class BuildFactoryButton extends GameObjects.Image {
     public state = State.Disabled;
     private readonly baseScale = 0.5;
@@ -18,20 +20,11 @@ export class BuildFactoryButton extends GameObjects.Image {
     constructor(
         scene: Scene,
         onPointerup: () => void,
-        private dataSrc: () => number
+        private disabledCondition: () => boolean
     ) {
-        super(
-            scene,
-            MainSceneCfg.buildFactory.x,
-            MainSceneCfg.buildFactory.y,
-            "octagon"
-        );
+        super(scene, cfg.x, cfg.y, "octagon");
         scene.add.existing(this);
-        const icon = this.scene.add.image(
-            MainSceneCfg.buildFactory.x,
-            MainSceneCfg.buildFactory.y,
-            "factory"
-        );
+        const icon = this.scene.add.image(cfg.x, cfg.y, "factory");
         this.icon = assign(icon, { baseScale: 1 });
 
         this.setScale(this.baseScale);
@@ -43,11 +36,11 @@ export class BuildFactoryButton extends GameObjects.Image {
     }
 
     public preUpdate() {
-        this.nextState(this.dataSrc());
+        this.nextState();
     }
 
-    private nextState(playerFactories: number) {
-        if (playerFactories === 0) {
+    private nextState() {
+        if (this.disabledCondition()) {
             this.disable();
         } else {
             this.enable();

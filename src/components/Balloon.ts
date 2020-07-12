@@ -15,7 +15,6 @@ export class Balloon extends GameObjects.Image {
         scene.add.existing(this);
         this.setDisplaySize(30, 30);
         this.setAlpha(0.8);
-
         const config = getBalloonTweenConfig(this, start, target);
         this.anim = this.scene.tweens.add(config) as CustomTween;
         this.anim.movementPattern = random(5);

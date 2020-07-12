@@ -7,6 +7,8 @@ export const level1: ILevel = {
         { name: "Ablesh", stock: 6, production: -1, x: 811, y: 395 },
         { name: "Eflar", stock: 6, production: -1, x: 540, y: 282 },
     ],
+    shops: [{ name: "Kadrel", price: 3, x: 480, y: 520 }],
+
     travelPaths: [
         {
             first: "Ustrela",
@@ -31,6 +33,7 @@ export const level1: ILevel = {
                 { x: 811, y: 395 },
             ],
         },
+        { first: "Kadrel", second: "Ustrela", points: [] },
     ],
     player: { stock: 3, location: "Ustrela" },
     background: "background",
