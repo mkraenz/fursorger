@@ -54,14 +54,7 @@ export class MainScene extends Scene {
         const logicObjects = LogicBuilder.create(this.currentLevel);
         this.player = logicObjects.player;
         this.graph = logicObjects.graph;
-        const background = new BackgroundImage(
-            this,
-            this.currentLevel.background
-        ).setInteractive();
-        background.on("pointerdown", () => {
-            this.shops.forEach(shop => shop.destroy());
-            this.addShops(this.currentLevel.shops);
-        });
+        new BackgroundImage(this, this.currentLevel.background);
         this.addCities(cityData);
         this.addShops(shopData);
         this.setNodesStates();
