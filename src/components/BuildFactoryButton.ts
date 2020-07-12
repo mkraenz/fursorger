@@ -19,7 +19,8 @@ export class BuildFactoryButton extends GameObjects.Image {
     constructor(
         scene: Scene,
         onPointerup: () => void,
-        private dataSrc: () => number
+        private dataSrc: () => number,
+        private disabledCondition: () => boolean
     ) {
         super(
             scene,
@@ -45,12 +46,12 @@ export class BuildFactoryButton extends GameObjects.Image {
     }
 
     public preUpdate() {
-        this.nextState(this.dataSrc());
+        this.nextState();
         this.counter.setText(this.dataSrc().toString());
     }
 
-    private nextState(playerFactories: number) {
-        if (playerFactories === 0) {
+    private nextState() {
+        if (this.disabledCondition()) {
             this.disable();
         } else {
             this.enable();

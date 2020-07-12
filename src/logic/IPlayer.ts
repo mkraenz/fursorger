@@ -3,6 +3,8 @@ export interface IPlayer {
     turn: number;
     stock: number;
     locationName: string;
+    hasFactory(): boolean;
+    isInCity(): boolean;
     take(): void;
     store(): void;
     move(location: { name: string }): void;

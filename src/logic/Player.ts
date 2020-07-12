@@ -1,4 +1,5 @@
 import { isNil } from "lodash";
+import { LogicCity } from "./City";
 import { IPlayer } from "./IPlayer";
 
 export class Player implements IPlayer {
@@ -33,5 +34,13 @@ export class Player implements IPlayer {
         if (this.turn % 3 === 0 && this.turn > 0) {
             this.factories++;
         }
+    }
+
+    public isInCity(): boolean {
+        return LogicCity.instanceOf(this.location);
+    }
+
+    public hasFactory(): boolean {
+        return this.factories > 0;
     }
 }

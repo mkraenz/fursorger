@@ -86,7 +86,8 @@ export class MainScene extends Scene {
         new BuildFactoryButton(
             this,
             () => this.handleBuildButtonClicked(),
-            () => this.player.factories
+            () => this.player.factories,
+            () => !this.player.isInCity() || !this.player.hasFactory()
         );
         new TurnDisplay(this, () => this.player.turn);
         new PlayerStockDisplay(this, () => this.player.stock);
@@ -109,11 +110,13 @@ export class MainScene extends Scene {
     }
 
     private handleBuildButtonClicked() {
-        const locationName = this.player.locationName;
-        (getNode(this.graph, locationName) as LogicCity).production++;
-        this.player.factories--;
-        if (this.isWin()) {
-            this.win();
+        if (this.player.isInCity()) {
+            const locationName = this.player.locationName;
+            (getNode(this.graph, locationName) as LogicCity).production++;
+            this.player.factories--;
+            if (this.isWin()) {
+                this.win();
+            }
         }
     }
 
