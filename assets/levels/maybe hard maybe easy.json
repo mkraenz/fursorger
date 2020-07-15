@@ -1,0 +1,125 @@
+{
+    "cities": [
+        {
+            "name": "Porta Vara",
+            "stock": 15,
+            "production": -1,
+            "x": 238,
+            "y": 520
+        },
+        {
+            "name": "Melsum",
+            "stock": 13,
+            "production": -1,
+            "x": 423,
+            "y": 497
+        },
+        {
+            "name": "Iron Hill",
+            "stock": 14,
+            "production": -1,
+            "x": 430,
+            "y": 710
+        },
+        {
+            "name": "Strongfort",
+            "stock": 63,
+            "production": -3,
+            "x": 515,
+            "y": 339
+        },
+        {
+            "name": "Ognum",
+            "stock": 22,
+            "production": -1,
+            "x": 741,
+            "y": 564
+        },
+        {
+            "name": "New Fork",
+            "stock": 58,
+            "production": -2,
+            "x": 730,
+            "y": 265
+        },
+        {
+            "name": "Orn Port",
+            "stock": 30,
+            "production": -1,
+            "x": 148,
+            "y": 126
+        },
+        {
+            "name": "Evergreen",
+            "stock": 21,
+            "production": -1,
+            "x": 870,
+            "y": 103
+        },
+        {
+            "name": "Spring Water",
+            "stock": 19,
+            "production": -1,
+            "x": 956,
+            "y": 385
+        },
+        {
+            "name": "Kings Bridge",
+            "stock": 19,
+            "production": -1,
+            "x": 291,
+            "y": 219
+        }
+    ],
+    "travelPaths": [
+        {
+            "first": "Iron Hill",
+            "second": "Melsum"
+        },
+        {
+            "first": "Melsum",
+            "second": "Porta Vara"
+        },
+        {
+            "first": "Strongfort",
+            "second": "Ognum"
+        },
+        {
+            "first": "New Fork",
+            "second": "Spring Water"
+        },
+        {
+            "first": "Kings Bridge",
+            "second": "Orn Port"
+        },
+        {
+            "first": "New Fork",
+            "second": "Evergreen"
+        },
+        {
+            "first": "Ognum",
+            "second": "New Fork"
+        },
+        {
+            "first": "Spring Water",
+            "second": "Ognum"
+        },
+        {
+            "first": "Strongfort",
+            "second": "Kings Bridge"
+        },
+        {
+            "first": "Melsum",
+            "second": "Strongfort"
+        },
+        {
+            "first": "Iron Hill",
+            "second": "Porta Vara"
+        }
+    ],
+    "player": {
+        "stock": 0,
+        "location": "Kings Bridge"
+    },
+    "background": "background2"
+}
