@@ -37,4 +37,13 @@ export const level1: ILevel = {
     ],
     player: { stock: 3, location: "Ustrela" },
     background: "background",
+    secrets: [
+        {
+            centerX: 508,
+            centerY: 57,
+            width: 72,
+            height: 54,
+            text: "I am seafood. Please do not eat me!",
+        },
+    ],
 };
