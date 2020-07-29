@@ -19,6 +19,7 @@ import { NextLevelButton } from "../components/NextLevelButton";
 import { PlayerStockDisplay } from "../components/PlayerStockDisplay";
 import { PlusMinusButton } from "../components/PlusMinusButton";
 import { RestartButton } from "../components/RestartButton";
+import { Secret } from "../components/Secret";
 import { Shop } from "../components/Shop";
 import { TurnDisplay } from "../components/TurnDisplay";
 import { DEV } from "../dev-config";
@@ -63,6 +64,9 @@ export class MainScene extends Scene {
         this.input.keyboard.on("keydown-R", () => this.restart());
         this.addBalloons();
         this.pathAnimator = new PathAnimator(this, this.currentLevel);
+        this.currentLevel.secrets?.forEach(
+            secretData => new Secret(this, secretData)
+        );
     }
 
     public update() {

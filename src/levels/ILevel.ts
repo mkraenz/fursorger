@@ -12,6 +12,7 @@ export interface ILevel {
         stock: number;
         location: string;
     };
+    secrets?: ISecret[];
 }
 
 export interface ICity {
@@ -27,4 +28,12 @@ export interface IShop {
     price: number;
     x: number;
     y: number;
+}
+
+export interface ISecret {
+    centerX: number;
+    centerY: number;
+    width: number;
+    height: number;
+    text: string;
 }
