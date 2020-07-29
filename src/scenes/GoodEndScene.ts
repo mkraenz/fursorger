@@ -94,22 +94,24 @@ export class GoodEndScene extends Scene {
 }
 
 const getWorldSavedText = (level: number) => {
-    if (level === 0) {
-        return "One world saved.";
-    }
-    if (level <= 2) {
-        return "Another world saved.";
-    }
-    if (level <= 4) {
-        return "Yet another world saved.";
-    }
-    if (level <= 6) {
-        return "Yet another world saved...";
-    }
-    if (level <= 8) {
-        return "I'm tired...";
-    } else {
-        return "Is there no end to misery?";
+    switch (level) {
+        case 0:
+            return "One world saved.";
+        case 1:
+            return "Another world saved.";
+        case 2:
+        case 3:
+            return "I will never let something like back then happen again.";
+        case 4:
+            return "Yet another world saved.";
+        case 5:
+        case 6:
+            return "Yet another world saved...";
+        case 7:
+        case 8:
+            return "I'm tired...";
+        default:
+            return "Is there no end to misery?";
     }
 };
 
