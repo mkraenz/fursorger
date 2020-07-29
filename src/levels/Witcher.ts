@@ -1,6 +1,7 @@
 import { ILevel } from "./ILevel";
 
 export const Witcher: ILevel = {
+    name: "Witcher's Winter",
     cities: [
         {
             name: "Eate",
