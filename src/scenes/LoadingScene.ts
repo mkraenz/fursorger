@@ -3,6 +3,7 @@ import { DEV } from "../dev-config";
 import { setLevel } from "../registry/level";
 import { Color, toHex } from "../styles/Color";
 import { setDefaultTextStyle, TextConfig } from "../styles/Text";
+import { CreditsScene } from "./CreditsScene";
 import { GoodEndScene } from "./GoodEndScene";
 import { MainScene } from "./mainScene";
 import { TitleScene } from "./TitleScene";
@@ -26,37 +27,38 @@ export class LoadingScene extends Scene {
     }
 
     private preloadAllAssets() {
-        const imgPath = (filename: string) => `./assets/images/${filename}`;
+        const img = (filename: string) => `./assets/images/${filename}`;
+        const audio = (filename: string) => `./assets/sounds/${filename}`;
         this.load
             .image(
                 "rectangleButton",
                 " ./assets/images/blank_rectangle60x160.png"
             )
-            .image("goodEnd", imgPath("goodEnd1280×853.jpg"))
-            .image("badEnd", imgPath("badEnd640x512.jpg"))
-            .image("city", imgPath("town-01-inkarnate387x295.png"))
-            .image("background", imgPath("shoaw-whium.jpg"))
-            .image("backpack", imgPath("backpack64x64.png"))
-            .image("hourglass", imgPath("hourglass64x64.png"))
-            .image("background2", imgPath("default-background.jpg"))
-            .image("map-tutorial", imgPath("map-tutorial-1.jpg"))
-            .image("map-wesnoth", imgPath("map-wesnoth.jpg"))
-            .image("buildFactory", imgPath("buildFactoryButton128x128.png"))
-            .image("balloon", imgPath("balloon1600x1600.png"))
-            .image("stock", imgPath("storage64x64.png"))
-            .image("production", imgPath("decreasing-bars64x64.png"))
-            .image("play", imgPath("playArrow300x200.png"))
-            .image("export", imgPath("export180x120.png"))
-            .image("title", imgPath("title.jpg"))
-            .image("banner", imgPath("banner.png"))
-            .image("startArrow", imgPath("StartArrow140x324.png"))
-            .svg("shop", imgPath("shop.svg"))
-            .svg("factory", imgPath("power-plant.svg"))
-            .svg("restart", imgPath("reload64x64.svg"))
-            .svg("arrow-right", imgPath("arrow-right.svg"))
-            .audio("background", "./assets/sounds/bgm.mp3")
-            .audio("wind", "./assets/sounds/wind.mp3")
-            .audio("scribbling", "./assets/sounds/scribbling.mp3")
+            .image("goodEnd", img("goodEnd1280×853.jpg"))
+            .image("badEnd", img("badEnd640x512.jpg"))
+            .image("city", img("town-01-inkarnate387x295.png"))
+            .image("background", img("shoaw-whium.jpg"))
+            .image("backpack", img("backpack64x64.png"))
+            .image("hourglass", img("hourglass64x64.png"))
+            .image("background2", img("default-background.jpg"))
+            .image("map-tutorial", img("map-tutorial-1.jpg"))
+            .image("map-wesnoth", img("map-wesnoth.jpg"))
+            .image("buildFactory", img("buildFactoryButton128x128.png"))
+            .image("balloon", img("balloon1600x1600.png"))
+            .image("stock", img("storage64x64.png"))
+            .image("production", img("decreasing-bars64x64.png"))
+            .image("play", img("playArrow300x200.png"))
+            .image("export", img("export180x120.png"))
+            .image("title", img("title.jpg"))
+            .image("banner", img("banner.png"))
+            .image("startArrow", img("StartArrow140x324.png"))
+            .svg("shop", img("shop.svg"))
+            .svg("factory", img("power-plant.svg"))
+            .svg("restart", img("reload64x64.svg"))
+            .svg("arrow-right", img("arrow-right.svg"))
+            .audio("background", audio("bgm.mp3"))
+            .audio("risingMoon", audio("Rising_Moon_By_RandomMind.mp3"))
+            .audio("scribbling", audio("scribbling.mp3"))
             .atlas(
                 "shapes",
                 "assets/particles/shapes.png",
@@ -66,21 +68,21 @@ export class LoadingScene extends Scene {
                 "wind-particle-effect",
                 "./assets/particles/wind-particle-effect.json"
             )
-            .spritesheet("octagon", imgPath("octagon.png"), {
+            .spritesheet("octagon", img("octagon.png"), {
                 frameWidth: 168,
                 frameHeight: 168,
             })
-            .spritesheet("plus", imgPath("plus-extra.png"), {
+            .spritesheet("plus", img("plus-extra.png"), {
                 frameWidth: 74,
                 frameHeight: 74,
                 spacing: 40,
             })
-            .spritesheet("wagon", imgPath("wagon.png"), {
+            .spritesheet("wagon", img("wagon.png"), {
                 frameWidth: 261 / 3,
                 frameHeight: 252 / 3,
                 // spacing: 5,
             })
-            .spritesheet("minus", imgPath("minus-extra.png"), {
+            .spritesheet("minus", img("minus-extra.png"), {
                 frameWidth: 74,
                 frameHeight: 74,
                 spacing: 40,
@@ -127,6 +129,8 @@ export class LoadingScene extends Scene {
                 this.scene.add("GoodEndScene", GoodEndScene, true);
             } else if (DEV.skipTitle) {
                 this.scene.add("MainScene", MainScene, true);
+            } else if (DEV.startInCredits) {
+                this.scene.add("CreditsScene", CreditsScene, true);
             } else {
                 this.scene.add("TitleScene", TitleScene, true);
             }

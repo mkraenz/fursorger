@@ -4,11 +4,17 @@ import { BannerButton } from "../components/BannerButton";
 import { Color } from "../styles/Color";
 import { TextConfig } from "../styles/Text";
 import { BgmScene } from "./BgmScene";
+import { CreditsScene } from "./CreditsScene";
 import { EditorScene } from "./editorScene";
 import { MainScene } from "./mainScene";
 
+export interface ITitleSceneInitData {
+    fadeInEnabled: boolean;
+}
+
 export class TitleScene extends Scene {
     private backgroundSound: Sound.BaseSound;
+    private fadeInEnabled = true;
 
     constructor() {
         super({
@@ -16,8 +22,14 @@ export class TitleScene extends Scene {
         });
     }
 
+    public init({ fadeInEnabled = true }: ITitleSceneInitData) {
+        this.fadeInEnabled = fadeInEnabled;
+    }
+
     public create(): void {
-        this.cameras.main.fadeIn(200);
+        if (this.fadeInEnabled) {
+            this.cameras.main.fadeIn(200);
+        }
         this.addMap();
         this.addHud();
     }
@@ -33,31 +45,34 @@ export class TitleScene extends Scene {
                 this.scale.width / 2,
                 290,
                 "A Game by Mirco Kraenz and Matthias Möser",
-                TextConfig.version
+                TextConfig.subTitle
             )
             .setOrigin(0.5);
         this.add.text(
             10,
             this.scale.height - 20,
-            "v0.10.0",
+            "v0.42.0",
             TextConfig.version
         );
 
-        const bannerStartHeight = this.scale.height / 2 + 130;
+        const bannerStartHeight = this.scale.height / 2 + 55;
         new BannerButton(this, bannerStartHeight, "Singleplayer", () =>
             this.goto("MainScene", MainScene)
         );
         new BannerButton(this, bannerStartHeight + 75, "Editor", () =>
             this.goto("EditorScene", EditorScene)
         );
+        new BannerButton(this, bannerStartHeight + 75 * 2, "Credits", () =>
+            this.goto("CreditsScene", CreditsScene)
+        );
     }
 
     private addMap() {
-        this.backgroundSound = this.sound.add("wind");
+        this.backgroundSound = this.sound.add("risingMoon");
         this.backgroundSound.play("", { loop: true, volume: 0 });
         this.tweens.add({
             targets: this.backgroundSound,
-            volume: 0.7,
+            volume: 0.15,
             duration: 400,
         });
         new BackgroundImage(this, "title");
@@ -70,16 +85,20 @@ export class TitleScene extends Scene {
     }
 
     private goto(key: string, sceneClass: new (name: string) => Scene) {
-        this.cameras.main.once("camerafadeoutcomplete", () => {
-            this.scene.add("BgmScene", BgmScene, true);
-            this.tweens.add({
-                targets: this.backgroundSound,
-                volume: 0,
-                duration: 4000,
-                onComplete: () => this.scene.remove("TitleScene"),
-            });
+        if (key === "CreditsScene") {
             this.scene.add(key, sceneClass, true);
-        });
-        this.cameras.main.fadeOut(800);
+        } else {
+            this.cameras.main.once("camerafadeoutcomplete", () => {
+                this.scene.add("BgmScene", BgmScene, true);
+                this.tweens.add({
+                    targets: this.backgroundSound,
+                    volume: 0,
+                    duration: 2000,
+                    onComplete: () => this.scene.remove(this),
+                });
+                this.scene.add(key, sceneClass, true);
+            });
+            this.cameras.main.fadeOut(800);
+        }
     }
 }

@@ -17,7 +17,10 @@ export class BannerButton extends GameObjects.Sprite {
         this.setDisplaySize(300, 300 / 6);
 
         this.setInteractive({ useHandCursor: true });
-        this.on("pointerup", onPointerup)
+        this.on("pointerup", () => {
+            this.removeListener("pointerup");
+            onPointerup();
+        })
             .on("pointerover", this.enterHoverState)
             .on("pointerout", this.enterBaseState);
 
