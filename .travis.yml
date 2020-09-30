@@ -29,15 +29,15 @@ after_success:
 before_deploy:
   # HACK: Delete "build" from gitignore because github pages uses `git add --all`
   - ./deployment/delete-build-dir-from-gitignore.sh
-  - if [ ${TRAVIS_BRANCH} != "master" ]; then ./deployment/wait-for-other-heroku-builds.sh; fi
+  #- if [ ${TRAVIS_BRANCH} != "master" ]; then ./deployment/wait-for-other-heroku-builds.sh; fi
 deploy:
-  - provider: heroku
-    app: fursorger-game
-    api_key: ${HEROKU_API_KEY}
-    on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH != master # except master
-    edge: true
+  # - provider: heroku
+  #   app: fursorger-game
+  #   api_key: ${HEROKU_API_KEY}
+  #   on:
+  #     all_branches: true
+  #     condition: $TRAVIS_BRANCH != master # except master
+  #   edge: true
 
   - provider: pages
     token: ${GITHUB_TOKEN} # Set in the settings page of travis repository, as a secure variable
