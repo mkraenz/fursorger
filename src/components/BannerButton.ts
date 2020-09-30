@@ -2,8 +2,11 @@ import { GameObjects, Scene } from "phaser";
 import { Color } from "../styles/Color";
 import { TextConfig } from "../styles/Text";
 
+const CLICK_COOLDOWN = 1000;
+
 export class BannerButton extends GameObjects.Sprite {
     private buttonText: GameObjects.Text;
+    private timeSinceLastInvoke = CLICK_COOLDOWN;
 
     constructor(
         scene: Scene,
@@ -11,21 +14,26 @@ export class BannerButton extends GameObjects.Sprite {
         text: string,
         onPointerup: () => void
     ) {
-        const halfWidth = scene.scale.width / 2;
-        super(scene, halfWidth, y, "banner");
+        super(scene, scene.scale.width / 2, y, "banner");
         scene.add.existing(this);
         this.setDisplaySize(300, 300 / 6);
 
         this.setInteractive({ useHandCursor: true });
         this.on("pointerup", () => {
-            this.removeListener("pointerup");
-            onPointerup();
+            if (this.timeSinceLastInvoke >= CLICK_COOLDOWN) {
+                onPointerup();
+                this.timeSinceLastInvoke = 0;
+            }
         })
             .on("pointerover", this.enterHoverState)
             .on("pointerout", this.enterBaseState);
 
-        this.addText(scene, halfWidth, y, text);
+        this.addText(scene, scene.scale.width / 2, y, text);
         this.enterBaseState();
+    }
+
+    public preUpdate(_: number, delta: number) {
+        this.timeSinceLastInvoke += delta;
     }
 
     private addText(scene: Scene, halfWidth: number, y: number, text: string) {

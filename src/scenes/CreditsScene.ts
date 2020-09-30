@@ -17,6 +17,7 @@ export class CreditsScene extends Scene {
         new BackgroundImage(this, "title");
         this.addCredits();
         this.input.on("pointerup", () => {
+            this.input.stopPropagation(); // stops event propagation of pointerup
             this.shuttingDown = true;
             this.handleCreditEnd();
         });
