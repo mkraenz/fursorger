@@ -1,48 +1,109 @@
 import { ILevel } from "./ILevel";
 
 export const level1: ILevel = {
-    name: "Beginnings",
     cities: [
-        { name: "Ustrela", stock: 4, production: -1, x: 520, y: 655 },
-        { name: "Ablesh", stock: 6, production: -1, x: 811, y: 395 },
-        { name: "Eflar", stock: 6, production: -1, x: 540, y: 282 },
+        {
+            name: "Bertl",
+            stock: 9,
+            production: -1,
+            x: 453,
+            y: 316,
+        },
+        {
+            name: "Zismo",
+            stock: 10,
+            production: -1,
+            x: 255,
+            y: 682,
+        },
+        {
+            name: "Seli",
+            stock: 11,
+            production: -1,
+            x: 506,
+            y: 136,
+        },
+        {
+            name: "K'hrom",
+            stock: 6,
+            production: -1,
+            x: 507,
+            y: 637,
+        },
+        {
+            name: "Norb",
+            stock: 9,
+            production: -1,
+            x: 880,
+            y: 130,
+        },
+        {
+            name: "Ot",
+            stock: 18,
+            production: -1,
+            x: 952,
+            y: 643,
+        },
+        {
+            name: "Cael",
+            stock: 35,
+            production: -1,
+            x: 699,
+            y: 476,
+        },
+        {
+            name: "Alm",
+            stock: 10,
+            production: -1,
+            x: 227,
+            y: 154,
+        },
     ],
-    shops: [{ name: "Kadrel", price: 3, x: 480, y: 520 }],
     travelPaths: [
         {
-            first: "Ustrela",
-            second: "Ablesh",
-            points: [
-                { x: 811, y: 395 },
-                { x: 897, y: 456 },
-                { x: 723, y: 561 },
-                { x: 676, y: 668 },
-                { x: 520, y: 655 },
-            ],
+            first: "Ot",
+            second: "Bertl",
         },
         {
-            first: "Ablesh",
-            second: "Eflar",
-            points: [
-                { x: 540, y: 282 },
-                { x: 580, y: 407 },
-                { x: 676, y: 461 },
-                { x: 717, y: 445 },
-                { x: 715, y: 381 },
-                { x: 811, y: 395 },
-            ],
+            first: "Seli",
+            second: "Norb",
         },
-        { first: "Kadrel", second: "Ustrela", points: [] },
-    ],
-    player: { stock: 3, location: "Ustrela" },
-    background: "background",
-    secrets: [
         {
-            centerX: 508,
-            centerY: 57,
-            width: 72,
-            height: 54,
-            text: "I am seafood. Please do not eat me!",
+            first: "Seli",
+            second: "Cael",
+        },
+        {
+            first: "Cael",
+            second: "K'hrom",
+        },
+        {
+            first: "Zismo",
+            second: "Alm",
+        },
+        {
+            first: "Ot",
+            second: "Norb",
+        },
+        {
+            first: "Zismo",
+            second: "K'hrom",
+        },
+        {
+            first: "Bertl",
+            second: "Cael",
+        },
+        {
+            first: "Bertl",
+            second: "Alm",
+        },
+        {
+            first: "Ot",
+            second: "Cael",
         },
     ],
+    player: {
+        stock: 0,
+        location: "Alm",
+    },
+    background: "background2",
 };

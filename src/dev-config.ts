@@ -2,10 +2,12 @@ const isProd = window.location.hostname !== "localhost";
 export const DEV = isProd
     ? {}
     : {
-          initialLevel: 1,
+          initialLevel: 0,
           startInWinScene: false,
-          skipTitle: true,
+          skipTitle: false,
+          startInCredits: false,
           showPaths: false,
           loseDisabled: false,
           winDisabled: false,
+          enableSceneWatcher: false,
       };
