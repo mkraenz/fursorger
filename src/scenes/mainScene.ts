@@ -73,6 +73,14 @@ export class MainScene extends Scene {
         this.pathAnimator.update();
     }
 
+    public restart() {
+        this.cameras.main.once("camerafadeoutcomplete", () => {
+            this.input.removeAllListeners();
+            this.scene.restart();
+        });
+        this.cameras.main.fadeOut(100);
+    }
+
     private addBalloons() {
         this.graph.edges().forEach(edge => {
             this.addBalloonForEdge(edge.v, edge.w);
@@ -248,7 +256,7 @@ export class MainScene extends Scene {
     }
 
     private lose() {
-        this.goto("badEndScene", BadEndScene);
+        this.scene.add("badEndScene", BadEndScene, true);
     }
 
     private goto(
@@ -267,12 +275,5 @@ export class MainScene extends Scene {
         const nextLevel = (getLevel(this.registry) + 1) % levels.length;
         setLevel(this.registry, selectedLevel || nextLevel);
         this.restart();
-    }
-
-    private restart() {
-        this.cameras.main.once("camerafadeoutcomplete", () =>
-            this.scene.restart()
-        );
-        this.cameras.main.fadeOut(100);
     }
 }

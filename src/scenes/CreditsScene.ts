@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import { Input, Scene } from "phaser";
 import { BackgroundImage } from "../components/BackgroundImage";
 import { CreditsText } from "../components/CreditsText";
 import { ITitleSceneInitData, TitleScene } from "./TitleScene";
@@ -16,11 +16,17 @@ export class CreditsScene extends Scene {
     public create() {
         new BackgroundImage(this, "title");
         this.addCredits();
+        this.stopEventPropagationToOtherScenes();
         this.input.on("pointerup", () => {
-            this.input.stopPropagation(); // stops event propagation of pointerup
             this.shuttingDown = true;
             this.handleCreditEnd();
         });
+    }
+
+    private stopEventPropagationToOtherScenes() {
+        Object.values(Input.Events).forEach(e =>
+            this.input.on(e, () => this.input.stopPropagation())
+        );
     }
 
     private goto(
