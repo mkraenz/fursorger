@@ -34,7 +34,7 @@
         "del-cli": "^3.0.1",
         "expose-loader": "0.7.5",
         "husky": "^4.2.5",
-        "lint-staged": "^10.2.11",
+        "lint-staged": "^10.5.0",
         "mocha": "^7.1.2",
         "nyc": "^15.0.1",
         "phaser-plugin-scene-watcher": "^4.2.0",
