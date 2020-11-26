@@ -32,7 +32,7 @@
         "commit-message-validator": "^0.1.11",
         "dat.gui": "^0.7.7",
         "del-cli": "^3.0.1",
-        "expose-loader": "0.7.5",
+        "expose-loader": "1.0.2",
         "husky": "^4.2.5",
         "lint-staged": "^10.2.11",
         "mocha": "^7.1.2",
