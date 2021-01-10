@@ -19,7 +19,7 @@ export class BadEndScene extends Scene {
                 this.scale.width,
                 this.scale.height,
                 toHex(Color.Black),
-                0.5
+                0
             )
             .setOrigin(0, 0)
             .setInteractive();
@@ -28,42 +28,56 @@ export class BadEndScene extends Scene {
             this.sound.stopByKey("scribbling");
         });
 
-        this.cameras.main.fadeIn(200);
-        this.cameras.main.once("camerafadeincomplete", () => {
-            const worldLostText = getWorldLostText(getLevel(this.registry));
-            const fursorger = "— Der Fürsorger —";
-            const halfWidth = this.scale.width / 2;
-            const halfHeight = this.scale.height / 2;
-            const worldLostTextComp = this.add
-                .text(halfWidth, halfHeight - 80, "", TextConfig.xl)
-                .setColor(Color.WhiteSilver)
-                .setOrigin(0.5);
-            this.sound.play("scribbling", { loop: true });
-            typeWriter(worldLostText, worldLostTextComp, () =>
-                this.events.emit("quote-scribbling-finished")
-            );
+        this.fadeInAndThen(bg, () => this.scribble());
+    }
 
-            this.events.once("quote-scribbling-finished", () => {
-                this.sound.stopByKey("scribbling");
-                const fursorgerText = this.add
-                    .text(halfWidth, halfHeight - 40, fursorger, TextConfig.md)
-                    .setColor(Color.WhiteSilver)
-                    .setOrigin(0.5)
-                    .setAlpha(0);
-                const goldenRatio = 0.618;
-                const retryNote = this.add
-                    .text(
-                        halfWidth,
-                        this.scale.height * goldenRatio,
-                        "Click anywhere to retry",
-                        TextConfig.sm
-                    )
-                    .setColor(Color.WhiteSilver)
-                    .setOrigin(0.5)
-                    .setAlpha(0);
-                this.fadeIn(fursorgerText);
-                this.fadeIn(retryNote, 5000);
-            });
+    private fadeInAndThen(
+        target: GameObjects.GameObject,
+        onComplete: () => void
+    ) {
+        this.tweens.add({
+            targets: [target],
+            ease: "linear",
+            fillAlpha: 0.5,
+            duration: 150,
+            onComplete,
+        });
+    }
+
+    private scribble() {
+        const worldLostText = getWorldLostText(getLevel(this.registry));
+        const fursorger = "— Der Fürsorger —";
+        const halfWidth = this.scale.width / 2;
+        const halfHeight = this.scale.height / 2;
+        const worldLostTextComp = this.add
+            .text(halfWidth, halfHeight - 80, "", TextConfig.xl)
+            .setColor(Color.WhiteSilver)
+            .setOrigin(0.5);
+        this.sound.play("scribbling", { loop: true });
+        typeWriter(worldLostText, worldLostTextComp, () =>
+            this.events.emit("quote-scribbling-finished")
+        );
+
+        this.events.once("quote-scribbling-finished", () => {
+            this.sound.stopByKey("scribbling");
+            const fursorgerText = this.add
+                .text(halfWidth, halfHeight - 40, fursorger, TextConfig.md)
+                .setColor(Color.WhiteSilver)
+                .setOrigin(0.5)
+                .setAlpha(0);
+            const goldenRatio = 0.618;
+            const retryNote = this.add
+                .text(
+                    halfWidth,
+                    this.scale.height * goldenRatio,
+                    "Click anywhere to retry",
+                    TextConfig.sm
+                )
+                .setColor(Color.WhiteSilver)
+                .setOrigin(0.5)
+                .setAlpha(0);
+            this.fadeIn(fursorgerText);
+            this.fadeIn(retryNote, 5000);
         });
     }
 
