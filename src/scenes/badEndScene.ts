@@ -50,13 +50,30 @@ export class BadEndScene extends Scene {
                     .setColor(Color.WhiteSilver)
                     .setOrigin(0.5)
                     .setAlpha(0);
-                this.tweens.add({
-                    targets: [fursorgerText],
-                    ease: "Cubic",
-                    alpha: 1,
-                    duration: 1500,
-                });
+                const goldenRatio = 0.618;
+                const retryNote = this.add
+                    .text(
+                        halfWidth,
+                        this.scale.height * goldenRatio,
+                        "Click anywhere to retry",
+                        TextConfig.sm
+                    )
+                    .setColor(Color.WhiteSilver)
+                    .setOrigin(0.5)
+                    .setAlpha(0);
+                this.fadeIn(fursorgerText);
+                this.fadeIn(retryNote, 5000);
             });
+        });
+    }
+
+    private fadeIn(target: GameObjects.Text, startDelay?: number) {
+        this.tweens.add({
+            targets: [target],
+            ease: "Cubic",
+            delay: startDelay,
+            alpha: 1,
+            duration: 1500,
         });
     }
 

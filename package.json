@@ -55,7 +55,7 @@
         "webpack-dev-server": "3.11.0"
     },
     "dependencies": {
-        "codecov": "^3.7.2",
+        "codecov": "^3.8.1",
         "file-saver": "^2.0.2",
         "graphlib": "^2.1.8",
         "lodash": "^4.17.20",
