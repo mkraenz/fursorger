@@ -24,7 +24,7 @@
         "@types/dat.gui": "^0.7.5",
         "@types/file-saver": "^2.0.1",
         "@types/graphlib": "^2.1.7",
-        "@types/lodash": "^4.14.161",
+        "@types/lodash": "^4.14.167",
         "@types/mocha": "^7.0.2",
         "@types/sinon": "^9.0.10",
         "@types/sinon-chai": "^3.2.4",
