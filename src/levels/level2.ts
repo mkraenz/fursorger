@@ -74,6 +74,9 @@ export const level2: ILevel = {
             ],
         },
     ],
-    player: { stock: 3, location: "Thudor" },
+    player: {
+        stock: 3,
+        location: "Thudor",
+    },
     background: "background",
 };

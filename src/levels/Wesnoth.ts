@@ -61,6 +61,9 @@ export const Wesnoth: ILevel = {
             second: "Careyn",
         },
     ],
-    player: { stock: 3, location: "Elensefar" },
+    player: {
+        stock: 3,
+        location: "Elensefar",
+    },
     background: "map-wesnoth",
 };
