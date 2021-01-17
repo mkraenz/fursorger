@@ -16,6 +16,9 @@ export const tutorialLevel1: ILevel = {
             ],
         },
     ],
-    player: { stock: 1, location: "Copia" },
+    player: {
+        stock: 1,
+        location: "Copia",
+    },
     background: "map-tutorial",
 };
