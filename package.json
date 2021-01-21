@@ -55,7 +55,7 @@
         "webpack-dev-server": "3.11.0"
     },
     "dependencies": {
-        "file-saver": "^2.0.2",
+        "file-saver": "^2.0.5",
         "graphlib": "^2.1.8",
         "lodash": "^4.17.20",
         "phaser": "~3.24.1"
