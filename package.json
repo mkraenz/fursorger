@@ -21,7 +21,7 @@
     },
     "devDependencies": {
         "@types/chai": "^4.2.12",
-        "@types/dat.gui": "^0.7.5",
+        "@types/dat.gui": "^0.7.6",
         "@types/file-saver": "^2.0.1",
         "@types/graphlib": "^2.1.7",
         "@types/lodash": "^4.14.168",
@@ -50,13 +50,13 @@
         "tslint-no-focused-test": "^0.5.0",
         "tslint-plugin-prettier": "^2.3.0",
         "typescript": "~3.9.7",
-        "webpack": "4.45.0",
+        "webpack": "4.46.0",
         "webpack-cli": "3.3.12",
-        "webpack-dev-server": "3.11.0"
+        "webpack-dev-server": "3.11.2"
     },
     "dependencies": {
         "codecov": "^3.8.1",
-        "file-saver": "^2.0.2",
+        "file-saver": "^2.0.5",
         "graphlib": "^2.1.8",
         "lodash": "^4.17.20",
         "phaser": "~3.24.1"
