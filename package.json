@@ -40,7 +40,7 @@
         "phaser-plugin-scene-watcher": "^4.2.0",
         "prettier": "^1.19.1",
         "prettier-tslint": "^0.4.2",
-        "sinon": "^9.2.3",
+        "sinon": "^9.2.4",
         "sinon-chai": "^3.5.0",
         "ts-loader": "8.0.14",
         "ts-node": "^9.1.1",
