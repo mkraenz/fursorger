@@ -20,7 +20,7 @@
         "sanity-check": "npm install && npm run test && npm run dev"
     },
     "devDependencies": {
-        "@types/chai": "^4.2.12",
+        "@types/chai": "^4.2.15",
         "@types/dat.gui": "^0.7.6",
         "@types/file-saver": "^2.0.1",
         "@types/graphlib": "^2.1.7",
