@@ -58,7 +58,7 @@
         "file-saver": "^2.0.5",
         "graphlib": "^2.1.8",
         "lodash": "^4.17.20",
-        "phaser": "~3.24.1"
+        "phaser": "~3.54.0"
     },
     "husky": {
         "hooks": {
