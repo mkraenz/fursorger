@@ -79,7 +79,9 @@ Every branch is automatically deployed to [fursorger-game.herokuapp.com](https:/
 
 See [.travis.yml](.travis.yml).
 
-## External Phaser Resources
+## Resources
+
+### Phaser
 
 - [Phaser 3 Framework](https://github.com/photonstorm/phaser)
 - [Phaser 3 Docs with TypeScript Definition File](https://github.com/photonstorm/phaser3-docs)
@@ -90,8 +92,9 @@ See [.travis.yml](.travis.yml).
 - [Cheat sheets](https://github.com/digitsensitive/phaser3-typescript/blob/master/cheatsheets)
 - [Template Project - Phaser3 with TypeScript](https://github.com/digitsensitive/phaser3-typescript)
 - [RexRainbow Github Phaser 3 plugins and more](https://github.com/rexrainbow/phaser3-rex-notes/tree/master/plugins)
+- [Ease Cheat Sheet](http://lets-gamedev.de/phasereasings/)
 
-## Helpful tools and Resources
+### Tools
 
 - [Pixel Art Maker](http://pixelartmaker.com/)
 - [Leshy SpriteSheet Tool](https://www.leshylabs.com/apps/sstool)
@@ -109,3 +112,8 @@ See [.travis.yml](.travis.yml).
 - [Phaser3 Particle Editor](https://koreezgames.github.io/phaser3-particle-editor/)
 - [jessholland Maps](https://jessholland.artstation.com/projects/ovArq)
 - [Phaser3 Path Builder Plugin](https://github.com/samid737/phaser3-plugin-pathbuilder) (not working with newest Phaser3 version)
+
+## Assets
+
+- [game-icons.net](https://game-icons.net/)
+- <https://itch.io/c/396696/tools>
