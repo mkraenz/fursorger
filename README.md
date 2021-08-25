@@ -112,6 +112,7 @@ See [.travis.yml](.travis.yml).
 - [Phaser3 Particle Editor](https://koreezgames.github.io/phaser3-particle-editor/)
 - [jessholland Maps](https://jessholland.artstation.com/projects/ovArq)
 - [Phaser3 Path Builder Plugin](https://github.com/samid737/phaser3-plugin-pathbuilder) (not working with newest Phaser3 version)
+- [GMXR2 - audio generation tool](https://wubs.itch.io/gmxr2)
 
 ## Assets
 
