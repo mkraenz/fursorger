@@ -7,7 +7,7 @@ const cfg = MainSceneCfg.buildFactory.text;
 
 export class BuildFactoryText extends GameObjects.Text {
     constructor(scene: Scene, private dataSrc: () => number) {
-        super(scene, cfg.x, cfg.y, name, TextConfig.xl);
+        super(scene, cfg.x, cfg.y, "Factories", TextConfig.xl);
         scene.add.existing(this);
         setTextShadow(this);
     }

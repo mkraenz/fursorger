@@ -81,6 +81,6 @@ export class CoveredWagon extends GameObjects.PathFollower {
             repeat: -1,
         };
         this.scene.anims.create(cfg);
-        this.anims.load(key);
+        // this.anims.load(key);
     }
 }

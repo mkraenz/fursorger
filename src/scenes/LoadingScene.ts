@@ -96,7 +96,7 @@ export class LoadingScene extends Scene {
             text: "Loading...",
             style: {
                 font: "30px Metamorphous",
-                fill: Color.White,
+                color: Color.White,
             },
         });
         loadingText.setOrigin(0.5);
@@ -117,7 +117,7 @@ export class LoadingScene extends Scene {
             text: "",
             style: {
                 font: "18px Metamorphous",
-                fill: Color.White,
+                color: Color.White,
             },
         });
         assetText.setOrigin(0.5);
