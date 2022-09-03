@@ -116,7 +116,7 @@ export class ShopContainer extends Phaser.GameObjects.Container {
     }
 
     private addNameText() {
-        const textField = this.scene.add.text(0, 0, this.name, textStyle);
+        const textField = this.scene.add.text(-70, -30, this.name, textStyle);
         this.add(textField);
     }
 
