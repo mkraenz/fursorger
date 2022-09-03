@@ -6,7 +6,9 @@
         "noImplicitReturns": true,
         "noUnusedLocals": false,
         "noUnusedParameters": false,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "build",
+        "skipLibCheck": true
     },
     "exclude": ["node_modules", "build", "scripts", "webpack"],
     "typeRoots": ["./node_modules/@types", "./node_modules/phaser/types"],
