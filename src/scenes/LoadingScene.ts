@@ -138,7 +138,6 @@ export class LoadingScene extends Scene {
             } else {
                 this.scene.add('TitleScene', TitleScene, true);
             }
-            this.scene.remove(this);
         });
     }
 
