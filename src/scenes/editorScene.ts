@@ -6,8 +6,9 @@ import { CityContainer, IEconomyHandlers } from '../components/CityContainer';
 import { DeleteCityButton } from '../components/DeleteCityButton';
 import { DownloadButton } from '../components/DownloadButton';
 import { PlayMyMapButton } from '../components/PlayMyMapButton';
+import { IPricingHandler, ShopContainer } from '../components/ShopContainer';
 import { defaultLevel } from '../levels/defaultLevel';
-import { ICity, ILevel } from '../levels/ILevel';
+import { ICity, ILevel, IShop } from '../levels/ILevel';
 import { Color, toHex } from '../styles/Color';
 import { MainScene } from './mainScene';
 
@@ -17,7 +18,8 @@ const STORED_LEVEL_KEY = 'STORE_EDITOR';
 const DEFAULT_START_ICON_X = 300;
 const DEFAULT_START_ICON_Y = 400;
 export class EditorScene extends Scene {
-    private containerArray!: CityContainer[];
+    private cities!: CityContainer[];
+    private shops!: ShopContainer[];
     private travelPathLines!: GameObjects.Graphics;
     private startIcon!: GameObjects.Image;
     private noStartIconDrag!: boolean;
@@ -37,13 +39,20 @@ export class EditorScene extends Scene {
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: toHex(Color.Black) },
         });
-        this.containerArray = [];
+        this.cities = [];
         this.level.cities.forEach(city => {
             this.addNewCityContainer(false, city);
         });
+        this.shops = [];
+        if (this.level.shops) {
+            this.level.shops.forEach(shop => {
+                this.addNewShopContainer(false, shop);
+            });
+        }
         this.noStartIconDrag = true;
         this.addStartIcon();
         this.addCityCreationButton();
+        this.addShopCreationButton();
         this.addBackpackContainer();
         this.addExportLevelButton();
         this.addBlankLevelButton();
@@ -63,6 +72,18 @@ export class EditorScene extends Scene {
             }
             textField.value = '';
         });
+    }
+    addShopCreationButton() {
+        const creationButton = this.add
+            .image(this.scale.width - 100, this.scale.height - 170, 'plus')
+            .setInteractive();
+
+        creationButton.on('pointerup', () => {
+            this.createShopButtonClicked();
+        });
+    }
+    createShopButtonClicked() {
+        this.addNewShopContainer(true)
     }
 
     public init(): void {
@@ -100,7 +121,7 @@ export class EditorScene extends Scene {
     public update() {
         this.updateEdgeSlopes();
         this.updateEdgeSetting();
-        this.containerArray.forEach(city => city.update());
+        this.cities.forEach(city => city.update());
         if (this.noStartIconDrag) {
             this.moveStartIconToCity(this.level.player.location);
         }
@@ -123,7 +144,7 @@ export class EditorScene extends Scene {
     }
 
     private getActivatedCities() {
-        return this.containerArray.filter(city => city.isChosen());
+        return this.cities.filter(city => city.isChosen());
     }
 
     private addStartIcon() {
@@ -150,14 +171,14 @@ export class EditorScene extends Scene {
     }
 
     private updateStartIconPosition() {
-        this.containerArray.forEach(container => {
+        this.cities.forEach(container => {
             // adjust to size of button which will change size
             const button = container.getAt(0) as GameObjects.Image;
             const width = button.width * button.scaleX;
             const height = button.height * button.scaleY;
             if (
                 Math.abs(container.x - this.getStartIconPoint().x) <
-                    width / 2 &&
+                width / 2 &&
                 Math.abs(container.y - this.getStartIconPoint().y) < height / 2
             ) {
                 this.level.player.location = container.name;
@@ -167,7 +188,7 @@ export class EditorScene extends Scene {
     }
 
     private moveStartIconToCity(startCityName: string) {
-        const startCityContainer = this.containerArray.find(
+        const startCityContainer = this.cities.find(
             container => container.name === startCityName
         );
         if (startCityContainer) {
@@ -206,10 +227,10 @@ export class EditorScene extends Scene {
             lineStyle: { width: 4, color: 0x0 },
         });
         this.level.travelPaths.forEach(path => {
-            const nodeV = this.containerArray.find(
+            const nodeV = this.cities.find(
                 container => path.first === container.name
             );
-            const nodeW = this.containerArray.find(
+            const nodeW = this.cities.find(
                 container => path.second === container.name
             );
             const line = new Phaser.Geom.Line(
@@ -257,7 +278,7 @@ export class EditorScene extends Scene {
             cityInList.x = x;
             cityInList.y = y;
         };
-        this.containerArray.push(
+        this.cities.push(
             new CityContainer(
                 this,
                 city.x,
@@ -272,9 +293,41 @@ export class EditorScene extends Scene {
             )
         );
     }
+    private addNewShopContainer(
+        addToLevel: boolean,
+        shop: IShop = {
+            x: 300,
+            y: 400,
+            name: "Shop",
+            price: 1
+        }
+    ) {
+        if (addToLevel) {
+            this.level.shops = (this.level.shops || []).concat(shop);
+        }
+        const cityInList = this.level.cities.find(
+            container => shop.name === container.name
+        );
+        const onTranslation = (x: number, y: number) => {
+            cityInList.x = x;
+            cityInList.y = y;
+        };
+        this.shops.push(
+            new ShopContainer(
+                this,
+                shop.x,
+                shop.y,
+                shop.name,
+                shop.price,
+                {
+                    addToPrice: () => { },
+                } as IPricingHandler,
+                onTranslation
+            )
+        );
+    }
 
-    private creationButtonClicked() {
-        const containerName = this.containerArray.length.toString();
+    private createCityButtonClicked() {
         this.addNewCityContainer(true);
     }
 
@@ -284,7 +337,7 @@ export class EditorScene extends Scene {
             .setInteractive();
 
         creationButton.on('pointerup', () => {
-            this.creationButtonClicked();
+            this.createCityButtonClicked();
         });
     }
 
@@ -327,7 +380,7 @@ export class EditorScene extends Scene {
 
     private addBlankLevelButton() {
         const deleteCitiesAndPaths = () => {
-            const cityNames = this.containerArray.map(
+            const cityNames = this.cities.map(
                 cityContainer => cityContainer.name
             );
             cityNames.forEach(name => this.removeCity(name));
@@ -337,7 +390,7 @@ export class EditorScene extends Scene {
 
     private addDeleteCityButton() {
         const deleteCityByName = () => {
-            const chosenCity = this.containerArray.find(city =>
+            const chosenCity = this.cities.find(city =>
                 city.isChosen()
             );
             if (chosenCity) {
@@ -354,10 +407,10 @@ export class EditorScene extends Scene {
         this.level.travelPaths = this.level.travelPaths.filter(
             path => path.first !== cityName && path.second !== cityName
         );
-        this.containerArray
+        this.cities
             .find(container => container.name === cityName)
             .destroy();
-        this.containerArray = this.containerArray.filter(
+        this.cities = this.cities.filter(
             container => container.name !== cityName
         );
         if (this.level.player.location === cityName) {
@@ -375,7 +428,7 @@ export class EditorScene extends Scene {
     }
 
     private startCityExists() {
-        return this.containerArray.some(
+        return this.cities.some(
             container => container.name === this.level.player.location
         );
     }
