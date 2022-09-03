@@ -1,23 +1,24 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const level1: ILevel = {
+    name: 'A Slow Decline',
     cities: [
         {
-            name: "Bertl",
+            name: 'Bertl',
             stock: 9,
             production: -1,
             x: 453,
             y: 316,
         },
         {
-            name: "Zismo",
+            name: 'Zismo',
             stock: 10,
             production: -1,
             x: 255,
             y: 682,
         },
         {
-            name: "Seli",
+            name: 'Seli',
             stock: 11,
             production: -1,
             x: 506,
@@ -31,28 +32,28 @@ export const level1: ILevel = {
             y: 637,
         },
         {
-            name: "Norb",
+            name: 'Norb',
             stock: 9,
             production: -1,
             x: 880,
             y: 130,
         },
         {
-            name: "Ot",
+            name: 'Ot',
             stock: 18,
             production: -1,
             x: 952,
             y: 643,
         },
         {
-            name: "Cael",
+            name: 'Cael',
             stock: 35,
             production: -1,
             x: 699,
             y: 476,
         },
         {
-            name: "Alm",
+            name: 'Alm',
             stock: 10,
             production: -1,
             x: 227,
@@ -61,49 +62,49 @@ export const level1: ILevel = {
     ],
     travelPaths: [
         {
-            first: "Ot",
-            second: "Bertl",
+            first: 'Ot',
+            second: 'Bertl',
         },
         {
-            first: "Seli",
-            second: "Norb",
+            first: 'Seli',
+            second: 'Norb',
         },
         {
-            first: "Seli",
-            second: "Cael",
+            first: 'Seli',
+            second: 'Cael',
         },
         {
-            first: "Cael",
+            first: 'Cael',
             second: "K'hrom",
         },
         {
-            first: "Zismo",
-            second: "Alm",
+            first: 'Zismo',
+            second: 'Alm',
         },
         {
-            first: "Ot",
-            second: "Norb",
+            first: 'Ot',
+            second: 'Norb',
         },
         {
-            first: "Zismo",
+            first: 'Zismo',
             second: "K'hrom",
         },
         {
-            first: "Bertl",
-            second: "Cael",
+            first: 'Bertl',
+            second: 'Cael',
         },
         {
-            first: "Bertl",
-            second: "Alm",
+            first: 'Bertl',
+            second: 'Alm',
         },
         {
-            first: "Ot",
-            second: "Cael",
+            first: 'Ot',
+            second: 'Cael',
         },
     ],
     player: {
         stock: 0,
-        location: "Alm",
+        location: 'Alm',
     },
-    background: "background2",
+    background: 'background2',
 };
