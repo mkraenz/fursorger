@@ -2,10 +2,10 @@ import { GameObjects, Scene } from 'phaser';
 import { DEV } from '../dev-config';
 import { Color, toHex } from '../styles/Color';
 import { setDefaultTextStyle, TextConfig } from '../styles/Text';
-import { CreditsScene } from './CreditsScene';
 import { EditorScene } from './editorScene';
 import { GoodEndScene } from './GoodEndScene';
 import { MainScene } from './mainScene';
+import { CreditsScene } from './title/CreditsScene';
 import { TitleScene } from './TitleScene';
 
 export class LoadingScene extends Scene {
@@ -97,7 +97,7 @@ export class LoadingScene extends Scene {
             y: this.halfHeight - 50,
             text: 'Loading...',
             style: {
-                font: "30px Metamorphous",
+                font: '30px Metamorphous',
                 color: Color.White,
             },
         });
@@ -118,7 +118,7 @@ export class LoadingScene extends Scene {
             y: this.halfHeight + 65,
             text: '',
             style: {
-                font: "18px Metamorphous",
+                font: '18px Metamorphous',
                 color: Color.White,
             },
         });
