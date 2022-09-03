@@ -7,16 +7,9 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "lint:fix": "npm run lint:type-check && npm run lint:tslint:fix && npm run lint:prettier:fix",
         "lint:type-check": "tsc --noEmit",
-        "lint:tslint": "tslint --project .",
-        "lint:tslint:fix": "npm run lint:tslint --fix",
         "lint:prettier:fix": "prettier --write \"**/*.{graphql,json,md,yaml,yml}\"",
-        "test": "mocha",
-        "test:coverage": "nyc mocha",
-        "test:watch": "mocha --watch --watch-extensions ts",
-        "test:debug": "mocha --inspect-brk",
-        "sanity-check": "npm install && npm run test && npm run dev"
+        "sanity-check": "npm install && npm run dev"
     },
     "devDependencies": {
         "@types/chai": "^4.2.12",
