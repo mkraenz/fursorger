@@ -20,10 +20,10 @@ const PRICE_Y = 60;
 const BUTTON_X = 100;
 const NAME_TEXT_TO_BUTTON_OFFSET = 20;
 const MAIN_BUTTON_INDEX = 0;
-const PRICE_TEXT_INDEX = 1;
-const PRICE_PLUS_INDEX = 2;
-const PRICE_MINUS_INDEX = 3;
-const NAME_TEXT_INDEX = 4;
+const PRICE_TEXT_INDEX = 2;
+const PRICE_PLUS_INDEX = 3;
+const PRICE_MINUS_INDEX = 4;
+const NAME_TEXT_INDEX = 5;
 export class ShopContainer extends Phaser.GameObjects.Container {
     public state: stateColors;
     private onTranslation: (x: number, y: number) => void;
@@ -172,6 +172,7 @@ export class ShopContainer extends Phaser.GameObjects.Container {
 
     private updateTextAndButton() {
         const priceText = this.getAt(PRICE_TEXT_INDEX) as GameObjects.Text;
+
         priceText.setText(this.price.toString());
         const nameText = this.getAt(NAME_TEXT_INDEX) as GameObjects.Text;
         nameText.setText(this.name);
