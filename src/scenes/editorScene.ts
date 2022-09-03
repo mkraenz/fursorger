@@ -63,7 +63,7 @@ export class EditorScene extends Scene {
         textField.id = 'text';
         this.add.dom(100, 50, textField);
         textField.addEventListener('change', () => {
-            const focusedCity = this.getActivatedCities()[0];
+            const focusedCity = this.getActivatedBuildings()[0];
             // TODO: Add user notification for case that second condition is not fulfilled!
             if (focusedCity && this.noCityHasThisName(textField.value)) {
                 const oldContainerName = focusedCity.name;
@@ -99,6 +99,10 @@ export class EditorScene extends Scene {
         }
     }
 
+    private buildings(){
+        return {logic:[...this.cities,...this.shops],display:[...this.cities,...this.shops]}
+    }
+
     public adjustLevelToNameChange(oldName: string, newName: string) {
         this.level.travelPaths.forEach(path => {
             if (path.first === oldName) {
@@ -108,9 +112,9 @@ export class EditorScene extends Scene {
                 path.second = newName;
             }
         });
-        this.level.cities.forEach(city => {
-            if (city.name === oldName) {
-                city.name = newName;
+        this.buildings().logic.forEach(building => {
+            if (building.name === oldName) {
+                building.name = newName;
             }
         });
         if (this.level.player.location === oldName) {
@@ -122,19 +126,20 @@ export class EditorScene extends Scene {
         this.updateEdgeSlopes();
         this.updateEdgeSetting();
         this.cities.forEach(city => city.update());
+        this.shops.forEach(shop => shop.update());
         if (this.noStartIconDrag) {
             this.moveStartIconToCity(this.level.player.location);
         }
     }
 
     private updateEdgeSetting() {
-        const activatedCities = this.getActivatedCities();
-        if (activatedCities.length === 2) {
-            activatedCities[0].deactivate();
-            activatedCities[1].deactivate();
+        const activatedBuildings = this.getActivatedBuildings();
+        if (activatedBuildings.length === 2) {
+            activatedBuildings[0].deactivate();
+            activatedBuildings[1].deactivate();
             this.redrawEdgesAfterContainerClick({
-                container: activatedCities[0],
-                otherContainer: activatedCities[1],
+                container: activatedBuildings[0],
+                otherContainer: activatedBuildings[1],
             });
         }
     }
@@ -143,8 +148,8 @@ export class EditorScene extends Scene {
         return !this.level.cities.some(city => city.name === name);
     }
 
-    private getActivatedCities() {
-        return this.cities.filter(city => city.isChosen());
+    private getActivatedBuildings() {
+        return this.buildings().display.filter(building => building.isChosen());
     }
 
     private addStartIcon() {
@@ -227,10 +232,10 @@ export class EditorScene extends Scene {
             lineStyle: { width: 4, color: 0x0 },
         });
         this.level.travelPaths.forEach(path => {
-            const nodeV = this.cities.find(
+            const nodeV = this.buildings().display.find(
                 container => path.first === container.name
             );
-            const nodeW = this.cities.find(
+            const nodeW = this.buildings().display.find(
                 container => path.second === container.name
             );
             const line = new Phaser.Geom.Line(
@@ -305,12 +310,15 @@ export class EditorScene extends Scene {
         if (addToLevel) {
             this.level.shops = (this.level.shops || []).concat(shop);
         }
-        const cityInList = this.level.cities.find(
+        if(!this.level.shops){
+           throw new Error("Shops are undefined. Do you need to add the shop?");
+        }
+        const shopInList = this.level.shops.find(
             container => shop.name === container.name
         );
         const onTranslation = (x: number, y: number) => {
-            cityInList.x = x;
-            cityInList.y = y;
+            shopInList.x = x;
+            shopInList.y = y;
         };
         this.shops.push(
             new ShopContainer(
@@ -341,12 +349,12 @@ export class EditorScene extends Scene {
         });
     }
 
-    private redrawEdgesAfterContainerClick(cityPair: {
-        container: CityContainer;
-        otherContainer: CityContainer;
+    private redrawEdgesAfterContainerClick(selected: {
+        container: CityContainer|ShopContainer;
+        otherContainer: CityContainer|ShopContainer;
     }) {
-        const firstName = cityPair.container.name;
-        const secondName = cityPair.otherContainer.name;
+        const firstName = selected.container.name;
+        const secondName = selected.otherContainer.name;
 
         if (!this.deletePath(firstName, secondName)) {
             this.level.travelPaths.push({
