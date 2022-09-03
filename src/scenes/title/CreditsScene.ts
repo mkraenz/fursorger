@@ -17,11 +17,7 @@ export class CreditsScene extends Scene {
             this.shuttingDown = true;
             this.handleCreditEnd();
         });
-        this.events.on('wake', () => {
-            console.log('wake');
-
-            this.scene.restart();
-        });
+        this.events.on('wake', () => this.scene.restart());
     }
 
     private stopEventPropagationToOtherScenes() {
@@ -30,7 +26,6 @@ export class CreditsScene extends Scene {
         );
     }
     private handleCreditEnd() {
-        console.log('handleCreditEnd');
         this.input.removeListener('pointerup');
         this.switchWithinTitleScene('MainMenuScene');
     }
