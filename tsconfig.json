@@ -10,7 +10,5 @@
         "outDir": "build",
         "skipLibCheck": true
     },
-    "exclude": ["node_modules", "build", "scripts", "webpack"],
-    "typeRoots": ["./node_modules/@types", "./node_modules/phaser/types"],
-    "types": ["phaser"]
+    "exclude": ["node_modules", "build"]
 }
