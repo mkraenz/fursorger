@@ -94,7 +94,6 @@ export class TitleScene extends Scene {
                     targets: this.backgroundSound,
                     volume: 0,
                     duration: 2000,
-                    onComplete: () => this.scene.remove(this),
                 });
                 this.scene.add(key, sceneClass, true);
             });
