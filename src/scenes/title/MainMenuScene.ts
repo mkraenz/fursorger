@@ -26,7 +26,7 @@ export class MainMenuScene extends Scene {
         this.add.text(
             10,
             this.scale.height - 20,
-            'v0.43.0',
+            'v0.43.1',
             TextConfig.version
         );
 
