@@ -1,6 +1,6 @@
-import { GameObjects, Scene } from "phaser";
-import { Color } from "../styles/Color";
-import { TextConfig } from "../styles/Text";
+import { GameObjects, Scene } from 'phaser';
+import { Color } from '../styles/Color';
+import { TextConfig } from '../styles/Text';
 
 const cfg = {
     startY: 675,

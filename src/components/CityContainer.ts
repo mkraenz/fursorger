@@ -75,13 +75,12 @@ export class CityContainer extends Phaser.GameObjects.Container {
     }
 
     public update() {
-        (this.getFirst(
-            'name',
-            'mainButton'
-        ) as Phaser.GameObjects.Image).setTint(toHex(this.state));
+        (
+            this.getFirst('name', 'mainButton') as Phaser.GameObjects.Image
+        ).setTint(toHex(this.state));
         this.updateTextAndButton();
 
-        (this.getButtons() as GameObjects.Image[]).forEach(button => {
+        (this.getButtons() as GameObjects.Image[]).forEach((button) => {
             button.setVisible(this.state !== stateColors.default);
         });
     }

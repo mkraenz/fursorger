@@ -1,8 +1,8 @@
-import { GameObjects, Scene } from "phaser";
-import { CityState } from "./City";
-import { CityImage, CityImageState } from "./CityImage";
-import { NameDisplay } from "./NameDisplay";
-import { PlusMinusButton } from "./PlusMinusButton";
+import { GameObjects, Scene } from 'phaser';
+import { CityState } from './City';
+import { CityImage, CityImageState } from './CityImage';
+import { NameDisplay } from './NameDisplay';
+import { PlusMinusButton } from './PlusMinusButton';
 
 export class Shop extends GameObjects.Container {
     public state = CityState.Base;

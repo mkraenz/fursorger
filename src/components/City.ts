@@ -1,9 +1,9 @@
-import { GameObjects, Scene } from "phaser";
-import { CityImage, CityImageState } from "./CityImage";
-import { CityProductionDisplay } from "./CityProductionDisplay";
-import { CityStockDisplay } from "./CityStockDisplay";
-import { NameDisplay } from "./NameDisplay";
-import { PlusMinusButton } from "./PlusMinusButton";
+import { GameObjects, Scene } from 'phaser';
+import { CityImage, CityImageState } from './CityImage';
+import { CityProductionDisplay } from './CityProductionDisplay';
+import { CityStockDisplay } from './CityStockDisplay';
+import { NameDisplay } from './NameDisplay';
+import { PlusMinusButton } from './PlusMinusButton';
 
 export enum CityState {
     Base,

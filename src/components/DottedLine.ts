@@ -1,5 +1,5 @@
-import { GameObjects, Geom, Scene } from "phaser";
-import { Color, toHex } from "../styles/Color";
+import { GameObjects, Geom, Scene } from 'phaser';
+import { Color, toHex } from '../styles/Color';
 
 interface IPoint {
     x: number;
@@ -8,7 +8,7 @@ interface IPoint {
 
 export class DottedLine extends GameObjects.GameObject {
     constructor(scene: Scene, private start: IPoint, private end: IPoint) {
-        super(scene, "DottedLine");
+        super(scene, 'DottedLine');
         this.draw();
     }
 

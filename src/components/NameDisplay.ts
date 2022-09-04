@@ -1,6 +1,6 @@
-import { GameObjects, Scene } from "phaser";
-import { setTextShadow } from "../styles/setTextShadow";
-import { TextConfig } from "../styles/Text";
+import { GameObjects, Scene } from 'phaser';
+import { setTextShadow } from '../styles/setTextShadow';
+import { TextConfig } from '../styles/Text';
 
 export class NameDisplay extends GameObjects.Text {
     constructor(scene: Scene, name: string) {

@@ -1,19 +1,19 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const level2: ILevel = {
-    name: "Mountains and Cliffs",
+    name: 'Mountains and Cliffs',
     cities: [
-        { name: "Thudor", stock: 9, production: -1, x: 265, y: 619 },
-        { name: "Ustrela", stock: 6, production: -1, x: 520, y: 655 },
-        { name: "Wesnain", stock: 7, production: -1, x: 925, y: 251 },
-        { name: "Ablesh", stock: 8, production: -1, x: 811, y: 395 },
-        { name: "Eflar", stock: 0, production: 1, x: 540, y: 282 },
-        { name: "Iechein", stock: 6, production: -1, x: 98, y: 70 },
+        { name: 'Thudor', stock: 9, production: -1, x: 265, y: 619 },
+        { name: 'Ustrela', stock: 6, production: -1, x: 520, y: 655 },
+        { name: 'Wesnain', stock: 7, production: -1, x: 925, y: 251 },
+        { name: 'Ablesh', stock: 8, production: -1, x: 811, y: 395 },
+        { name: 'Eflar', stock: 0, production: 1, x: 540, y: 282 },
+        { name: 'Iechein', stock: 6, production: -1, x: 98, y: 70 },
     ],
     travelPaths: [
         {
-            first: "Thudor",
-            second: "Ustrela",
+            first: 'Thudor',
+            second: 'Ustrela',
             points: [
                 { x: 520, y: 655 },
                 { x: 384, y: 610 },
@@ -22,8 +22,8 @@ export const level2: ILevel = {
             ],
         },
         {
-            first: "Thudor",
-            second: "Eflar",
+            first: 'Thudor',
+            second: 'Eflar',
             points: [
                 { x: 540, y: 282 },
                 { x: 465, y: 290 },
@@ -32,8 +32,8 @@ export const level2: ILevel = {
             ],
         },
         {
-            first: "Ablesh",
-            second: "Wesnain",
+            first: 'Ablesh',
+            second: 'Wesnain',
             points: [
                 { x: 925, y: 251 },
                 { x: 885, y: 278 },
@@ -42,8 +42,8 @@ export const level2: ILevel = {
             ],
         },
         {
-            first: "Ustrela",
-            second: "Ablesh",
+            first: 'Ustrela',
+            second: 'Ablesh',
             points: [
                 { x: 811, y: 395 },
                 { x: 897, y: 456 },
@@ -53,8 +53,8 @@ export const level2: ILevel = {
             ],
         },
         {
-            first: "Ablesh",
-            second: "Eflar",
+            first: 'Ablesh',
+            second: 'Eflar',
             points: [
                 { x: 540, y: 282 },
                 { x: 580, y: 407 },
@@ -65,8 +65,8 @@ export const level2: ILevel = {
             ],
         },
         {
-            first: "Iechein",
-            second: "Eflar",
+            first: 'Iechein',
+            second: 'Eflar',
             points: [
                 { x: 540, y: 282 },
                 { x: 465, y: 290 },
@@ -76,7 +76,7 @@ export const level2: ILevel = {
     ],
     player: {
         stock: 3,
-        location: "Thudor",
+        location: 'Thudor',
     },
-    background: "background",
+    background: 'background',
 };

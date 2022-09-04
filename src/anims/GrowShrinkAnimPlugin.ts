@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects, Scene } from 'phaser';
 
 enum State {
     pointerover,
@@ -26,7 +26,7 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
             parent?: GameObjects.Image;
         }
     ) {
-        super(scene, "GrowShrinkAnimPlugin");
+        super(scene, 'GrowShrinkAnimPlugin');
         scene.add.existing(this);
         const maxRelativeScale = cfg?.maxRelativeScale || 1.25;
         this.speed = cfg?.speed || 2.3;
@@ -35,11 +35,11 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
         this.baseScale = this.target.scale;
         this.maxScale = this.baseScale * maxRelativeScale;
         if (cfg?.parent) {
-            cfg.parent.on("pointerout", () => this.setPointerOutState());
-            cfg.parent.on("pointerover", () => this.setPointerOverState());
+            cfg.parent.on('pointerout', () => this.setPointerOutState());
+            cfg.parent.on('pointerover', () => this.setPointerOverState());
         } else {
-            this.target.on("pointerout", () => this.setPointerOutState());
-            this.target.on("pointerover", () => this.setPointerOverState());
+            this.target.on('pointerout', () => this.setPointerOutState());
+            this.target.on('pointerover', () => this.setPointerOverState());
         }
     }
 
@@ -81,7 +81,7 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
         this.state = State.pointerout;
         if (this.debug) {
             // tslint:disable-next-line: no-console
-            console.log("pointerout");
+            console.log('pointerout');
         }
     }
 
@@ -97,7 +97,7 @@ export class GrowShrinkAnimPlugin extends GameObjects.GameObject {
 
         if (this.debug) {
             // tslint:disable-next-line: no-console
-            console.log("pointerover");
+            console.log('pointerover');
         }
     }
 }
