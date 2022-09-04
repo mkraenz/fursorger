@@ -32,10 +32,10 @@ export class PathAnimator {
         }
         const allPaths = this.currentLevel.travelPaths;
         const rightDirection = allPaths.find(
-            p => p.first === currentLocation && p.second === nextLocation
+            (p) => p.first === currentLocation && p.second === nextLocation
         );
         const reverseDirection = allPaths.find(
-            p => p.second === currentLocation && p.first === nextLocation
+            (p) => p.second === currentLocation && p.first === nextLocation
         );
         const isReverse = !!reverseDirection;
         const path = cloneDeep(rightDirection || reverseDirection);
@@ -70,7 +70,7 @@ export class PathAnimator {
     }
 
     private showTravelPaths() {
-        this.currentLevel.travelPaths.forEach(path => {
+        this.currentLevel.travelPaths.forEach((path) => {
             if (path.points?.length === 0) {
                 return;
             }

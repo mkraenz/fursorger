@@ -72,7 +72,7 @@ export class MainScene extends Scene {
         this.addBalloons();
         this.pathAnimator = new PathAnimator(this, this.currentLevel);
         this.currentLevel.secrets?.forEach(
-            secretData => new Secret(this, secretData)
+            (secretData) => new Secret(this, secretData)
         );
     }
 
@@ -89,15 +89,17 @@ export class MainScene extends Scene {
     }
 
     private addBalloons() {
-        this.graph.edges().forEach(edge => {
+        this.graph.edges().forEach((edge) => {
             this.addBalloonForEdge(edge.v, edge.w);
         });
     }
 
     private addBalloonForEdge(startCityName: string, targetCityName: string) {
         const allNodes = getNodes(this.graph);
-        const startCity = allNodes.find(city => city.name === startCityName);
-        const targetCity = allNodes.find(city => city.name === targetCityName);
+        const startCity = allNodes.find((city) => city.name === startCityName);
+        const targetCity = allNodes.find(
+            (city) => city.name === targetCityName
+        );
         new Balloon(this, startCity, targetCity);
         new DottedLine(this, startCity, targetCity);
     }
@@ -142,14 +144,14 @@ export class MainScene extends Scene {
 
     private isWin() {
         const endangeredCities = getAllCities(this.graph).filter(
-            city => city.production < 0
+            (city) => city.production < 0
         );
         return endangeredCities.length === 0 && !DEV.winDisabled;
     }
 
     private addCities(cities: ICity[]) {
         this.cities = [];
-        cities.forEach(cityData => {
+        cities.forEach((cityData) => {
             const city = this.addCity(cityData);
             this.cities.push(city);
             this.setOnNodeClick(city.name, city.citySprite);
@@ -229,7 +231,7 @@ export class MainScene extends Scene {
             nextLocation.name
         );
         this.player.move(nextLocation);
-        this.cities.forEach(cont => {
+        this.cities.forEach((cont) => {
             const consumCity = getNode(this.graph, cont.name) as LogicCity;
             consumCity.consumeOrProduce();
             if (consumCity.stock < 0 && !DEV.loseDisabled) {
@@ -237,12 +239,12 @@ export class MainScene extends Scene {
             }
         });
         this.setNodesStates();
-        this.cities.forEach(city => addProductionAnim(this, city));
+        this.cities.forEach((city) => addProductionAnim(this, city));
     }
 
     private setNodesStates() {
         const nodes = [...this.cities, ...this.shops];
-        nodes.forEach(node => {
+        nodes.forEach((node) => {
             const playerInNeighboringCity = this.graph.hasEdge(
                 this.player.locationName,
                 node.name

@@ -21,7 +21,7 @@ export class CreditsScene extends Scene {
     }
 
     private stopEventPropagationToOtherScenes() {
-        Object.values(Input.Events).forEach(e =>
+        Object.values(Input.Events).forEach((e) =>
             this.input.on(e, () => this.input.stopPropagation())
         );
     }
@@ -87,18 +87,15 @@ const credits = [
     { text: 'Icon made by roundicons from www.flaticon.com' },
     { text: '' },
     {
-        text:
-            'Font Metamorphous Copyright (c) 2011 by Sorkin Type Co\n(www.sorkintype.com) under SIL OFL 1.1',
+        text: 'Font Metamorphous Copyright (c) 2011 by Sorkin Type Co\n(www.sorkintype.com) under SIL OFL 1.1',
     },
     { text: '' },
     {
-        text:
-            'Font IMFellEnglishSC Copyright (c) 2010, Igino Marini\n(mail@iginomarini.com) under SIL OFL 1.1',
+        text: 'Font IMFellEnglishSC Copyright (c) 2010, Igino Marini\n(mail@iginomarini.com) under SIL OFL 1.1',
     },
     { text: '' },
     {
-        text:
-            'SIL OFL 1.1 available at\nhttps://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web',
+        text: 'SIL OFL 1.1 available at\nhttps://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web',
     },
     { text: '' },
     { text: '' },

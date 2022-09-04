@@ -1,31 +1,31 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const Witcher: ILevel = {
     name: "Witcher's Winter",
     cities: [
         {
-            name: "Eate",
+            name: 'Eate',
             stock: 3,
             production: 3,
             x: 876,
             y: 367,
         },
         {
-            name: "Velen",
+            name: 'Velen',
             stock: 6,
             production: -1,
             x: 503,
             y: 134,
         },
         {
-            name: "Birke",
+            name: 'Birke',
             stock: 7,
             production: -1,
             x: 648,
             y: 631,
         },
         {
-            name: "Vaerne",
+            name: 'Vaerne',
             stock: 21,
             production: -4,
             x: 195,
@@ -34,7 +34,7 @@ export const Witcher: ILevel = {
     ],
     shops: [
         {
-            name: "Belleteyn",
+            name: 'Belleteyn',
             price: 3,
             x: 458,
             y: 700,
@@ -42,33 +42,33 @@ export const Witcher: ILevel = {
     ],
     travelPaths: [
         {
-            first: "Birke",
-            second: "Belleteyn",
+            first: 'Birke',
+            second: 'Belleteyn',
         },
         {
-            first: "Eate",
-            second: "Velen",
+            first: 'Eate',
+            second: 'Velen',
         },
         {
-            first: "Birke",
-            second: "Eate",
+            first: 'Birke',
+            second: 'Eate',
         },
         {
-            first: "Birke",
-            second: "Velen",
+            first: 'Birke',
+            second: 'Velen',
         },
         {
-            first: "Vaerne",
-            second: "Birke",
+            first: 'Vaerne',
+            second: 'Birke',
         },
         {
-            first: "Vaerne",
-            second: "Velen",
+            first: 'Vaerne',
+            second: 'Velen',
         },
     ],
     player: {
         stock: 3,
-        location: "Eate",
+        location: 'Eate',
     },
-    background: "background2",
+    background: 'background2',
 };

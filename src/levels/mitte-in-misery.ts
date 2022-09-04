@@ -1,31 +1,31 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const levelMitteInMisery: ILevel = {
-    name: "Mitte in Misery",
+    name: 'Mitte in Misery',
     cities: [
         {
-            name: "Mitte",
+            name: 'Mitte',
             stock: 60,
             production: -4,
             x: 400,
             y: 250,
         },
         {
-            name: "Lichtenrade",
+            name: 'Lichtenrade',
             stock: 6,
             production: -1,
             x: 420,
             y: 400,
         },
         {
-            name: "Potsdam",
+            name: 'Potsdam',
             stock: 7,
             production: -1,
             x: 190,
             y: 492,
         },
         {
-            name: "Spandau",
+            name: 'Spandau',
             stock: 8,
             production: -1,
             x: 150,
@@ -34,25 +34,25 @@ export const levelMitteInMisery: ILevel = {
     ],
     travelPaths: [
         {
-            first: "Mitte",
-            second: "Lichtenrade",
+            first: 'Mitte',
+            second: 'Lichtenrade',
         },
         {
-            first: "Mitte",
-            second: "Potsdam",
+            first: 'Mitte',
+            second: 'Potsdam',
         },
         {
-            first: "Mitte",
-            second: "Mitte",
+            first: 'Mitte',
+            second: 'Mitte',
         },
         {
-            first: "Mitte",
-            second: "Spandau",
+            first: 'Mitte',
+            second: 'Spandau',
         },
     ],
     player: {
         stock: 3,
-        location: "Mitte",
+        location: 'Mitte',
     },
-    background: "background2",
+    background: 'background2',
 };

@@ -1,5 +1,5 @@
-import { GameObjects, Scene } from "phaser";
-import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
+import { GameObjects, Scene } from 'phaser';
+import { GrowShrinkAnimPlugin } from '../anims/GrowShrinkAnimPlugin';
 
 export enum CityImageState {
     Base,
@@ -8,8 +8,8 @@ export enum CityImageState {
 }
 
 export enum NodeName {
-    City = "city",
-    Shop = "shop",
+    City = 'city',
+    Shop = 'shop',
 }
 
 export class CityImage extends GameObjects.Image {

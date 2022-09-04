@@ -1,6 +1,6 @@
-import { GameObjects, Scene } from "phaser";
-import { ISecret } from "../levels/ILevel";
-import { Color, toHex } from "../styles/Color";
+import { GameObjects, Scene } from 'phaser';
+import { ISecret } from '../levels/ILevel';
+import { Color, toHex } from '../styles/Color';
 
 export class Secret extends GameObjects.Rectangle {
     constructor(
@@ -10,17 +10,17 @@ export class Secret extends GameObjects.Rectangle {
         super(scene, centerX, centerY, width, height, toHex(Color.White), 0.1);
         scene.add.existing(this);
         this.setVisible(false);
-        const storyText = scene.add.text(centerX, centerY, "");
+        const storyText = scene.add.text(centerX, centerY, '');
         this.setInteractive();
         this.input.alwaysEnabled = true;
-        this.on("pointerover", () => {
+        this.on('pointerover', () => {
             this.setVisible(true);
         });
-        this.on("pointerout", () => {
+        this.on('pointerout', () => {
             this.setVisible(false);
-            storyText.setText("");
+            storyText.setText('');
         });
-        this.on("pointerup", () => {
+        this.on('pointerup', () => {
             storyText.setText(text);
         });
     }

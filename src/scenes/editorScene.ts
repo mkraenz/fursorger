@@ -40,12 +40,12 @@ export class EditorScene extends Scene {
             lineStyle: { width: 4, color: toHex(Color.Black) },
         });
         this.cities = [];
-        this.level.cities.forEach(city => {
+        this.level.cities.forEach((city) => {
             this.addNewCityContainer(false, city);
         });
         this.shops = [];
         if (this.level.shops) {
-            this.level.shops.forEach(shop => {
+            this.level.shops.forEach((shop) => {
                 this.addNewShopContainer(false, shop);
             });
         }
@@ -83,7 +83,7 @@ export class EditorScene extends Scene {
         });
     }
     createShopButtonClicked() {
-        this.addNewShopContainer(true)
+        this.addNewShopContainer(true);
     }
 
     public init(): void {
@@ -99,12 +99,15 @@ export class EditorScene extends Scene {
         }
     }
 
-    private buildings(){
-        return {logic:[...this.cities,...this.shops],display:[...this.cities,...this.shops]}
+    private buildings() {
+        return {
+            logic: [...this.cities, ...this.shops],
+            display: [...this.cities, ...this.shops],
+        };
     }
 
     public adjustLevelToNameChange(oldName: string, newName: string) {
-        this.level.travelPaths.forEach(path => {
+        this.level.travelPaths.forEach((path) => {
             if (path.first === oldName) {
                 path.first = newName;
             }
@@ -112,7 +115,7 @@ export class EditorScene extends Scene {
                 path.second = newName;
             }
         });
-        this.buildings().logic.forEach(building => {
+        this.buildings().logic.forEach((building) => {
             if (building.name === oldName) {
                 building.name = newName;
             }
@@ -125,8 +128,8 @@ export class EditorScene extends Scene {
     public update() {
         this.updateEdgeSlopes();
         this.updateEdgeSetting();
-        this.cities.forEach(city => city.update());
-        this.shops.forEach(shop => shop.update());
+        this.cities.forEach((city) => city.update());
+        this.shops.forEach((shop) => shop.update());
         if (this.noStartIconDrag) {
             this.moveStartIconToCity(this.level.player.location);
         }
@@ -145,11 +148,13 @@ export class EditorScene extends Scene {
     }
 
     private noCityHasThisName(name: string) {
-        return !this.level.cities.some(city => city.name === name);
+        return !this.level.cities.some((city) => city.name === name);
     }
 
     private getActivatedBuildings() {
-        return this.buildings().display.filter(building => building.isChosen());
+        return this.buildings().display.filter((building) =>
+            building.isChosen()
+        );
     }
 
     private addStartIcon() {
@@ -176,14 +181,14 @@ export class EditorScene extends Scene {
     }
 
     private updateStartIconPosition() {
-        this.cities.forEach(container => {
+        this.cities.forEach((container) => {
             // adjust to size of button which will change size
             const button = container.getAt(0) as GameObjects.Image;
             const width = button.width * button.scaleX;
             const height = button.height * button.scaleY;
             if (
                 Math.abs(container.x - this.getStartIconPoint().x) <
-                width / 2 &&
+                    width / 2 &&
                 Math.abs(container.y - this.getStartIconPoint().y) < height / 2
             ) {
                 this.level.player.location = container.name;
@@ -194,7 +199,7 @@ export class EditorScene extends Scene {
 
     private moveStartIconToCity(startCityName: string) {
         const startCityContainer = this.cities.find(
-            container => container.name === startCityName
+            (container) => container.name === startCityName
         );
         if (startCityContainer) {
             this.startIcon.x = startCityContainer.x - 50;
@@ -231,12 +236,12 @@ export class EditorScene extends Scene {
         this.travelPathLines = this.add.graphics({
             lineStyle: { width: 4, color: 0x0 },
         });
-        this.level.travelPaths.forEach(path => {
+        this.level.travelPaths.forEach((path) => {
             const nodeV = this.buildings().display.find(
-                container => path.first === container.name
+                (container) => path.first === container.name
             );
             const nodeW = this.buildings().display.find(
-                container => path.second === container.name
+                (container) => path.second === container.name
             );
             const line = new Phaser.Geom.Line(
                 nodeV.x,
@@ -253,7 +258,7 @@ export class EditorScene extends Scene {
         const possibleNames = new Array(numberOfCities + 1)
             .fill(1)
             .map((entry, index) => index.toString());
-        return possibleNames.find(name => this.noCityHasThisName(name));
+        return possibleNames.find((name) => this.noCityHasThisName(name));
     }
 
     private addNewCityContainer(
@@ -270,7 +275,7 @@ export class EditorScene extends Scene {
             this.level.cities.push(city);
         }
         const cityInList = this.level.cities.find(
-            container => city.name === container.name
+            (container) => city.name === container.name
         );
         const newEconomy = { stock: city.stock, production: city.production };
         const stockAdd = (summand: number) => {
@@ -303,18 +308,20 @@ export class EditorScene extends Scene {
         shop: IShop = {
             x: 300,
             y: 400,
-            name: "Shop",
-            price: 1
+            name: 'Shop',
+            price: 1,
         }
     ) {
         if (addToLevel) {
             this.level.shops = (this.level.shops || []).concat(shop);
         }
-        if(!this.level.shops){
-           throw new Error("Shops are undefined. Do you need to add the shop?");
+        if (!this.level.shops) {
+            throw new Error(
+                'Shops are undefined. Do you need to add the shop?'
+            );
         }
         const shopInList = this.level.shops.find(
-            container => shop.name === container.name
+            (container) => shop.name === container.name
         );
         const onTranslation = (x: number, y: number) => {
             shopInList.x = x;
@@ -328,7 +335,7 @@ export class EditorScene extends Scene {
                 shop.name,
                 shop.price,
                 {
-                    addToPrice: () => { },
+                    addToPrice: () => {},
                 } as IPricingHandler,
                 onTranslation
             )
@@ -350,8 +357,8 @@ export class EditorScene extends Scene {
     }
 
     private redrawEdgesAfterContainerClick(selected: {
-        container: CityContainer|ShopContainer;
-        otherContainer: CityContainer|ShopContainer;
+        container: CityContainer | ShopContainer;
+        otherContainer: CityContainer | ShopContainer;
     }) {
         const firstName = selected.container.name;
         const secondName = selected.otherContainer.name;
@@ -367,7 +374,7 @@ export class EditorScene extends Scene {
     private deletePath(firstName: string, secondName: string) {
         const oldNumberOfPaths = this.level.travelPaths.length;
         const remainingPaths = this.level.travelPaths.filter(
-            path =>
+            (path) =>
                 (path.first !== firstName || path.second !== secondName) &&
                 (path.first !== secondName || path.second !== firstName)
         );
@@ -389,18 +396,16 @@ export class EditorScene extends Scene {
     private addBlankLevelButton() {
         const deleteCitiesAndPaths = () => {
             const cityNames = this.cities.map(
-                cityContainer => cityContainer.name
+                (cityContainer) => cityContainer.name
             );
-            cityNames.forEach(name => this.removeCity(name));
+            cityNames.forEach((name) => this.removeCity(name));
         };
         BlancLevelButton(this, deleteCitiesAndPaths);
     }
 
     private addDeleteCityButton() {
         const deleteCityByName = () => {
-            const chosenCity = this.cities.find(city =>
-                city.isChosen()
-            );
+            const chosenCity = this.cities.find((city) => city.isChosen());
             if (chosenCity) {
                 this.removeCity(chosenCity.name);
             }
@@ -410,16 +415,14 @@ export class EditorScene extends Scene {
 
     private removeCity(cityName: string) {
         this.level.cities = this.level.cities.filter(
-            city => city.name !== cityName
+            (city) => city.name !== cityName
         );
         this.level.travelPaths = this.level.travelPaths.filter(
-            path => path.first !== cityName && path.second !== cityName
+            (path) => path.first !== cityName && path.second !== cityName
         );
-        this.cities
-            .find(container => container.name === cityName)
-            .destroy();
+        this.cities.find((container) => container.name === cityName).destroy();
         this.cities = this.cities.filter(
-            container => container.name !== cityName
+            (container) => container.name !== cityName
         );
         if (this.level.player.location === cityName) {
             this.level.player.location = '';
@@ -437,7 +440,7 @@ export class EditorScene extends Scene {
 
     private startCityExists() {
         return this.cities.some(
-            container => container.name === this.level.player.location
+            (container) => container.name === this.level.player.location
         );
     }
 

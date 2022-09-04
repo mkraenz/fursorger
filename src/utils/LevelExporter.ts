@@ -1,7 +1,7 @@
-import { cloneDeep } from "lodash";
-import { ILevel } from "../levels/ILevel";
-import { LogicCity } from "../logic/City";
-import { Shop } from "../logic/Shop";
+import { cloneDeep } from 'lodash';
+import { ILevel } from '../levels/ILevel';
+import { LogicCity } from '../logic/City';
+import { Shop } from '../logic/Shop';
 
 export class LevelExporter {
     constructor(
@@ -16,15 +16,15 @@ export class LevelExporter {
     public get(): ILevel {
         const level = cloneDeep(this.leveldataSrc());
         const cities = this.citiesDataSrc().filter(LogicCity.instanceOf);
-        const adjustedCities: ILevel["cities"] = cities.map(city => {
-            const cityBaseData = level.cities.find(c => c.name === city.name);
+        const adjustedCities: ILevel['cities'] = cities.map((city) => {
+            const cityBaseData = level.cities.find((c) => c.name === city.name);
             return {
                 ...cityBaseData,
                 ...city,
             };
         });
         const player = this.playerDataSrc();
-        const adjustedPlayer: ILevel["player"] = {
+        const adjustedPlayer: ILevel['player'] = {
             location: player.locationName,
             stock: player.stock,
         };

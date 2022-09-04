@@ -1,38 +1,38 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const levelBrandenburg: ILevel = {
-    name: "Brandenburg",
+    name: 'Brandenburg',
     cities: [
         {
-            name: "Berlin",
+            name: 'Berlin',
             stock: 0,
             production: 1,
             x: 450,
             y: 280,
         },
         {
-            name: "Beelitz",
+            name: 'Beelitz',
             stock: 5,
             production: -1,
             x: 600,
             y: 100,
         },
         {
-            name: "Mahlow",
+            name: 'Mahlow',
             stock: 7,
             production: -1,
             x: 600,
             y: 430,
         },
         {
-            name: "Blankenfelde",
+            name: 'Blankenfelde',
             stock: 8,
             production: -1,
             x: 250,
             y: 100,
         },
         {
-            name: "Rangsdorf",
+            name: 'Rangsdorf',
             stock: 3,
             production: -1,
             x: 250,
@@ -41,41 +41,41 @@ export const levelBrandenburg: ILevel = {
     ],
     travelPaths: [
         {
-            first: "Berlin",
-            second: "Mahlow",
+            first: 'Berlin',
+            second: 'Mahlow',
         },
         {
-            first: "Berlin",
-            second: "Beelitz",
+            first: 'Berlin',
+            second: 'Beelitz',
         },
         {
-            first: "Berlin",
-            second: "Rangsdorf",
+            first: 'Berlin',
+            second: 'Rangsdorf',
         },
         {
-            first: "Berlin",
-            second: "Blankenfelde",
+            first: 'Berlin',
+            second: 'Blankenfelde',
         },
         {
-            first: "Beelitz",
-            second: "Blankenfelde",
+            first: 'Beelitz',
+            second: 'Blankenfelde',
         },
         {
-            first: "Beelitz",
-            second: "Mahlow",
+            first: 'Beelitz',
+            second: 'Mahlow',
         },
         {
-            first: "Rangsdorf",
-            second: "Blankenfelde",
+            first: 'Rangsdorf',
+            second: 'Blankenfelde',
         },
         {
-            first: "Rangsdorf",
-            second: "Mahlow",
+            first: 'Rangsdorf',
+            second: 'Mahlow',
         },
     ],
     player: {
         stock: 3,
-        location: "Berlin",
+        location: 'Berlin',
     },
-    background: "background2",
+    background: 'background2',
 };

@@ -1,10 +1,10 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
 export default defineConfig({
     server: {
         open: true,
     },
     build: {
-        outDir: "build",
+        outDir: 'build',
     },
 });

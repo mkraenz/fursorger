@@ -1,6 +1,6 @@
-import { Scene } from "phaser";
-import { MainSceneCfg } from "../styles/MainSceneCfg";
-import { IconButton } from "./IconButton";
+import { Scene } from 'phaser';
+import { MainSceneCfg } from '../styles/MainSceneCfg';
+import { IconButton } from './IconButton';
 
 export const RestartButton = (
     scene: Scene,
@@ -10,5 +10,5 @@ export const RestartButton = (
 ) =>
     new IconButton(scene, onPointerUp, x, y, {
         baseScale: 1,
-        texture: "restart",
+        texture: 'restart',
     });

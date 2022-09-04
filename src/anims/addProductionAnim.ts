@@ -1,6 +1,6 @@
-import { GameObjects, Scene } from "phaser";
-import { Color } from "../styles/Color";
-import { TextConfig } from "../styles/Text";
+import { GameObjects, Scene } from 'phaser';
+import { Color } from '../styles/Color';
+import { TextConfig } from '../styles/Text';
 
 export const addProductionAnim = (
     scene: Scene,
@@ -26,7 +26,7 @@ export const addProductionAnim = (
         y: parent.y + 100,
         alpha: 0,
         duration: 900,
-        onComplete: tween => {
+        onComplete: (tween) => {
             tween.remove();
             productionAnim.destroy();
         },

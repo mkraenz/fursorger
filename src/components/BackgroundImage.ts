@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects, Scene } from 'phaser';
 
 export class BackgroundImage extends GameObjects.Image {
     constructor(scene: Scene, texture: string) {

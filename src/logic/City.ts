@@ -1,5 +1,5 @@
-import { INode } from "./INode";
-import { IStorage } from "./IStorage";
+import { INode } from './INode';
+import { IStorage } from './IStorage';
 
 export class LogicCity implements IStorage, INode {
     public static instanceOf(x: any): x is LogicCity {

@@ -1,7 +1,7 @@
-import { assign } from "lodash";
-import { FOREVER, GameObjects, Scene, Tweens } from "phaser";
-import { ScalableTweenBuilderConfig } from "../anims/ScalableTweenBuilderConfig";
-import { MainSceneCfg } from "../styles/MainSceneCfg";
+import { assign } from 'lodash';
+import { FOREVER, GameObjects, Scene, Tweens } from 'phaser';
+import { ScalableTweenBuilderConfig } from '../anims/ScalableTweenBuilderConfig';
+import { MainSceneCfg } from '../styles/MainSceneCfg';
 
 enum State {
     Disabled,
@@ -22,9 +22,9 @@ export class BuildFactoryButton extends GameObjects.Image {
         onPointerup: () => void,
         private disabledCondition: () => boolean
     ) {
-        super(scene, cfg.x, cfg.y, "octagon");
+        super(scene, cfg.x, cfg.y, 'octagon');
         scene.add.existing(this);
-        const icon = this.scene.add.image(cfg.x, cfg.y, "factory");
+        const icon = this.scene.add.image(cfg.x, cfg.y, 'factory');
         this.icon = assign(icon, { baseScale: 1 });
 
         this.setScale(this.baseScale);
@@ -32,7 +32,7 @@ export class BuildFactoryButton extends GameObjects.Image {
         this.iconAnim = this.scene.add.tween(this.getIconTweenCfg());
         this.disable();
         this.iconAnim.resume();
-        this.on("pointerup", onPointerup);
+        this.on('pointerup', onPointerup);
     }
 
     public preUpdate() {
@@ -74,7 +74,7 @@ export class BuildFactoryButton extends GameObjects.Image {
             targets: this,
             scaleX: this.baseScale * 1.2,
             scaleY: this.baseScale * 1.2,
-            ease: "Linear",
+            ease: 'Linear',
             repeat: FOREVER,
             yoyo: true,
             duration: 300,
@@ -86,7 +86,7 @@ export class BuildFactoryButton extends GameObjects.Image {
             targets: this.icon,
             scaleX: this.icon.baseScale * 1.2,
             scaleY: this.icon.baseScale * 1.2,
-            ease: "Linear",
+            ease: 'Linear',
             repeat: FOREVER,
             yoyo: true,
             duration: 300,

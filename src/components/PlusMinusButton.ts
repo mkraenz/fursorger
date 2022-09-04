@@ -1,5 +1,5 @@
-import { GameObjects, Scene } from "phaser";
-import { GrowShrinkAnimPlugin } from "../anims/GrowShrinkAnimPlugin";
+import { GameObjects, Scene } from 'phaser';
+import { GrowShrinkAnimPlugin } from '../anims/GrowShrinkAnimPlugin';
 
 export class PlusMinusButton extends GameObjects.Sprite {
     private isClicked = false;
@@ -12,11 +12,11 @@ export class PlusMinusButton extends GameObjects.Sprite {
      */
     constructor(
         scene: Scene,
-        texture: "plus" | "minus",
+        texture: 'plus' | 'minus',
         private onclickOrClickHold: () => void,
         private disabledCondition: () => boolean
     ) {
-        super(scene, -60, texture === "plus" ? -25 : 25, texture);
+        super(scene, -60, texture === 'plus' ? -25 : 25, texture);
         scene.add.existing(this);
         this.setScale(0.5);
         this.setInputHandlers();
@@ -27,8 +27,8 @@ export class PlusMinusButton extends GameObjects.Sprite {
         this.configureAnims();
 
         this.setInteractive({ useHandCursor: true })
-            .on("pointerdown", this.enterPressedState)
-            .on("pointerup", this.enterUnpressedState);
+            .on('pointerdown', this.enterPressedState)
+            .on('pointerup', this.enterUnpressedState);
         this.enterEnabledState();
         this.enterUnpressedState();
     }
@@ -82,12 +82,12 @@ export class PlusMinusButton extends GameObjects.Sprite {
 
     private setInputHandlers() {
         const resetClicked = () => this.resetClicked();
-        this.on("pointerdown", () => {
+        this.on('pointerdown', () => {
             this.isClicked = true;
             this.onclickOrClickHold();
         });
-        this.on("pointerup", resetClicked);
-        this.on("pointerout", resetClicked);
+        this.on('pointerup', resetClicked);
+        this.on('pointerout', resetClicked);
     }
 
     private resetClicked() {

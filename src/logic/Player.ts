@@ -1,6 +1,6 @@
-import { isNil } from "lodash";
-import { LogicCity } from "./City";
-import { IPlayer } from "./IPlayer";
+import { isNil } from 'lodash';
+import { LogicCity } from './City';
+import { IPlayer } from './IPlayer';
 
 export class Player implements IPlayer {
     constructor(

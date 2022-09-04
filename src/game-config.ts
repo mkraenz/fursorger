@@ -1,5 +1,5 @@
-import { Types } from "phaser";
-import { LoadingScene } from "./scenes/LoadingScene";
+import { Types } from 'phaser';
+import { LoadingScene } from './scenes/LoadingScene';
 
 export const gameConfig: Types.Core.GameConfig = {
     scene: LoadingScene,
@@ -8,7 +8,7 @@ export const gameConfig: Types.Core.GameConfig = {
         createContainer: true,
     },
     scale: {
-        parent: "game",
+        parent: 'game',
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 1024,

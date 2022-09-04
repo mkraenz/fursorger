@@ -1,17 +1,17 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const level3: ILevel = {
-    name: "To the Mountains",
+    name: 'To the Mountains',
     cities: [
-        { name: "Thudor", stock: 3, production: -1, x: 265, y: 619 },
-        { name: "Ustrela", stock: 0, production: 1, x: 520, y: 655 },
-        { name: "Ablesh", stock: 3, production: -1, x: 811, y: 395 },
-        { name: "Wesnain", stock: 7, production: -1, x: 925, y: 251 },
+        { name: 'Thudor', stock: 3, production: -1, x: 265, y: 619 },
+        { name: 'Ustrela', stock: 0, production: 1, x: 520, y: 655 },
+        { name: 'Ablesh', stock: 3, production: -1, x: 811, y: 395 },
+        { name: 'Wesnain', stock: 7, production: -1, x: 925, y: 251 },
     ],
     travelPaths: [
         {
-            first: "Thudor",
-            second: "Ustrela",
+            first: 'Thudor',
+            second: 'Ustrela',
             points: [
                 { x: 520, y: 655 },
                 { x: 384, y: 610 },
@@ -20,8 +20,8 @@ export const level3: ILevel = {
             ],
         },
         {
-            first: "Ustrela",
-            second: "Ablesh",
+            first: 'Ustrela',
+            second: 'Ablesh',
             points: [
                 { x: 811, y: 395 },
                 { x: 897, y: 456 },
@@ -31,8 +31,8 @@ export const level3: ILevel = {
             ],
         },
         {
-            first: "Ablesh",
-            second: "Wesnain",
+            first: 'Ablesh',
+            second: 'Wesnain',
             points: [
                 { x: 925, y: 251 },
                 { x: 885, y: 278 },
@@ -41,6 +41,6 @@ export const level3: ILevel = {
             ],
         },
     ],
-    player: { stock: 3, location: "Thudor" },
-    background: "background",
+    player: { stock: 3, location: 'Thudor' },
+    background: 'background',
 };

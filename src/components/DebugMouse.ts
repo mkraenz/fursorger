@@ -1,5 +1,5 @@
-import { GameObjects, Scene } from "phaser";
-import { TextConfig } from "../styles/Text";
+import { GameObjects, Scene } from 'phaser';
+import { TextConfig } from '../styles/Text';
 
 /**
  * Prints the mouse coordinates on the canvas
@@ -7,7 +7,7 @@ import { TextConfig } from "../styles/Text";
  */
 export class DebugMouse extends GameObjects.Text {
     constructor(scene: Scene) {
-        super(scene, 10, 10, "", TextConfig.debug);
+        super(scene, 10, 10, '', TextConfig.debug);
         scene.add.existing(this);
     }
 

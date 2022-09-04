@@ -1,5 +1,5 @@
-import { random } from "lodash";
-import { GameObjects, Scene, Tweens } from "phaser";
+import { random } from 'lodash';
+import { GameObjects, Scene, Tweens } from 'phaser';
 
 type CustomTween = Tweens.Tween & { movementPattern: number };
 interface ILocation {
@@ -11,7 +11,7 @@ export class Balloon extends GameObjects.Image {
     private anim: CustomTween;
 
     constructor(scene: Scene, start: ILocation, target: ILocation) {
-        super(scene, start.x, start.y, "balloon");
+        super(scene, start.x, start.y, 'balloon');
         scene.add.existing(this);
         this.setDisplaySize(30, 30);
         this.setAlpha(0.8);
@@ -75,7 +75,7 @@ function getBalloonTweenConfig(
         return {
             targets: image,
             x: x2,
-            ease: t => t,
+            ease: (t) => t,
             duration: 5000,
             yoyo: true,
             repeat: -1,
@@ -107,7 +107,7 @@ function getBalloonTweenConfig(
         return {
             targets: image,
             y: y2,
-            ease: t => t,
+            ease: (t) => t,
             duration: 2000,
             yoyo: true,
             repeat: -1,

@@ -1,18 +1,18 @@
-import { ILevel } from "./ILevel";
+import { ILevel } from './ILevel';
 
 export const level4: ILevel = {
-    name: "To the Land in the Sea",
+    name: 'To the Land in the Sea',
     cities: [
-        { name: "Thudor", stock: 6, production: -1, x: 265, y: 619 },
-        { name: "Ustrela", stock: 68, production: -5, x: 520, y: 655 },
-        { name: "Ablesh", stock: 8, production: -1, x: 811, y: 395 },
-        { name: "Eflar", stock: 5, production: -1, x: 540, y: 282 },
-        { name: "Iechein", stock: 0, production: 2, x: 98, y: 70 },
+        { name: 'Thudor', stock: 6, production: -1, x: 265, y: 619 },
+        { name: 'Ustrela', stock: 68, production: -5, x: 520, y: 655 },
+        { name: 'Ablesh', stock: 8, production: -1, x: 811, y: 395 },
+        { name: 'Eflar', stock: 5, production: -1, x: 540, y: 282 },
+        { name: 'Iechein', stock: 0, production: 2, x: 98, y: 70 },
     ],
     travelPaths: [
         {
-            first: "Thudor",
-            second: "Ustrela",
+            first: 'Thudor',
+            second: 'Ustrela',
             points: [
                 { x: 520, y: 655 },
                 { x: 384, y: 610 },
@@ -21,8 +21,8 @@ export const level4: ILevel = {
             ],
         },
         {
-            first: "Ustrela",
-            second: "Ablesh",
+            first: 'Ustrela',
+            second: 'Ablesh',
             points: [
                 { x: 811, y: 395 },
                 { x: 897, y: 456 },
@@ -32,8 +32,8 @@ export const level4: ILevel = {
             ],
         },
         {
-            first: "Ablesh",
-            second: "Eflar",
+            first: 'Ablesh',
+            second: 'Eflar',
             points: [
                 { x: 540, y: 282 },
                 { x: 580, y: 407 },
@@ -44,8 +44,8 @@ export const level4: ILevel = {
             ],
         },
         {
-            first: "Iechein",
-            second: "Eflar",
+            first: 'Iechein',
+            second: 'Eflar',
             points: [
                 { x: 540, y: 282 },
                 { x: 465, y: 290 },
@@ -53,6 +53,6 @@ export const level4: ILevel = {
             ],
         },
     ],
-    player: { stock: 3, location: "Thudor" },
-    background: "background",
+    player: { stock: 3, location: 'Thudor' },
+    background: 'background',
 };

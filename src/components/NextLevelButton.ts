@@ -1,6 +1,6 @@
-import { Scene } from "phaser";
-import { MainSceneCfg } from "../styles/MainSceneCfg";
-import { IconButton } from "./IconButton";
+import { Scene } from 'phaser';
+import { MainSceneCfg } from '../styles/MainSceneCfg';
+import { IconButton } from './IconButton';
 
 export const NextLevelButton = (
     scene: Scene,
@@ -10,5 +10,5 @@ export const NextLevelButton = (
 ) =>
     new IconButton(scene, onPointerUp, x, y, {
         baseScale: 1,
-        texture: "arrow-right",
+        texture: 'arrow-right',
     });
