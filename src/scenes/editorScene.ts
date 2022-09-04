@@ -99,8 +99,10 @@ export class EditorScene extends Scene {
         }
     }
 
-    private buildings(){
-        return {logic:[...this.cities,...this.shops],display:[...this.cities,...this.shops]}
+    private buildings() {
+        const logic = [...this.level.cities,...(this.level.shops||[])]
+        const display = [...this.cities,...this.shops]
+        return { logic ,display }
     }
 
     public adjustLevelToNameChange(oldName: string, newName: string) {
@@ -176,9 +178,11 @@ export class EditorScene extends Scene {
     }
 
     private updateStartIconPosition() {
-        this.cities.forEach(container => {
+        this.buildings().display.forEach(container => {
             // adjust to size of button which will change size
             const button = container.getAt(0) as GameObjects.Image;
+            if (!(button instanceof GameObjects.Image)) throw new Error("Index 0 of container was no Button");
+
             const width = button.width * button.scaleX;
             const height = button.height * button.scaleY;
             if (
@@ -193,7 +197,7 @@ export class EditorScene extends Scene {
     }
 
     private moveStartIconToCity(startCityName: string) {
-        const startCityContainer = this.cities.find(
+        const startCityContainer = this.buildings().display.find(
             container => container.name === startCityName
         );
         if (startCityContainer) {
@@ -310,8 +314,8 @@ export class EditorScene extends Scene {
         if (addToLevel) {
             this.level.shops = (this.level.shops || []).concat(shop);
         }
-        if(!this.level.shops){
-           throw new Error("Shops are undefined. Do you need to add the shop?");
+        if (!this.level.shops) {
+            throw new Error("Shops are undefined. Do you need to add the shop?");
         }
         const shopInList = this.level.shops.find(
             container => shop.name === container.name
@@ -350,8 +354,8 @@ export class EditorScene extends Scene {
     }
 
     private redrawEdgesAfterContainerClick(selected: {
-        container: CityContainer|ShopContainer;
-        otherContainer: CityContainer|ShopContainer;
+        container: CityContainer | ShopContainer;
+        otherContainer: CityContainer | ShopContainer;
     }) {
         const firstName = selected.container.name;
         const secondName = selected.otherContainer.name;
@@ -388,40 +392,44 @@ export class EditorScene extends Scene {
 
     private addBlankLevelButton() {
         const deleteCitiesAndPaths = () => {
-            const cityNames = this.cities.map(
-                cityContainer => cityContainer.name
+            const cityNames = this.buildings().display.map(
+                container => container.name
             );
-            cityNames.forEach(name => this.removeCity(name));
+            cityNames.forEach(name => this.removeBuilding(name));
         };
         BlancLevelButton(this, deleteCitiesAndPaths);
     }
 
     private addDeleteCityButton() {
         const deleteCityByName = () => {
-            const chosenCity = this.cities.find(city =>
+            const chosenCity = this.buildings().display.find(city =>
                 city.isChosen()
             );
             if (chosenCity) {
-                this.removeCity(chosenCity.name);
+                this.removeBuilding(chosenCity.name);
             }
         };
         DeleteCityButton(this, deleteCityByName);
     }
 
-    private removeCity(cityName: string) {
+    private removeBuilding(name: string) {
         this.level.cities = this.level.cities.filter(
-            city => city.name !== cityName
+            city => city.name !== name
         );
+        this.level.shops = this.level.shops.filter(shop =>shop.name !== name)
         this.level.travelPaths = this.level.travelPaths.filter(
-            path => path.first !== cityName && path.second !== cityName
+            path => path.first !== name && path.second !== name
         );
-        this.cities
-            .find(container => container.name === cityName)
+        this.buildings().display
+            .find(container => container.name === name)
             .destroy();
         this.cities = this.cities.filter(
-            container => container.name !== cityName
+            container => container.name !== name
         );
-        if (this.level.player.location === cityName) {
+        this.shops = this.shops.filter(
+            container => container.name !== name
+        );
+        if (this.level.player.location === name) {
             this.level.player.location = '';
         }
     }
@@ -436,7 +444,7 @@ export class EditorScene extends Scene {
     }
 
     private startCityExists() {
-        return this.cities.some(
+        return this.buildings().display.some(
             container => container.name === this.level.player.location
         );
     }
