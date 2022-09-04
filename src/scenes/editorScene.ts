@@ -100,9 +100,11 @@ export class EditorScene extends Scene {
     }
 
     private buildings() {
+        const logic = [...this.level.cities,...(this.level.shops||[])]
+        const display = [...this.cities,...this.shops]
         return {
-            logic: [...this.cities, ...this.shops],
-            display: [...this.cities, ...this.shops],
+            logic,
+            display
         };
     }
 
@@ -181,7 +183,7 @@ export class EditorScene extends Scene {
     }
 
     private updateStartIconPosition() {
-        this.cities.forEach((container) => {
+        this.buildings().display.forEach((container) => {
             // adjust to size of button which will change size
             const button = container.getAt(0) as GameObjects.Image;
             const width = button.width * button.scaleX;
@@ -198,12 +200,12 @@ export class EditorScene extends Scene {
     }
 
     private moveStartIconToCity(startCityName: string) {
-        const startCityContainer = this.cities.find(
+        const startContainer = this.buildings().display.find(
             (container) => container.name === startCityName
         );
-        if (startCityContainer) {
-            this.startIcon.x = startCityContainer.x - 50;
-            this.startIcon.y = startCityContainer.y - 80;
+        if (startContainer) {
+            this.startIcon.x = startContainer.x - 50;
+            this.startIcon.y = startContainer.y - 80;
         } else {
             this.startIcon.x = DEFAULT_START_ICON_X;
             this.startIcon.y = DEFAULT_START_ICON_Y;
@@ -395,51 +397,57 @@ export class EditorScene extends Scene {
 
     private addBlankLevelButton() {
         const deleteCitiesAndPaths = () => {
-            const cityNames = this.cities.map(
+            const buildings = this.buildings().display.map(
                 (cityContainer) => cityContainer.name
             );
-            cityNames.forEach((name) => this.removeCity(name));
+            buildings.forEach((name) => this.removeCity(name));
         };
         BlancLevelButton(this, deleteCitiesAndPaths);
     }
 
     private addDeleteCityButton() {
         const deleteCityByName = () => {
-            const chosenCity = this.cities.find((city) => city.isChosen());
-            if (chosenCity) {
-                this.removeCity(chosenCity.name);
+            const chosenBuilding = this.buildings().display.find((building) => building.isChosen());
+            if (chosenBuilding) {
+                this.removeCity(chosenBuilding.name);
             }
         };
         DeleteCityButton(this, deleteCityByName);
     }
 
-    private removeCity(cityName: string) {
+    private removeCity(name: string) {
         this.level.cities = this.level.cities.filter(
-            (city) => city.name !== cityName
+            (city) => city.name !== name
+        );
+        this.level.shops = this.level.shops?.filter(
+            (shop) => shop.name !== name
         );
         this.level.travelPaths = this.level.travelPaths.filter(
-            (path) => path.first !== cityName && path.second !== cityName
+            (path) => path.first !== name && path.second !== name
         );
-        this.cities.find((container) => container.name === cityName).destroy();
+        this.buildings().display.find((container) => container.name === name).destroy();
         this.cities = this.cities.filter(
-            (container) => container.name !== cityName
+            (container) => container.name !== name
         );
-        if (this.level.player.location === cityName) {
+        this.shops = this.shops.filter(
+            (container) => container.name !== name
+        );
+        if (this.level.player.location === name) {
             this.level.player.location = '';
         }
     }
 
     private addMainSceneButton() {
         const playMap = () => {
-            if (this.startCityExists()) {
+            if (this.startWasChosen()) {
                 this.goToMainScene();
             }
         };
         PlayMyMapButton(this, playMap);
     }
 
-    private startCityExists() {
-        return this.cities.some(
+    private startWasChosen() {
+        return this.buildings().display.some(
             (container) => container.name === this.level.player.location
         );
     }
