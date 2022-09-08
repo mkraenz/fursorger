@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
+import { build } from 'vite';
 import { BackgroundImage } from '../components/BackgroundImage';
 import { BackpackContainer } from '../components/BackPackContainer';
 import { BlancLevelButton } from '../components/BlancLevelButton';
@@ -12,6 +13,9 @@ import { ICity, ILevel, IShop } from '../levels/ILevel';
 import { Color, toHex } from '../styles/Color';
 import { MainScene } from './mainScene';
 
+interface NameHolder {
+    name: string;
+}
 const STORED_LEVEL_KEY = 'STORE_EDITOR';
 
 // TODO: make this depending to screen size
@@ -100,8 +104,8 @@ export class EditorScene extends Scene {
     }
 
     private buildings() {
-        const logic = [...this.level.cities,...(this.level.shops||[])]
-        const display = [...this.cities,...this.shops]
+        const logic = [...this.level.cities, ...(this.level.shops || [])]
+        const display = [...this.cities, ...this.shops]
         return {
             logic,
             display
@@ -190,7 +194,7 @@ export class EditorScene extends Scene {
             const height = button.height * button.scaleY;
             if (
                 Math.abs(container.x - this.getStartIconPoint().x) <
-                    width / 2 &&
+                width / 2 &&
                 Math.abs(container.y - this.getStartIconPoint().y) < height / 2
             ) {
                 this.level.player.location = container.name;
@@ -255,20 +259,25 @@ export class EditorScene extends Scene {
         });
     }
 
-    private getDefaultCityName() {
-        const numberOfCities = this.level.cities.length;
-        const possibleNames = new Array(numberOfCities + 1)
-            .fill(1)
-            .map((entry, index) => index.toString());
-        return possibleNames.find((name) => this.noCityHasThisName(name));
+    private getDefaultName(isFor: "City" | "Shop") {
+        const buildings = isFor === "City" ? this.level.cities : this.level.shops || []
+        const numberOfTargets = buildings.length
+        const possibleNames = new Array(numberOfTargets + 1).fill(1).map((undefined, index) => this.concateName(isFor, index))
+
+
+        const nameIsUnused = (name: string) => (buildings as NameHolder[]).every(building => building.name !== name)
+
+        return possibleNames.find((name) => nameIsUnused(name))
     }
+
+    private concateName(isFor: "City" | "Shop", index: number) { return isFor + " " + index }
 
     private addNewCityContainer(
         addToLevelCities: boolean,
         city: ICity = {
             production: -1,
             stock: 5,
-            name: this.getDefaultCityName(),
+            name: this.getDefaultName("City"),
             x: 300,
             y: 400,
         }
@@ -310,7 +319,7 @@ export class EditorScene extends Scene {
         shop: IShop = {
             x: 300,
             y: 400,
-            name: 'Shop',
+            name: this.getDefaultName("Shop"),
             price: 1,
         }
     ) {
@@ -337,7 +346,7 @@ export class EditorScene extends Scene {
                 shop.name,
                 shop.price,
                 {
-                    addToPrice: () => {},
+                    addToPrice: () => { },
                 } as IPricingHandler,
                 onTranslation
             )
@@ -425,7 +434,7 @@ export class EditorScene extends Scene {
         this.level.travelPaths = this.level.travelPaths.filter(
             (path) => path.first !== name && path.second !== name
         );
-        this.buildings().display.find((container) => container.name === name).destroy();
+        this.buildings().display.filter((container) => container.name === name).forEach((building) => building.destroy());
         this.cities = this.cities.filter(
             (container) => container.name !== name
         );
