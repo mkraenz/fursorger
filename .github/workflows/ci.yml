@@ -16,7 +16,7 @@ jobs:
           node-version: 16.x
           cache: npm # global npm cache
 
-      - name: Locally cache node_modules
+      - name: Cache local node_modules
         uses: actions/cache@v2
         id: node-modules-cache
         with:
