@@ -1,3 +1,4 @@
+import { saveAs } from 'file-saver';
 import { GameObjects, Scene } from 'phaser';
 import { GrowShrinkAnimPlugin } from '../anims/GrowShrinkAnimPlugin';
 import { ILevel } from '../levels/ILevel';
