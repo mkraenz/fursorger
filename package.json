@@ -9,7 +9,8 @@
         "preview": "vite preview",
         "lint:type-check": "tsc --noEmit",
         "lint:prettier:fix": "prettier --write \"**/*.{graphql,json,md,yaml,yml}\"",
-        "sanity-check": "npm install && npm run dev"
+        "sanity-check": "npm install && npm run dev",
+        "prettify": "prettier --check ./src"
     },
     "devDependencies": {
         "@types/dat.gui": "^0.7.7",
