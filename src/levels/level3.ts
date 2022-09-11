@@ -43,4 +43,13 @@ export const level3: ILevel = {
     ],
     player: { stock: 3, location: 'Thudor' },
     background: 'background',
+    secrets: [
+        {
+            text: 'From far away,\na savior came.\nShe gives them hope,\nshe shares their pain.',
+            centerX: 506,
+            centerY: 65,
+            height: 50,
+            width: 60,
+        },
+    ],
 };

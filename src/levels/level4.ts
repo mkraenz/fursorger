@@ -55,4 +55,13 @@ export const level4: ILevel = {
     ],
     player: { stock: 3, location: 'Thudor' },
     background: 'background',
+    secrets: [
+        {
+            text: "When all are saved,\nyour quest be done,\nwill you then share\nfrom where you've come?",
+            centerX: 506,
+            centerY: 65,
+            height: 50,
+            width: 60,
+        },
+    ],
 };

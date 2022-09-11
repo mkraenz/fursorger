@@ -79,4 +79,13 @@ export const level2: ILevel = {
         location: 'Thudor',
     },
     background: 'background',
+    secrets: [
+        {
+            text: 'Fursorger, you\nare not from here\nwhy do you help\nwith love and tear?',
+            centerX: 506,
+            centerY: 65,
+            height: 50,
+            width: 60,
+        },
+    ],
 };
