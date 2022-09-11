@@ -10,7 +10,7 @@ export class Secret extends GameObjects.Rectangle {
         super(scene, centerX, centerY, width, height, toHex(Color.White), 0.1);
         scene.add.existing(this);
         this.setVisible(false);
-        const storyText = scene.add.text(centerX, centerY, '');
+        const storyText = scene.add.text(centerX-width, centerY, '');
         this.setInteractive();
         this.input.alwaysEnabled = true;
         this.on('pointerover', () => {
