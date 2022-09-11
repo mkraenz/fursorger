@@ -107,4 +107,20 @@ export const level1: ILevel = {
         location: 'Alm',
     },
     background: 'background2',
+    secrets: [
+        {
+            text: 'Not even the royal astrologers\nforesaw the Crisis.',
+            centerX: 125,
+            centerY: 475,
+            height: 60,
+            width: 40,
+        },
+        {
+            text: 'The mighty snow crown of Mt. Everwinter\nis melting away.',
+            centerX: 601,
+            centerY: 700,
+            height: 50,
+            width: 50,
+        },
+    ],
 };
