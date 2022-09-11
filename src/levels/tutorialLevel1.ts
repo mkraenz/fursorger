@@ -1,7 +1,7 @@
 import { ILevel } from './ILevel';
 
-const RICH_CITY = "Copia"
-const POOR_CITY = "Orsus"
+const RICH_CITY = 'Copia';
+const POOR_CITY = 'Orsus';
 
 export const tutorialLevel1: ILevel = {
     name: 'First steps',
@@ -25,7 +25,19 @@ export const tutorialLevel1: ILevel = {
     },
     background: 'map-tutorial',
     secrets: [
-        { text: `${RICH_CITY}'s fertile lands seem to withstand the Fiery Rain... for now.`, centerX: 336, centerY: 242, height: 50, width: 50 },
-        { text: `${POOR_CITY} suffers from the Crisis\n and its reserves are dwindling.`, centerX: 713, centerY: 467, height: 30, width: 50 },
-    ]
+        {
+            text: `${RICH_CITY}'s fertile lands seem to withstand the Fiery Rain... for now.`,
+            centerX: 336,
+            centerY: 242,
+            height: 50,
+            width: 50,
+        },
+        {
+            text: `${POOR_CITY} suffers from the Crisis\n and its reserves are dwindling.`,
+            centerX: 713,
+            centerY: 467,
+            height: 30,
+            width: 50,
+        },
+    ],
 };
