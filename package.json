@@ -28,7 +28,7 @@
         "graphlib": "^2.1.8",
         "lodash": "^4.17.21",
         "phaser": "~3.55.2",
-        "vite": "^3.0.9"
+        "vite": "^3.1.0"
     },
     "husky": {
         "hooks": {
