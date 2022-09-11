@@ -1,5 +1,5 @@
 export interface ILevel {
-    name?: string;
+    name: string;
     cities: ICity[];
     shops?: IShop[];
     travelPaths: Array<{

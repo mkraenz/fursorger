@@ -11,7 +11,7 @@ export interface ITitleSceneInitData {
 }
 
 export class TitleScene extends Scene {
-    private backgroundSound: Sound.BaseSound;
+    private backgroundSound!: Sound.BaseSound;
     private fadeInEnabled = true;
 
     constructor() {

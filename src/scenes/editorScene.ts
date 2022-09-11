@@ -173,10 +173,13 @@ export class EditorScene extends Scene {
     }
 
     private defineStartIconEvents() {
-        this.startIcon.on('drag', (pointer, dragX, dragY) => {
-            this.startIcon.x = dragX;
-            this.startIcon.y = dragY;
-        });
+        this.startIcon.on(
+            'drag',
+            (_: unknown, dragX: number, dragY: number) => {
+                this.startIcon.x = dragX;
+                this.startIcon.y = dragY;
+            }
+        );
         this.startIcon.on('pointerdown', () => {
             this.noStartIconDrag = false;
             this.startIcon.once('pointerup', () => {
@@ -249,6 +252,10 @@ export class EditorScene extends Scene {
             const nodeW = this.buildings().display.find(
                 (container) => path.second === container.name
             );
+            if (!nodeV || !nodeW)
+                throw new Error(
+                    `Node not found for path ${path.first} to ${path.second}`
+                );
             const line = new Phaser.Geom.Line(
                 nodeV.x,
                 nodeV.y,
@@ -265,14 +272,14 @@ export class EditorScene extends Scene {
         const numberOfTargets = buildings.length;
         const possibleNames = new Array(numberOfTargets + 1)
             .fill(1)
-            .map((undefined, index) => this.concateName(isFor, index));
+            .map((_, index) => this.concateName(isFor, index));
 
         const nameIsUnused = (name: string) =>
             (buildings as NameHolder[]).every(
                 (building) => building.name !== name
             );
 
-        return possibleNames.find((name) => nameIsUnused(name));
+        return possibleNames.find((name) => nameIsUnused(name))!;
     }
 
     private concateName(isFor: 'City' | 'Shop', index: number) {
@@ -294,7 +301,7 @@ export class EditorScene extends Scene {
         }
         const cityInList = this.level.cities.find(
             (container) => city.name === container.name
-        );
+        )!;
         const newEconomy = { stock: city.stock, production: city.production };
         const stockAdd = (summand: number) => {
             cityInList.stock += summand;
@@ -340,7 +347,7 @@ export class EditorScene extends Scene {
         }
         const shopInList = this.level.shops.find(
             (container) => shop.name === container.name
-        );
+        )!;
         const onTranslation = (x: number, y: number) => {
             shopInList.x = x;
             shopInList.y = y;
@@ -479,7 +486,7 @@ export class EditorScene extends Scene {
         localStorage.removeItem(STORED_LEVEL_KEY);
         localStorage.setItem(STORED_LEVEL_KEY, jsonTryOutLevel);
         const textField = document.getElementById('text');
-        textField.remove();
+        textField?.remove();
         this.scene.remove(this);
     }
 }

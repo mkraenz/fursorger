@@ -96,10 +96,11 @@ export class MainScene extends Scene {
 
     private addBalloonForEdge(startCityName: string, targetCityName: string) {
         const allNodes = getNodes(this.graph);
-        const startCity = allNodes.find((city) => city.name === startCityName);
+        // always defined by construction
+        const startCity = allNodes.find((city) => city.name === startCityName)!;
         const targetCity = allNodes.find(
             (city) => city.name === targetCityName
-        );
+        )!;
         new Balloon(this, startCity, targetCity);
         new DottedLine(this, startCity, targetCity);
     }

@@ -75,7 +75,7 @@ function getBalloonTweenConfig(
         return {
             targets: image,
             x: x2,
-            ease: (t) => t,
+            ease: (t: number) => t,
             duration: 5000,
             yoyo: true,
             repeat: -1,
@@ -90,24 +90,28 @@ function getBalloonTweenConfig(
                                 image.x,
                                 x1,
                                 x2,
-                                (this as CustomTween).movementPattern
+                                (this as unknown as CustomTween).movementPattern
                             )
                     );
             },
             onYoyo() {
+                // @ts-ignore TODO fix this
                 this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                (this as unknown as CustomTween).movementPattern =
+                    random(numberOfCases);
             },
             onRepeat() {
+                // @ts-ignore TODO fix this
                 this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                (this as unknown as CustomTween).movementPattern =
+                    random(numberOfCases);
             },
         };
     } else {
         return {
             targets: image,
             y: y2,
-            ease: (t) => t,
+            ease: (t: number) => t,
             duration: 2000,
             yoyo: true,
             repeat: -1,
@@ -122,17 +126,21 @@ function getBalloonTweenConfig(
                                 image.y,
                                 y1,
                                 y2,
-                                (this as CustomTween).movementPattern
+                                (this as unknown as CustomTween).movementPattern
                             )
                     );
             },
             onYoyo() {
+                // @ts-ignore TODO fix this
                 this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                (this as unknown as CustomTween).movementPattern =
+                    random(numberOfCases);
             },
             onRepeat() {
+                // @ts-ignore TODO fix this
                 this.setTimeScale(Math.max(Math.random(), MIN_BALLOON_SPEED));
-                (this as CustomTween).movementPattern = random(numberOfCases);
+                (this as unknown as CustomTween).movementPattern =
+                    random(numberOfCases);
             },
         };
     }
