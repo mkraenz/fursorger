@@ -20,5 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install
         run: npm ci
+      - name: Prettier Check
+        run: npm run prettify
       - name: Build
         run: npm run build
