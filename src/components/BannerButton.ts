@@ -6,7 +6,7 @@ import { TextConfig } from '../styles/Text';
 const CLICK_COOLDOWN = 1000;
 
 export class BannerButton extends GameObjects.Sprite {
-    private buttonText: GameObjects.Text;
+    private buttonText!: GameObjects.Text;
 
     constructor(
         scene: Scene,

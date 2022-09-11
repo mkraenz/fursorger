@@ -91,7 +91,7 @@ export class ShopContainer extends Phaser.GameObjects.Container {
     }
 
     private defineDrag() {
-        this.on('drag', (pointer, dragX, dragY) => {
+        this.on('drag', (_: unknown, dragX: number, dragY: number) => {
             this.x = dragX;
             this.y = dragY;
             this.onTranslation(dragX, dragY);

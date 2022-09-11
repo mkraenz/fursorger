@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "ES2017",
         "module": "CommonJs",
-        "strict": false,
+        "strict": true,
         "noImplicitReturns": true,
         "noUnusedLocals": false,
         "noUnusedParameters": false,
