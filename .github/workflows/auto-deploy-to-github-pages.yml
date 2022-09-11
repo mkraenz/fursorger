@@ -1,0 +1,36 @@
+name: Deploy to Github Pages
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: npm # global npm cache
+
+      - name: Cache local node_modules
+        uses: actions/cache@v2
+        id: node-modules-cache
+        with:
+          path: node_modules
+          key: node-${{ hashFiles('package-lock.json')}}
+
+      - name: Install
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build # deploy this folder
