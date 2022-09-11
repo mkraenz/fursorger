@@ -9,18 +9,20 @@
         "preview": "vite preview",
         "lint:type-check": "tsc --noEmit",
         "lint:prettier:fix": "prettier --write \"**/*.{graphql,json,md,yaml,yml}\"",
-        "sanity-check": "npm install && npm run dev",
-        "prettify": "prettier --check ./src"
+        "sanity-check": "npm ci && npm run dev",
+        "prettify": "prettier --check ./src",
+        "prettify:write": "prettier --write ./src",
+        "prepare": "husky install"
     },
     "devDependencies": {
         "@types/dat.gui": "^0.7.7",
         "@types/file-saver": "^2.0.5",
         "@types/graphlib": "^2.1.8",
         "@types/lodash": "^4.14.184",
-        "commit-message-validator": "^0.1.11",
+        "commit-message-validator": "^1.0.2",
         "dat.gui": "^0.7.9",
-        "husky": "^4.3.8",
-        "lint-staged": "^10.5.3",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
         "prettier": "^2.7.1",
         "typescript": "~4.8.3"
     },
@@ -31,14 +33,8 @@
         "phaser": "~3.55.2",
         "vite": "^3.1.0"
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged",
-            "commit-msg": "commit-message-validator"
-        }
-    },
     "lint-staged": {
-        "*.{json,md,yaml,yml}": [
+        "*.{ts,json,md,yaml,yml}": [
             "prettier --write"
         ]
     },

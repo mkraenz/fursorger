@@ -1,8 +1,5 @@
 # Fursorger
 
-[![Build Status](https://travis-ci.com/proSingularity/fursorger.svg?branch=master)](https://travis-ci.com/proSingularity/fursorger)
-[![codecov](https://codecov.io/gh/proSingularity/fursorger/branch/master/graph/badge.svg)](https://codecov.io/gh/proSingularity/fursorger)
-
 **Play now at [prosingularity.github.io/fursorger/](https://prosingularity.github.io/fursorger/).**
 
 ```log
@@ -27,16 +24,13 @@ Assumes you have globally installed
 - git
 - node.js
 
-Clone the git repository
-
 ```bash
+# Clone the git repository
 git clone https://github.com/proSingularity/fursorger.git
-```
-
-Install, test and start:
-
-```bash
+# install and start dev server
 npm run sanity-check
+# setup git hooks via husky (prettify and check commit message format on commit)
+npm run prepare
 ```
 
 ### Building and Running
