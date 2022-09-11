@@ -29,7 +29,7 @@ export class ImportLevelButton extends GameObjects.Text {
         input.remove();
     };
 
-    private async handleFileSelect(event) {
+    private async handleFileSelect(event: Event) {
         const importedLevel = await parseLevelFromJsonUpload(event);
         this.afterLevelParsedCb(importedLevel);
     }
@@ -41,9 +41,9 @@ function parseLevelFromJsonUpload(event: any): Promise<ILevel> {
         const reader = new FileReader();
         reader.onload = (file) => {
             try {
-                const json = JSON.parse(file.target.result as string);
+                const json = JSON.parse(file.target?.result as string);
                 resolve(json);
-            } catch (err) {
+            } catch (err: any) {
                 alert(
                     `Error when trying to parse file as JSON. Original error: ${err.message}`
                 );

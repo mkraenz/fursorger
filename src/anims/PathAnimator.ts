@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 import { CoveredWagon } from '../components/CoveredWagon';
 import { DEV } from '../dev-config';
 import { ILevel } from '../levels/ILevel';
@@ -8,7 +8,7 @@ export class PathAnimator {
     private wagon?: GameObjects.PathFollower;
     private enabled = false; // TODO #208 enable
 
-    constructor(private scene, private currentLevel: ILevel) {
+    constructor(private scene: Scene, private currentLevel: ILevel) {
         if (DEV.showPaths) {
             this.showTravelPaths();
         }
@@ -39,8 +39,10 @@ export class PathAnimator {
         );
         const isReverse = !!reverseDirection;
         const path = cloneDeep(rightDirection || reverseDirection);
-        const directedPoints = isReverse ? path.points : path.points.reverse();
-        if (directedPoints.length === 0) {
+        const directedPoints = isReverse
+            ? path?.points
+            : path?.points?.reverse();
+        if (!directedPoints || directedPoints.length === 0) {
             return;
         }
         const points = directedPoints.map(
@@ -74,7 +76,7 @@ export class PathAnimator {
             if (path.points?.length === 0) {
                 return;
             }
-            const points = path.points.map(
+            const points = path.points?.map(
                 ({ x, y }) => new Phaser.Math.Vector2(x, y)
             );
             const curve = new Phaser.Curves.Spline(points);
@@ -83,7 +85,7 @@ export class PathAnimator {
             graphics.lineStyle(1, 0xffffff, 1);
             curve.draw(graphics, 64);
             graphics.fillStyle(0x00ff00, 1);
-            for (const point of points) {
+            for (const point of points || []) {
                 graphics.fillCircle(point.x, point.y, 4);
             }
         });
