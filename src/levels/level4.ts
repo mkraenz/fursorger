@@ -57,7 +57,7 @@ export const level4: ILevel = {
     background: 'background',
     secrets: [
         {
-            text: "When all are saved,\nyour quest be done,\nwill you then share\nfrom where you've come?",
+            text: "When all are saved,\nyour quest be done,\nwill you then share\nfrom whence you've come?",
             centerX: 506,
             centerY: 65,
             height: 50,
