@@ -71,4 +71,8 @@ export const Witcher: ILevel = {
         location: 'Eate',
     },
     background: 'background2',
+    secrets: [
+        { text: "At last, the Fursorger arrived!", centerX: 30, centerY: 60, height: 20, width: 20 },
+        { text: "The era of humans is over.", centerX: 870, centerY: 51, height: 20, width: 20 },
+    ]
 };
