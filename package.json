@@ -18,7 +18,7 @@
         "@types/dat.gui": "^0.7.7",
         "@types/file-saver": "^2.0.5",
         "@types/graphlib": "^2.1.8",
-        "@types/lodash": "^4.14.184",
+        "@types/lodash": "^4.14.186",
         "commit-message-validator": "^1.0.2",
         "dat.gui": "^0.7.9",
         "husky": "^8.0.1",
